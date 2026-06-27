@@ -14,10 +14,11 @@ exports.RegisterUser = async (req, res) => {
   console.log("Inside Register User");
 
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
 
     if (!username || !email || !password) {
       return res.status(400).json({
+        success: false,
         message: "All fields are required",
       });
     }
@@ -28,20 +29,17 @@ exports.RegisterUser = async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({
+        success: false,
         message: "User already exists",
       });
     }
 
-    // Hash Password
     const hashPassword = await bcrypt.hash(password, 10);
 
-    // Generate 6 digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Hash OTP
     const hashOtp = await bcrypt.hash(otp, 10);
 
-    // Send Email
     await sendEmail({
       to: userEmail,
       subject: "OTP Verification",
@@ -49,11 +47,11 @@ exports.RegisterUser = async (req, res) => {
              <p>This OTP will expire in 10 minutes.</p>`,
     });
 
-    // Create User
-    const newUser = await User.create({
+    await User.create({
       username,
       email: userEmail,
       password: hashPassword,
+      role: role || "user",
       otp: hashOtp,
       otpExpiry: Date.now() + 10 * 60 * 1000,
     });

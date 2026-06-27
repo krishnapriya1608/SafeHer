@@ -10,6 +10,7 @@ import RoleDashboard from "./pages/RoleDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import { useAuth } from "./context/AuthContext";
 import { dashboardPathForRole } from "./utils/roles";
+import Home from "./pages/Home";
 
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
@@ -20,7 +21,7 @@ export default function App() {
   return (
     <>
     <Routes>
-      <Route path="/" element={<HomeRedirect />} />
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />

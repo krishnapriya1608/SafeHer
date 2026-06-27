@@ -1,13 +1,17 @@
+require('dotenv').config()
 const express=require('express')
 const cors=require('cors')
-const route=require('./Routes/route')
+const userRoutes=require('./Routes/routes')
+require('./DB/connection')
 
 
 const app=express()
 
 app.use(cors())
+
 app.use(express.json())
-app.use('/',route)
+
+app.use("/api/user", userRoutes);
 
 
 const PORT=5000
