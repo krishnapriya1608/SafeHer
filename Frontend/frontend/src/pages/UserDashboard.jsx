@@ -29,8 +29,6 @@ export default function UserDashboard() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const inputClasses = `w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition-all duration-200 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/10 disabled:cursor-not-allowed disabled:opacity-60`;
-
   const updateProfileForm = (event) => {
     setProfile((prev) => ({
       ...prev,
@@ -175,65 +173,72 @@ export default function UserDashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 md:py-12">
-      <div className="mx-auto max-w-6xl space-y-6">
+    <main className="min-h-screen bg-zinc-950 text-zinc-100 antialiased px-4 py-8 md:py-16">
+      <div className="mx-auto max-w-6xl space-y-8">
         
-        {/* Header Title Section */}
-        <div className="border-b border-slate-200 pb-5">
-          <p className="text-xs font-bold uppercase text-teal-600 tracking-wider">Phase 3</p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
-            User Dashboard
-          </h1>
-          <p className="mt-2 text-sm text-slate-500">
-            Welcome, <span className="font-semibold text-slate-700">{username || email}</span>. Manage your system settings, emergency communication channels, and track system health feeds.
-          </p>
+        {/* Header Block with Clean Minimalist Line */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-zinc-800 pb-6">
+          <div>
+            <span className="text-[10px] font-bold tracking-widest uppercase bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-md">
+              Operational Interface
+            </span>
+            <h1 className="mt-2.5 text-3xl font-extrabold tracking-tight text-white">
+              User Command Hub
+            </h1>
+            <p className="mt-1.5 text-sm text-zinc-400">
+              Welcome back, <span className="text-zinc-200 font-medium">{username || email}</span>. System monitoring and critical dispatches active.
+            </p>
+          </div>
         </div>
 
-        {/* Global Notifications Container */}
+        {/* Dynamic System Alert Bars */}
         <div className="space-y-2">
           {message && <StatusMessage type="success">{message}</StatusMessage>}
           {error && <StatusMessage type="error">{error}</StatusMessage>}
         </div>
 
-        {/* Metric Cards Top Row */}
-        <section className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs flex justify-between items-center">
+        {/* High-Contrast Glassmorphic Stats Section */}
+        <section className="grid gap-4 sm:grid-cols-3">
+          <div className="relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Current Status</p>
-              <h2 className="mt-1 text-xl font-bold text-slate-900">{currentStatus}</h2>
+              <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Live Status Indicator</p>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">{currentStatus}</h2>
             </div>
-            <span className={`h-2.5 w-2.5 rounded-full ${currentStatus === "Safe" ? "bg-emerald-500" : currentStatus === "Need Help" ? "bg-amber-500" : "bg-rose-500 animate-pulse"}`} />
+            <div className="relative flex h-3 w-3">
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${currentStatus === "Safe" ? "bg-emerald-400" : currentStatus === "Need Help" ? "bg-amber-400" : "bg-rose-400"}`}></span>
+              <span className={`relative inline-flex rounded-full h-3 w-3 ${currentStatus === "Safe" ? "bg-emerald-500" : currentStatus === "Need Help" ? "bg-amber-500" : "bg-rose-500"}`}></span>
+            </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Emergency Contacts</p>
-            <h2 className="mt-1 text-xl font-bold text-slate-900">
-              {emergencyContacts.length} <span className="text-xs font-normal text-slate-400">assigned</span>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+            <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Assigned Contacts</p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">
+              {emergencyContacts.length} <span className="text-xs font-normal text-zinc-500">nodes configued</span>
             </h2>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Recent Alerts</p>
-            <h2 className="mt-1 text-xl font-bold text-slate-900">
-              {recentAlerts.length} <span className="text-xs font-normal text-slate-400">logged logs</span>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+            <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Broadcast Stream Logs</p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">
+              {recentAlerts.length} <span className="text-xs font-normal text-zinc-500">intercepts logged</span>
             </h2>
           </div>
         </section>
 
-        {/* Split Section Grid Row 1: Profile & Status Control */}
-        <section className="grid gap-6 lg:grid-cols-2">
+        {/* Container Row 1: Profile Modifications & Broadcast Toggle */}
+        <section className="grid gap-6 lg:grid-cols-12">
           
           <form
             onSubmit={handleUpdateProfile}
-            className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between"
+            className="lg:col-span-7 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col justify-between space-y-6"
           >
             <div>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">Edit Profile</h2>
-              <p className="text-xs text-slate-400 mb-4">Update your structural parameters used for active dispatches.</p>
+              <h2 className="text-lg font-bold text-white tracking-tight">Identity Parameters</h2>
+              <p className="text-xs text-zinc-500 mt-1">Configure baseline variables used during automated response executions.</p>
               
-              <div className="space-y-4">
+              <div className="mt-6 space-y-4">
                 <input
-                  className={inputClasses}
+                  className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
                   name="fullName"
                   placeholder="Full Name"
                   value={profile.fullName}
@@ -242,29 +247,31 @@ export default function UserDashboard() {
                   disabled={loading}
                 />
 
-                <input
-                  className={inputClasses}
-                  name="phone"
-                  placeholder="Phone"
-                  value={profile.phone}
-                  onChange={updateProfileForm}
-                  required
-                  disabled={loading}
-                />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <input
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={profile.phone}
+                    onChange={updateProfileForm}
+                    required
+                    disabled={loading}
+                  />
 
-                <input
-                  className={inputClasses}
-                  name="location"
-                  placeholder="Location"
-                  value={profile.location}
-                  onChange={updateProfileForm}
-                  disabled={loading}
-                />
+                  <input
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
+                    name="location"
+                    placeholder="Location Node"
+                    value={profile.location}
+                    onChange={updateProfileForm}
+                    disabled={loading}
+                  />
+                </div>
 
                 <textarea
-                  className={`${inputClasses} min-h-[100px] resize-none`}
+                  className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all min-h-[110px] resize-none"
                   name="medicalNotes"
-                  placeholder="Medical Notes (e.g., blood group, allergies)"
+                  placeholder="Critical Health Registry (e.g. baseline vitals, known allergen reactions)"
                   value={profile.medicalNotes}
                   onChange={updateProfileForm}
                   disabled={loading}
@@ -273,65 +280,95 @@ export default function UserDashboard() {
             </div>
 
             <motion.button
-              whileTap={!loading ? { scale: 0.985 } : {}}
-              className="mt-5 w-full rounded-xl bg-teal-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-teal-700 disabled:opacity-50 shadow-sm"
+              whileTap={!loading ? { scale: 0.99 } : {}}
+              className="w-full rounded-xl bg-indigo-600 py-3.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-40 transition-all shadow-lg cursor-pointer"
               disabled={loading}
             >
-              {loading ? "Saving Changes..." : "Update Profile"}
+              {loading ? "Recompiling..." : "Save Registry Parameters"}
             </motion.button>
           </form>
 
-          {/* Status Broadcaster Box */}
-          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between">
+          {/* Status Vector Controller */}
+          <div className="lg:col-span-5 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">Current Status</h2>
-              <p className="text-xs text-slate-400 mb-4">Directly toggle system alerts mapped out across endpoints.</p>
+              <h2 className="text-lg font-bold text-white tracking-tight">Signal Broadcaster</h2>
+              <p className="text-xs text-zinc-500 mt-1">Force update network conditions across active monitoring endpoints.</p>
 
-              <div className="grid gap-3 sm:grid-cols-3">
-                {["Safe", "Need Help", "Emergency"].map((status) => (
-                  <button
-                    key={status}
-                    type="button"
-                    onClick={() => handleStatusChange(status)}
-                    disabled={loading}
-                    className={`rounded-xl border px-4 py-4 text-sm font-semibold transition-all text-left flex flex-col justify-between h-20 ${
-                      currentStatus === status
-                        ? status === "Safe"
-                          ? "border-emerald-600 bg-emerald-50 text-emerald-700 ring-4 ring-emerald-500/10"
-                          : status === "Need Help"
-                          ? "border-amber-500 bg-amber-50 text-amber-700 ring-4 ring-amber-500/10"
-                          : "border-rose-600 bg-rose-50 text-rose-700 ring-4 ring-rose-500/10"
-                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                    }`}
-                  >
-                    <span className={`h-2 w-2 rounded-full ${status === "Safe" ? "bg-emerald-500" : status === "Need Help" ? "bg-amber-500" : "bg-rose-500"}`} />
-                    <span>{status}</span>
-                  </button>
-                ))}
+              <div className="mt-6 flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange("Safe")}
+                  disabled={loading}
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
+                    currentStatus === "Safe"
+                      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                      : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span>Signal Nominal (Safe)</span>
+                  </div>
+                  {currentStatus === "Safe" && <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-500">Active</span>}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange("Need Help")}
+                  disabled={loading}
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
+                    currentStatus === "Need Help"
+                      ? "border-amber-500/30 bg-amber-500/10 text-amber-400"
+                      : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 w-2 rounded-full bg-amber-500" />
+                    <span>Elevated Status (Need Help)</span>
+                  </div>
+                  {currentStatus === "Need Help" && <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500">Active</span>}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange("Emergency")}
+                  disabled={loading}
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
+                    currentStatus === "Emergency"
+                      ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
+                      : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+                    <span>Critical Breach (Emergency)</span>
+                  </div>
+                  {currentStatus === "Emergency" && <span className="text-[10px] uppercase font-bold tracking-widest text-rose-500 animate-pulse">Tripped</span>}
+                </button>
               </div>
             </div>
             
-            <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-500 leading-relaxed">
-              <strong>Notice:</strong> Changing your profile alert updates critical priority values across operational indices. Confirm configuration states are valid.
+            <div className="mt-6 p-4 rounded-xl bg-zinc-950/80 border border-zinc-800/60 text-xs text-zinc-500 leading-relaxed">
+              <span className="text-zinc-400 font-semibold block mb-1">Broadcaster Notice:</span> Changes push immediate cryptographic telemetry arrays down operational relay lines. Confirm status authenticity before execution.
             </div>
           </div>
         </section>
 
-        {/* Split Section Grid Row 2: Emergency Connections & Alerts */}
-        <section className="grid gap-6 lg:grid-cols-2">
+        {/* Container Row 2: Emergency Network & Stream Processing Feed */}
+        <section className="grid gap-6 lg:grid-cols-12">
           
           <form
             onSubmit={handleAddContact}
-            className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col"
+            className="lg:col-span-6 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col"
           >
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">Emergency Contacts</h2>
-            <p className="text-xs text-slate-400 mb-4">Add designated connections authorized for immediate ping dispatches.</p>
+            <h2 className="text-lg font-bold text-white tracking-tight">Proxy Intercept Nodes</h2>
+            <p className="text-xs text-zinc-500 mt-1">Assign prioritized remote contacts cleared for immediate telemetry streams.</p>
 
-            <div className="space-y-4">
+            <div className="mt-6 space-y-4">
               <input
-                className={inputClasses}
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
                 name="name"
-                placeholder="Contact Name"
+                placeholder="Connection Name"
                 value={newContact.name}
                 onChange={updateContactForm}
                 required
@@ -340,9 +377,9 @@ export default function UserDashboard() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <input
-                  className={inputClasses}
+                  className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
                   name="relation"
-                  placeholder="Relation"
+                  placeholder="Relational Mapping"
                   value={newContact.relation}
                   onChange={updateContactForm}
                   required
@@ -350,9 +387,9 @@ export default function UserDashboard() {
                 />
 
                 <input
-                  className={inputClasses}
+                  className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
                   name="phone"
-                  placeholder="Phone"
+                  placeholder="Data Relay Line"
                   value={newContact.phone}
                   onChange={updateContactForm}
                   required
@@ -362,30 +399,28 @@ export default function UserDashboard() {
             </div>
 
             <button
-              className="mt-4 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-slate-800 disabled:opacity-50"
+              className="mt-4 w-full rounded-xl bg-zinc-100 py-3 text-xs font-bold uppercase tracking-wider text-zinc-950 hover:bg-zinc-200 transition-all cursor-pointer"
               disabled={loading}
             >
-              Add Contact
+              Mount Proxy Node
             </button>
 
-            {/* Render Output List loop */}
-            <div className="mt-6 space-y-3 overflow-y-auto max-h-[260px] pr-1">
+            {/* Configured Outputs Iteration */}
+            <div className="mt-6 space-y-3 overflow-y-auto max-h-[280px] pr-1">
               {emergencyContacts.length === 0 ? (
-                <div className="text-center py-6 border border-dashed border-slate-200 rounded-xl text-xs text-slate-400">
-                  No emergency connections set up yet.
+                <div className="text-center py-10 border border-dashed border-zinc-800 rounded-xl text-xs text-zinc-600">
+                  No proxy interception paths allocated.
                 </div>
               ) : (
                 emergencyContacts.map((contact) => (
                   <div
                     key={contact._id}
-                    className="flex items-center justify-between rounded-xl border border-slate-200 p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors"
+                    className="flex items-center justify-between rounded-xl border border-zinc-800 p-4 bg-zinc-950/30 hover:bg-zinc-950/80 transition-colors"
                   >
                     <div>
-                      <h3 className="font-semibold text-slate-900 text-sm">
-                        {contact.name}
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        <span className="inline-block px-1.5 py-0.5 bg-slate-200 text-slate-700 font-medium rounded text-[10px] mr-2">{contact.relation}</span>
+                      <h3 className="font-semibold text-zinc-200 text-sm">{contact.name}</h3>
+                      <p className="text-xs text-zinc-500 mt-1 flex items-center gap-2">
+                        <span className="inline-block px-2 py-0.5 bg-zinc-800 text-zinc-400 font-bold rounded text-[9px] uppercase tracking-wider">{contact.relation}</span>
                         {contact.phone}
                       </p>
                     </div>
@@ -393,9 +428,9 @@ export default function UserDashboard() {
                     <button
                       type="button"
                       onClick={() => handleDeleteContact(contact._id)}
-                      className="text-xs font-semibold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100/60 px-3 py-1.5 rounded-lg transition-colors"
+                      className="text-xs font-bold uppercase tracking-wider text-rose-400 hover:text-rose-300 bg-rose-500/5 hover:bg-rose-500/10 px-3 py-2 rounded-lg transition-colors cursor-pointer"
                     >
-                      Delete
+                      Purge
                     </button>
                   </div>
                 ))
@@ -403,50 +438,108 @@ export default function UserDashboard() {
             </div>
           </form>
 
-          {/* Activity Logs Frame */}
-          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col">
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">Recent Alerts</h2>
-            <p className="text-xs text-slate-400 mb-4">Direct stream configuration logs broadcasted from index nodes.</p>
+          {/* Core System Telemetry Stream Grid */}
+          <div className="lg:col-span-6 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col">
+            <h2 className="text-lg font-bold text-white tracking-tight">Live Network Intercepts</h2>
+            <p className="text-xs text-zinc-500 mt-1">Real-time status tracking loops populated across validation frameworks.</p>
 
-            <div className="space-y-3 overflow-y-auto max-h-[460px] pr-1">
+            <div className="mt-6 space-y-3 overflow-y-auto max-h-[460px] pr-1">
               {recentAlerts.length === 0 ? (
-                <div className="text-center py-12 border border-dashed border-slate-200 rounded-xl text-xs text-slate-400">
-                  No tracking broadcasts captured.
+                <div className="text-center py-16 border border-dashed border-zinc-800 rounded-xl text-xs text-zinc-600">
+                  No tracking broadcasts captured on current cycle indices.
                 </div>
               ) : (
-                recentAlerts.map((alert) => (
-                  <div
-                    key={alert._id}
-                    className={`rounded-xl border border-slate-200 border-l-4 p-4 bg-slate-50/40 ${
-                      alert.level?.toLowerCase() === "critical"
-                        ? "border-l-rose-500"
-                        : alert.level?.toLowerCase() === "warning"
-                        ? "border-l-amber-500"
-                        : "border-l-teal-500"
-                    }`}
-                  >
-                    <div className="flex justify-between items-start gap-4">
-                      <h3 className="font-semibold text-slate-900 text-sm">
-                        {alert.title}
-                      </h3>
-                      <span className={`text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded ${
-                        alert.level?.toLowerCase() === "critical"
-                          ? "bg-rose-50 text-rose-700"
-                          : alert.level?.toLowerCase() === "warning"
-                          ? "bg-amber-50 text-amber-700"
-                          : "bg-teal-50 text-teal-700"
-                      }`}>
-                        {alert.level}
-                      </span>
+                recentAlerts.map((alert) => {
+                  const level = alert.level?.toLowerCase();
+                  const borderClass = level === "critical" ? "border-l-rose-500 bg-rose-500/[0.02]" : level === "warning" ? "border-l-amber-500 bg-amber-500/[0.02]" : "border-l-indigo-500 bg-indigo-500/[0.02]";
+                  const badgeClass = level === "critical" ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" : level === "warning" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20";
+                  
+                  return (
+                    <div key={alert._id} className={`rounded-xl border border-zinc-800 border-l-4 p-4 transition-all ${borderClass}`}>
+                      <div className="flex justify-between items-start gap-4">
+                        <h3 className="font-semibold text-zinc-200 text-sm tracking-tight">{alert.title}</h3>
+                        <span className={`text-[9px] uppercase font-extrabold tracking-widest px-2 py-0.5 rounded ${badgeClass}`}>
+                          {alert.level}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-xs text-zinc-400 leading-relaxed">{alert.detail}</p>
                     </div>
-                    <p className="mt-1.5 text-xs text-slate-500 leading-relaxed">{alert.detail}</p>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
           
         </section>
+        <div className={cardClasses}>
+  <p className="text-xs font-bold uppercase tracking-wider text-teal-600">
+    Emergency Contacts
+  </p>
+
+  <h2 className="mt-1 text-xl font-bold text-white">
+    Assigned Contacts
+  </h2>
+
+  <form onSubmit={handleAddContact} className="mt-6 grid gap-4">
+    <input
+      className={inputClasses}
+      name="name"
+      placeholder="Contact Name"
+      value={newContact.name}
+      onChange={updateContactForm}
+      required
+    />
+
+    <input
+      className={inputClasses}
+      name="relation"
+      placeholder="Relation"
+      value={newContact.relation}
+      onChange={updateContactForm}
+      required
+    />
+
+    <input
+      className={inputClasses}
+      name="phone"
+      placeholder="Phone"
+      value={newContact.phone}
+      onChange={updateContactForm}
+      required
+    />
+
+    <button
+      className="rounded-xl bg-teal-600 px-4 py-3 text-sm font-semibold text-white"
+      disabled={loading}
+    >
+      Add Contact
+    </button>
+  </form>
+
+  <div className="mt-6 space-y-3">
+    {emergencyContacts.map((contact) => (
+      <div
+        key={contact._id}
+        className="flex items-center justify-between rounded-xl border border-slate-700 p-4"
+      >
+        <div>
+          <h3 className="font-semibold text-white">{contact.name}</h3>
+          <p className="text-sm text-slate-400">
+            {contact.relation} - {contact.phone}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => handleDeleteContact(contact._id)}
+          className="text-sm font-semibold text-red-400"
+        >
+          Delete
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
       </div>
     </main>
   );
