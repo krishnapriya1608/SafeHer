@@ -43,6 +43,7 @@ export default function App() {
           <Route path="/dashboard/admin" element={<RoleDashboard roleName="admin" />} />
         </Route>
       </Route>
+      <Route path="/sos" element={<SOSPage />} />
     </Routes>
     </>
   );

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import StatusMessage from "../components/StatusMessage";
 import { dashboardApi } from "../api/dashboardApi";
+import { Link } from "react-router-dom";
 
 export default function UserDashboard() {
   const userId = localStorage.getItem("userId");
@@ -175,7 +176,7 @@ export default function UserDashboard() {
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100 antialiased px-4 py-8 md:py-16">
       <div className="mx-auto max-w-6xl space-y-8">
-        
+
         {/* Header Block with Clean Minimalist Line */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-zinc-800 pb-6">
           <div>
@@ -186,7 +187,7 @@ export default function UserDashboard() {
               User Command Hub
             </h1>
             <p className="mt-1.5 text-sm text-zinc-400">
-              Welcome back, <span className="text-zinc-200 font-medium">{username }</span>. System monitoring and critical dispatches active.
+              Welcome back, <span className="text-zinc-200 font-medium">{username}</span>. System monitoring and critical dispatches active.
             </p>
           </div>
         </div>
@@ -216,6 +217,12 @@ export default function UserDashboard() {
               {emergencyContacts.length} <span className="text-xs font-normal text-zinc-500">nodes configued</span>
             </h2>
           </div>
+          <Link
+            to="/sos"
+            className="rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white hover:bg-red-700"
+          >
+            SOS Emergency
+          </Link>
 
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
             <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Broadcast Stream Logs</p>
@@ -227,7 +234,7 @@ export default function UserDashboard() {
 
         {/* Container Row 1: Profile Modifications & Broadcast Toggle */}
         <section className="grid gap-6 lg:grid-cols-12">
-          
+
           <form
             onSubmit={handleUpdateProfile}
             className="lg:col-span-7 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col justify-between space-y-6"
@@ -235,7 +242,7 @@ export default function UserDashboard() {
             <div>
               <h2 className="text-lg font-bold text-white tracking-tight">Identity Parameters</h2>
               <p className="text-xs text-zinc-500 mt-1">Configure baseline variables used during automated response executions.</p>
-              
+
               <div className="mt-6 space-y-4">
                 <input
                   className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
@@ -299,11 +306,10 @@ export default function UserDashboard() {
                   type="button"
                   onClick={() => handleStatusChange("Safe")}
                   disabled={loading}
-                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
-                    currentStatus === "Safe"
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${currentStatus === "Safe"
                       ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
                       : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -316,11 +322,10 @@ export default function UserDashboard() {
                   type="button"
                   onClick={() => handleStatusChange("Need Help")}
                   disabled={loading}
-                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
-                    currentStatus === "Need Help"
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${currentStatus === "Need Help"
                       ? "border-amber-500/30 bg-amber-500/10 text-amber-400"
                       : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-amber-500" />
@@ -333,11 +338,10 @@ export default function UserDashboard() {
                   type="button"
                   onClick={() => handleStatusChange("Emergency")}
                   disabled={loading}
-                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
-                    currentStatus === "Emergency"
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${currentStatus === "Emergency"
                       ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
                       : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
@@ -347,7 +351,7 @@ export default function UserDashboard() {
                 </button>
               </div>
             </div>
-            
+
             <div className="mt-6 p-4 rounded-xl bg-zinc-950/80 border border-zinc-800/60 text-xs text-zinc-500 leading-relaxed">
               <span className="text-zinc-400 font-semibold block mb-1">Broadcaster Notice:</span> Changes push immediate cryptographic telemetry arrays down operational relay lines. Confirm status authenticity before execution.
             </div>
@@ -356,7 +360,7 @@ export default function UserDashboard() {
 
         {/* Container Row 2: Emergency Network & Stream Processing Feed */}
         <section className="grid gap-6 lg:grid-cols-12">
-          
+
           <form
             onSubmit={handleAddContact}
             className="lg:col-span-6 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col"
@@ -453,7 +457,7 @@ export default function UserDashboard() {
                   const level = alert.level?.toLowerCase();
                   const borderClass = level === "critical" ? "border-l-rose-500 bg-rose-500/[0.02]" : level === "warning" ? "border-l-amber-500 bg-amber-500/[0.02]" : "border-l-indigo-500 bg-indigo-500/[0.02]";
                   const badgeClass = level === "critical" ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" : level === "warning" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20";
-                  
+
                   return (
                     <div key={alert._id} className={`rounded-xl border border-zinc-800 border-l-4 p-4 transition-all ${borderClass}`}>
                       <div className="flex justify-between items-start gap-4">
@@ -469,7 +473,7 @@ export default function UserDashboard() {
               )}
             </div>
           </div>
-          
+
         </section>
       </div>
     </main>
