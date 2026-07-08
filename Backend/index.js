@@ -4,6 +4,8 @@ const cors=require('cors')
 const userRoutes=require('./Routes/routes')
 const dashboardRoutes=require('./Routes/dashRoutes')
 const emergencyRoute = require("./Routes/emergencyRoutes");
+const http = require("http");
+const { Server } = require("socket.io");
 require('./DB/connection')
 
 

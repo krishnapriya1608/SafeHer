@@ -11,7 +11,7 @@ import Unauthorized from "./pages/Unauthorized";
 import { useAuth } from "./context/AuthContext";
 import { dashboardPathForRole } from "./utils/roles";
 import Home from "./pages/Home";
-
+import SOSPage from "./pages/SOS";
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;

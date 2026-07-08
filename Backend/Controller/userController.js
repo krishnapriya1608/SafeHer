@@ -279,6 +279,14 @@ exports.resetPassword = async (req, res) => {
       });
     }
 
+    const comparePassword = await bcrypt.compare(password, user.password);
+
+    if (comparePassword) {
+      return res.status(400).json({
+        message: "New password cannot be same as old password",
+      });
+    }
+
     const hashPassword = await bcrypt.hash(password, 10);
 
     user.password = hashPassword;
