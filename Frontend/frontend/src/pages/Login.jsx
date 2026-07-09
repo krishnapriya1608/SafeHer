@@ -6,6 +6,7 @@ import StatusMessage from "../components/StatusMessage";
 import { authApi } from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
 import { dashboardPathForRole } from "../utils/roles";
+import loginImage from "../assets/Logins.jpg";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ export default function Login() {
   return (
     <AuthLayout
       eyebrow="Welcome back"
+      image={loginImage}
       title="Login securely"
       subtitle="Use your verified email and password to continue."
     >

@@ -1,46 +1,59 @@
 import { motion } from "framer-motion";
 import Logo from "./Logo";
-import safeHer from '../assets/side profile.jpg'
 
-export default function AuthLayout({ eyebrow, title, subtitle, children }) {
+export default function AuthLayout({
+  eyebrow,
+  title,
+  subtitle,
+  image,
+  imageClass = "h-screen",
+  children,
+}) {
   return (
-    <main className="auth-bg min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-6xl items-center">
-        <div className="grid w-full gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <motion.section
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55 }}
-            className="hidden lg:block"
-          >
-            <Logo />
-            <div className="mt-16 max-w-xl">
-              <img className="object-contain w-full max-w-md" src={safeHer} alt="SafeHer" />
-            </div>
-            <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
-              {["JWT Secured", "OTP Verified", "Role Based"].map((item) => (
-                <div key={item} className="glass rounded-2xl px-4 py-5 text-sm font-bold text-slate-800">
-                  {item}
-                </div>
-              ))}
-            </div>
-          </motion.section>
+    <main className="min-h-screen bg-white">
+      <div className="grid min-h-screen lg:grid-cols-2">
 
-          <motion.section
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.45 }}
-            className="glass mx-auto w-full max-w-xl rounded-[2rem] p-5 shadow-soft sm:p-8"
-          >
-            <div className="mb-8 flex items-center justify-between gap-4 lg:hidden">
-              <Logo />
+        {/* Left Image */}
+        <motion.section
+          className="hidden lg:block"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <img
+            src={image}
+            alt={title}
+              className={`${imageClass} w-full object-cover`}
+            
+          />
+        </motion.section>
+
+        {/* Right Side */}
+        <motion.section
+          className="flex items-center justify-center px-8 py-10"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <div className="w-full max-w-md">
+            <Logo />
+
+            <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-teal-600">
+              {eyebrow}
+            </p>
+
+            <h2 className="mt-2 text-3xl font-bold">
+              {title}
+            </h2>
+
+            <p className="mt-2 text-slate-500">
+              {subtitle}
+            </p>
+
+            <div className="mt-6">
+              {children}
             </div>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-teal-700">{eyebrow}</p>
-            <h2 className="mt-3 text-3xl font-black text-slate-950 sm:text-4xl">{title}</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">{subtitle}</p>
-            <div className="mt-8">{children}</div>
-          </motion.section>
-        </div>
+          </div>
+        </motion.section>
+
       </div>
     </main>
   );

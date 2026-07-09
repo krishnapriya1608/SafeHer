@@ -5,7 +5,7 @@ import AuthLayout from "../components/AuthLayout";
 import StatusMessage from "../components/StatusMessage";
 import { authApi } from "../api/authApi";
 import { roles } from "../utils/roles";
-import safeHer from '../assets/side profile.jpg'
+import registerImage from "../assets/side profile.jpg";
 export default function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -51,10 +51,15 @@ export default function Register() {
   return (
     <AuthLayout
       eyebrow="Create account"
+       image={registerImage}
+         imageClass="h-[950px]"
       title="Join your safety network"
       subtitle="Register with your role, verify your email, and continue to your dashboard."
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} 
+  onSubmit={handleSubmit}
+  className="mx-auto w-full max-w-md space-y-5"
+>
         
         {/* Alerts & Messages */}
         {message && <StatusMessage type="success">{message}</StatusMessage>}
