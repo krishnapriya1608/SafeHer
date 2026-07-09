@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Logo from "./Logo";
+import safeHer from '../assets/side profile.jpg'
 
 export default function AuthLayout({ eyebrow, title, subtitle, children }) {
   return (
@@ -14,16 +15,7 @@ export default function AuthLayout({ eyebrow, title, subtitle, children }) {
           >
             <Logo />
             <div className="mt-16 max-w-xl">
-              <p className="text-sm font-bold uppercase tracking-[0.24em] text-teal-700">
-                Women Safety Platform
-              </p>
-              <h1 className="mt-5 text-5xl font-black leading-tight text-slate-950">
-                Fast access for every responder in your safety network.
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                Secure login, verified accounts, and role-based dashboards for users,
-                volunteers, police teams, and administrators.
-              </p>
+              <img className="object-contain w-full max-w-md" src={safeHer} alt="SafeHer" />
             </div>
             <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
               {["JWT Secured", "OTP Verified", "Role Based"].map((item) => (

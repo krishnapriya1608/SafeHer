@@ -12,6 +12,7 @@ import { useAuth } from "./context/AuthContext";
 import { dashboardPathForRole } from "./utils/roles";
 import Home from "./pages/Home";
 import SOSPage from "./pages/SOS";
+import LiveTracking from "./pages/LiveTracking"; 
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;

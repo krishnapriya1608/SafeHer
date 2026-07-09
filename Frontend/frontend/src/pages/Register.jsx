@@ -5,7 +5,7 @@ import AuthLayout from "../components/AuthLayout";
 import StatusMessage from "../components/StatusMessage";
 import { authApi } from "../api/authApi";
 import { roles } from "../utils/roles";
-
+import safeHer from '../assets/side profile.jpg'
 export default function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
