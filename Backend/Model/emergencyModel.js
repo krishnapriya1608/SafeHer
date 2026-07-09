@@ -43,10 +43,18 @@ const emergencySchema = new mongoose.Schema(
       enum: ["Active", "Resolved"],
       default: "Active",
     },
+       locationHistory: [
+      {
+        latitude: Number,
+        longitude: Number,
+        timestamp: Number,
+      },
+    ],
   },
   {
     timestamps: true,
-  }
+  },
+  
 );
 
 module.exports = mongoose.model("Emergency", emergencySchema);

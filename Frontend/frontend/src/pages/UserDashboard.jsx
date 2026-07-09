@@ -175,7 +175,7 @@ export default function UserDashboard() {
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100 antialiased px-4 py-8 md:py-16">
       <div className="mx-auto max-w-6xl space-y-8">
-        
+
         {/* Header Block with Clean Minimalist Line */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-zinc-800 pb-6">
           <div>
@@ -190,6 +190,12 @@ export default function UserDashboard() {
             </p>
           </div>
         </div>
+        <Link
+          to={`/track/${alert._id}`}
+          className="mt-3 inline-block rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700"
+        >
+          Track Live
+        </Link>
 
         {/* Dynamic System Alert Bars */}
         <div className="space-y-2">
@@ -227,7 +233,7 @@ export default function UserDashboard() {
 
         {/* Container Row 1: Profile Modifications & Broadcast Toggle */}
         <section className="grid gap-6 lg:grid-cols-12">
-          
+
           <form
             onSubmit={handleUpdateProfile}
             className="lg:col-span-7 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col justify-between space-y-6"
@@ -235,7 +241,7 @@ export default function UserDashboard() {
             <div>
               <h2 className="text-lg font-bold text-white tracking-tight">Identity Parameters</h2>
               <p className="text-xs text-zinc-500 mt-1">Configure baseline variables used during automated response executions.</p>
-              
+
               <div className="mt-6 space-y-4">
                 <input
                   className="w-full rounded-xl border border-zinc-800 bg-zinc-950/70 px-4 py-3.5 text-sm text-zinc-100 placeholder-zinc-600 focus:border-indigo-500 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 transition-all"
@@ -299,11 +305,10 @@ export default function UserDashboard() {
                   type="button"
                   onClick={() => handleStatusChange("Safe")}
                   disabled={loading}
-                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
-                    currentStatus === "Safe"
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${currentStatus === "Safe"
                       ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
                       : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -316,11 +321,10 @@ export default function UserDashboard() {
                   type="button"
                   onClick={() => handleStatusChange("Need Help")}
                   disabled={loading}
-                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
-                    currentStatus === "Need Help"
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${currentStatus === "Need Help"
                       ? "border-amber-500/30 bg-amber-500/10 text-amber-400"
                       : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-amber-500" />
@@ -333,11 +337,10 @@ export default function UserDashboard() {
                   type="button"
                   onClick={() => handleStatusChange("Emergency")}
                   disabled={loading}
-                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${
-                    currentStatus === "Emergency"
+                  className={`w-full rounded-xl border p-4 text-sm font-semibold transition-all flex items-center justify-between cursor-pointer ${currentStatus === "Emergency"
                       ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
                       : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
@@ -347,7 +350,7 @@ export default function UserDashboard() {
                 </button>
               </div>
             </div>
-            
+
             <div className="mt-6 p-4 rounded-xl bg-zinc-950/80 border border-zinc-800/60 text-xs text-zinc-500 leading-relaxed">
               <span className="text-zinc-400 font-semibold block mb-1">Broadcaster Notice:</span> Changes push immediate cryptographic telemetry arrays down operational relay lines. Confirm status authenticity before execution.
             </div>
@@ -356,7 +359,7 @@ export default function UserDashboard() {
 
         {/* Container Row 2: Emergency Network & Stream Processing Feed */}
         <section className="grid gap-6 lg:grid-cols-12">
-          
+
           <form
             onSubmit={handleAddContact}
             className="lg:col-span-6 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col"
@@ -453,7 +456,7 @@ export default function UserDashboard() {
                   const level = alert.level?.toLowerCase();
                   const borderClass = level === "critical" ? "border-l-rose-500 bg-rose-500/[0.02]" : level === "warning" ? "border-l-amber-500 bg-amber-500/[0.02]" : "border-l-indigo-500 bg-indigo-500/[0.02]";
                   const badgeClass = level === "critical" ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" : level === "warning" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20";
-                  
+
                   return (
                     <div key={alert._id} className={`rounded-xl border border-zinc-800 border-l-4 p-4 transition-all ${borderClass}`}>
                       <div className="flex justify-between items-start gap-4">
@@ -469,77 +472,77 @@ export default function UserDashboard() {
               )}
             </div>
           </div>
-          
+
         </section>
         <div className={cardClasses}>
-  <p className="text-xs font-bold uppercase tracking-wider text-teal-600">
-    Emergency Contacts
-  </p>
-
-  <h2 className="mt-1 text-xl font-bold text-white">
-    Assigned Contacts
-  </h2>
-
-  <form onSubmit={handleAddContact} className="mt-6 grid gap-4">
-    <input
-      className={inputClasses}
-      name="name"
-      placeholder="Contact Name"
-      value={newContact.name}
-      onChange={updateContactForm}
-      required
-    />
-
-    <input
-      className={inputClasses}
-      name="relation"
-      placeholder="Relation"
-      value={newContact.relation}
-      onChange={updateContactForm}
-      required
-    />
-
-    <input
-      className={inputClasses}
-      name="phone"
-      placeholder="Phone"
-      value={newContact.phone}
-      onChange={updateContactForm}
-      required
-    />
-
-    <button
-      className="rounded-xl bg-teal-600 px-4 py-3 text-sm font-semibold text-white"
-      disabled={loading}
-    >
-      Add Contact
-    </button>
-  </form>
-
-  <div className="mt-6 space-y-3">
-    {emergencyContacts.map((contact) => (
-      <div
-        key={contact._id}
-        className="flex items-center justify-between rounded-xl border border-slate-700 p-4"
-      >
-        <div>
-          <h3 className="font-semibold text-white">{contact.name}</h3>
-          <p className="text-sm text-slate-400">
-            {contact.relation} - {contact.phone}
+          <p className="text-xs font-bold uppercase tracking-wider text-teal-600">
+            Emergency Contacts
           </p>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => handleDeleteContact(contact._id)}
-          className="text-sm font-semibold text-red-400"
-        >
-          Delete
-        </button>
-      </div>
-    ))}
-  </div>
-</div>
+          <h2 className="mt-1 text-xl font-bold text-white">
+            Assigned Contacts
+          </h2>
+
+          <form onSubmit={handleAddContact} className="mt-6 grid gap-4">
+            <input
+              className={inputClasses}
+              name="name"
+              placeholder="Contact Name"
+              value={newContact.name}
+              onChange={updateContactForm}
+              required
+            />
+
+            <input
+              className={inputClasses}
+              name="relation"
+              placeholder="Relation"
+              value={newContact.relation}
+              onChange={updateContactForm}
+              required
+            />
+
+            <input
+              className={inputClasses}
+              name="phone"
+              placeholder="Phone"
+              value={newContact.phone}
+              onChange={updateContactForm}
+              required
+            />
+
+            <button
+              className="rounded-xl bg-teal-600 px-4 py-3 text-sm font-semibold text-white"
+              disabled={loading}
+            >
+              Add Contact
+            </button>
+          </form>
+
+          <div className="mt-6 space-y-3">
+            {emergencyContacts.map((contact) => (
+              <div
+                key={contact._id}
+                className="flex items-center justify-between rounded-xl border border-slate-700 p-4"
+              >
+                <div>
+                  <h3 className="font-semibold text-white">{contact.name}</h3>
+                  <p className="text-sm text-slate-400">
+                    {contact.relation} - {contact.phone}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleDeleteContact(contact._id)}
+                  className="text-sm font-semibold text-red-400"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   );

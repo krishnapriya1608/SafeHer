@@ -31,9 +31,11 @@ export default function Register() {
     try {
       const response = await authApi.register(form);
       setMessage(response.data.message || "OTP sent successfully");
+      
       navigate("/verify-otp", { state: { email: form.email } });
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
+      set
     } finally {
       setLoading(false);
     }

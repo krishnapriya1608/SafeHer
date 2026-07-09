@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import StatusMessage from "../components/StatusMessage";
 import { emergencyApi } from "../api/emergencyApi";
 import { socket } from "../socket";
+import LiveMap from "../components/LiveMap";
 
 export default function SOSPage() {
   const userId = localStorage.getItem("userId");
@@ -14,6 +16,11 @@ export default function SOSPage() {
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [liveAlerts, setLiveAlerts] = useState([]);
+
+  // --- Phase 5: live tracking state ---
+  const [activeEmergencyId, setActiveEmergencyId] = useState(null);
+  const [myPosition, setMyPosition] = useState(null);
+  const watchIdRef = useRef(null);
 
   const fetchHistory = async () => {
     try {
@@ -53,6 +60,39 @@ export default function SOSPage() {
     };
   }, [userId]);
 
+  // stop the GPS watch + leave the room if the component unmounts
+  // (e.g. user navigates away) so we don't leak a watchPosition forever
+  useEffect(() => {
+    return () => stopLiveTracking();
+  }, []);
+
+  const startLiveTracking = (emergencyId) => {
+    if (!navigator.geolocation) return;
+    if (watchIdRef.current) navigator.geolocation.clearWatch(watchIdRef.current);
+
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setMyPosition([latitude, longitude]);
+        socket.emit("send-location", { emergencyId, latitude, longitude });
+      },
+      (err) => console.error("watchPosition error:", err.message),
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+    );
+  };
+
+  const stopLiveTracking = () => {
+    if (watchIdRef.current) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    if (activeEmergencyId) {
+      socket.emit("leave-tracking-room", activeEmergencyId);
+    }
+    setActiveEmergencyId(null);
+    setMyPosition(null);
+  };
+
   const triggerSOS = () => {
     setError("");
     setMessage("");
@@ -85,6 +125,13 @@ export default function SOSPage() {
 
           setMessage(response.data.message || "SOS alert sent successfully");
           setHistory((prev) => [response.data.emergency, ...prev]);
+
+          // --- Phase 5: start streaming live location for this emergency ---
+          const emergencyId = response.data.emergency._id;
+          setActiveEmergencyId(emergencyId);
+          setMyPosition([position.coords.latitude, position.coords.longitude]);
+          socket.emit("join-tracking-room", emergencyId);
+          startLiveTracking(emergencyId);
         } catch (err) {
           setError(err.response?.data?.message || "Failed to send SOS alert");
         } finally {
@@ -115,7 +162,7 @@ export default function SOSPage() {
       <div className="mx-auto max-w-6xl space-y-6">
         <section className="rounded-3xl border border-red-500/20 bg-slate-900 p-8 shadow-xl">
           <p className="text-xs font-bold uppercase tracking-wider text-red-400">
-            Phase 4
+            Phase 5
           </p>
 
           <h1 className="mt-2 text-3xl font-bold">
@@ -136,10 +183,37 @@ export default function SOSPage() {
               {loading ? "..." : "SOS"}
             </motion.button>
           </div>
+
+          {activeEmergencyId && (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <span className="flex items-center gap-2 rounded-full bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300">
+                <span className="h-2 w-2 animate-ping rounded-full bg-red-500" />
+                Broadcasting live location
+              </span>
+              <button
+                onClick={stopLiveTracking}
+                className="rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-800"
+              >
+                Stop sharing
+              </button>
+            </div>
+          )}
         </section>
 
         {message && <StatusMessage type="success">{message}</StatusMessage>}
         {error && <StatusMessage type="error">{error}</StatusMessage>}
+
+        {activeEmergencyId && (
+          <section className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
+            <h2 className="text-xl font-bold">Your Live Location</h2>
+            <p className="mt-1 text-sm text-slate-400">
+              This is what responders tracking your alert are seeing right now.
+            </p>
+            <div className="mt-4">
+              <LiveMap position={myPosition} />
+            </div>
+          </section>
+        )}
 
         <section className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
@@ -165,12 +239,21 @@ export default function SOSPage() {
                     {alert.message}
                   </p>
 
-                  <button
-                    onClick={() => openMap(alert.latitude, alert.longitude)}
-                    className="mt-3 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700"
-                  >
-                    View Location
-                  </button>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => openMap(alert.latitude, alert.longitude)}
+                      className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700"
+                    >
+                      View Location
+                    </button>
+
+                    <Link
+                      to={`/track/${alert._id}`}
+                      className="rounded-xl border border-red-500/40 px-4 py-2 text-sm font-semibold text-red-300 hover:bg-red-500/10"
+                    >
+                      Track Live
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>

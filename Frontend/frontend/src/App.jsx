@@ -20,31 +20,36 @@ function HomeRedirect() {
 export default function App() {
   return (
     <>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/verify-otp" element={<VerifyOtp />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
-      <Route element={<DashboardLayout />}>
-        <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
-          <Route path="/dashboard/user" element={<RoleDashboard roleName="user" />} />
+        <Route element={<DashboardLayout />}>
+          <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
+            <Route path="/dashboard/user" element={<RoleDashboard roleName="user" />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["volunteer"]} />}>
+            <Route path="/dashboard/volunteer" element={<RoleDashboard roleName="volunteer" />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["police"]} />}>
+            <Route path="/dashboard/police" element={<RoleDashboard roleName="police" />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/dashboard/admin" element={<RoleDashboard roleName="admin" />} />
+          </Route>
         </Route>
-        <Route element={<ProtectedRoute allowedRoles={["volunteer"]} />}>
-          <Route path="/dashboard/volunteer" element={<RoleDashboard roleName="volunteer" />} />
+        <Route path="/sos" element={<SOSPage />} />
+        <Route
+          element={<ProtectedRoute allowedRoles={["volunteer", "police", "admin"]} />}
+        >
+          <Route path="/track/:emergencyId" element={<LiveTracking />} />
         </Route>
-        <Route element={<ProtectedRoute allowedRoles={["police"]} />}>
-          <Route path="/dashboard/police" element={<RoleDashboard roleName="police" />} />
-        </Route>
-        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/dashboard/admin" element={<RoleDashboard roleName="admin" />} />
-        </Route>
-      </Route>
-      <Route path="/sos" element={<SOSPage />} />
-    </Routes>
+      </Routes>
     </>
   );
 }
