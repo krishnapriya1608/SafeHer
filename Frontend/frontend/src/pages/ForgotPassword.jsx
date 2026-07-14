@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout";
 import StatusMessage from "../components/StatusMessage";
 import { authApi } from "../api/authApi";
 
@@ -11,7 +12,6 @@ export default function ForgotPassword() {
 
   const submit = async (event) => {
     event.preventDefault();
-
     setLoading(true);
     setError("");
     setMessage("");
@@ -27,159 +27,62 @@ export default function ForgotPassword() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-white to-slate-100 px-4">
+    <AuthLayout 
+      eyebrow="Password help" 
+      title="Reset your password" 
+      subtitle="Enter your email and we will send a secure reset link."
+    >
+      <form onSubmit={submit} className="space-y-5">
+        
+        {/* Success and Error Feedback Messages */}
+        {message && <StatusMessage type="success">{message}</StatusMessage>}
+        {error && <StatusMessage type="error">{error}</StatusMessage>}
 
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl">
-
-        {/* Security Icon */}
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-teal-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 11c0-1.657 1.343-3 3-3s3 1.343 3 3v2H9v-2c0-1.657 1.343-3 3-3zm0 0V7a4 4 0 118 0v4"
-              />
-
-              <rect
-                x="6"
-                y="11"
-                width="12"
-                height="9"
-                rx="2"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-            </svg>
-          </div>
+        {/* Email Input Field */}
+        <div>
+          <label className="mb-1.5 block text-xs font-semibold text-slate-700">Email Address</label>
+          <input 
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition-all duration-200 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+            type="email" 
+            placeholder="you@example.com" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required
+            disabled={loading}
+          />
         </div>
 
-
-        {/* Heading */}
-        <h1 className="mt-6 text-center text-3xl font-black text-slate-900">
-          Forgot Password?
-        </h1>
-
-        <p className="mt-3 text-center text-sm leading-6 text-slate-500">
-          Enter your registered email address and we will send
-          you a secure password reset link.
-        </p>
-
-
-        <form
-          onSubmit={submit}
-          className="mt-8 space-y-5"
-        >
-
-          {message && (
-            <StatusMessage type="success">
-              {message}
-            </StatusMessage>
-          )}
-
-          {error && (
-            <StatusMessage type="error">
-              {error}
-            </StatusMessage>
-          )}
-
-
-          {/* Email */}
-          <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Email Address
-            </label>
-
-            <input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-              required
-              className="
-                w-full rounded-xl border border-slate-200
-                bg-white px-4 py-3 text-sm
-                text-slate-900
-                placeholder-slate-400
-                shadow-sm
-                transition
-                focus:border-teal-500
-                focus:outline-none
-                focus:ring-4
-                focus:ring-teal-500/10
-              "
-            />
-          </div>
-
-
-          {/* Button */}
-          <button
+        {/* Submit Button */}
+        <div className="pt-1">
+          <button 
+            className="w-full rounded-xl bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-teal-600/10 transition-all duration-200 hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-500/20 active:bg-teal-800 disabled:pointer-events-none disabled:opacity-50" 
             disabled={loading}
-            className="
-              flex w-full items-center justify-center
-              rounded-xl bg-teal-600
-              py-3 text-sm font-semibold
-              text-white
-              shadow-md shadow-teal-600/20
-              transition
-              hover:bg-teal-700
-              disabled:opacity-50
-            "
           >
-
             {loading ? (
-              <>
-                <svg
-                  className="mr-2 h-4 w-4 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
+              <span className="flex items-center justify-center gap-2">
+                {/* SVG Loading Spinner */}
+                <svg className="h-4 w-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                 </svg>
                 Sending...
-              </>
+              </span>
             ) : (
-              "Send Reset Link"
+              "Send reset link"
             )}
-
           </button>
+        </div>
 
-        </form>
-
-
-        {/* Login Link */}
-        <p className="mt-6 text-center text-sm text-slate-500">
-          Remember your password?{" "}
-          <Link
-            to="/login"
-            className="font-semibold text-teal-600 hover:text-teal-700 hover:underline"
+        {/* Back to Login Anchor */}
+        <div className="pt-1 text-center">
+          <Link 
+            to="/login" 
+            className="inline-block text-sm font-semibold text-teal-600 transition-colors duration-150 hover:text-teal-700 hover:underline"
           >
-            Login
+            Back to login
           </Link>
-        </p>
-
-      </div>
-
-    </main>
+        </div>
+      </form>
+    </AuthLayout>
   );
 }
