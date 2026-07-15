@@ -7,7 +7,7 @@ export default function AuthLayout({ eyebrow, title, subtitle, children, bggradi
   sky: "bg-gradient-to-br from-[#E0F2FE] via-[#F0FDF4] to-[#CCFBF1]",
   purple: "bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200",
   green: "bg-gradient-to-br from-green-100 via-emerald-100 to-teal-200",
-  black:"bg-gradient-to-b from-white via-white to-slate-100"
+  black:"bg-gradient-to-br from-black-400 via-gray-400 to-white"
 };
   return (
     <main className="min-h-screen bg-slate-50 font-sans antialiased">
