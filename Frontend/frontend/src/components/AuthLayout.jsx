@@ -10,8 +10,8 @@ export default function AuthLayout({ eyebrow, title, subtitle, children, bggradi
   black:"bg-gradient-to-br from-black-400 via-gray-400 to-white"
 };
   return (
-    <main className="min-h-screen bg-slate-50 font-sans antialiased">
-      <div className="grid min-h-screen w-full lg:grid-cols-[0.95fr_1.05fr]">
+    <main className="min-h-screen  bg-slate-50  antialiased">
+      <div className="grid font-sans min-h-screen w-full lg:grid-cols-[0.95fr_1.05fr]">
 
         {/* Left Section: Image (Hidden on mobile) */}
         <motion.section

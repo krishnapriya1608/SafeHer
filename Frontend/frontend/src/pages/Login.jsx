@@ -59,6 +59,7 @@ export default function Login() {
       subtitle="Use your verified email and password to continue."
       image={loginImage}
       bggradient="sky"
+      
     >
       <form onSubmit={handleSubmit} className="space-y-5">
 
