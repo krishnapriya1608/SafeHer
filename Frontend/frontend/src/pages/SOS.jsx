@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MapPin, PhoneCall, Radio, History, AlertTriangle } from "lucide-react"; // Highly recommended for clean icons
 import StatusMessage from "../components/StatusMessage";
 import { emergencyApi } from "../api/emergencyApi";
@@ -11,11 +11,16 @@ export default function SOSPage() {
   const username = localStorage.getItem("username") || "Unknown User";
   const email = localStorage.getItem("email") || "";
 
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [liveAlerts, setLiveAlerts] = useState([]);
+  const [activeEmergencyId, setActiveEmergencyId] = useState(null);
+
+  const watchIdRef = useRef(null);
 
   const fetchHistory = async () => {
     try {
@@ -47,6 +52,10 @@ export default function SOSPage() {
           alert._id === data.emergency._id ? data.emergency : alert
         )
       );
+
+      setActiveEmergencyId((current) =>
+        current === data.emergency._id ? null : current
+      );
     });
 
     return () => {
@@ -54,6 +63,39 @@ export default function SOSPage() {
       socket.off("emergency-resolved");
     };
   }, [userId]);
+
+  // Phase 5: Live Tracking — once an SOS is active, keep streaming this
+  // device's GPS position into the emergency's Socket.IO room so anyone
+  // watching the live map sees the marker move in real time.
+  useEffect(() => {
+    if (!activeEmergencyId) return;
+
+    socket.emit("join-emergency-room", activeEmergencyId);
+
+    if ("geolocation" in navigator) {
+      watchIdRef.current = navigator.geolocation.watchPosition(
+        (position) => {
+          socket.emit("send-location-update", {
+            emergencyId: activeEmergencyId,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (err) => {
+          console.log("Live tracking GPS error:", err.message);
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+      );
+    }
+
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+      socket.emit("leave-emergency-room", activeEmergencyId);
+    };
+  }, [activeEmergencyId]);
 
   const triggerSOS = () => {
     setError("");
@@ -87,6 +129,7 @@ export default function SOSPage() {
 
           setMessage(response.data.message || "SOS alert sent successfully");
           setHistory((prev) => [response.data.emergency, ...prev]);
+          setActiveEmergencyId(response.data.emergency._id);
         } catch (err) {
           setError(err.response?.data?.message || "Failed to send SOS alert");
         } finally {
@@ -112,6 +155,10 @@ export default function SOSPage() {
     );
   };
 
+  const openLiveTracking = (emergencyId) => {
+    navigate(`/live-tracking/${emergencyId}`);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black px-4 py-12 text-white selection:bg-red-500 selection:text-white">
       <div className="mx-auto max-w-5xl space-y-8">
@@ -124,7 +171,7 @@ export default function SOSPage() {
           <div className="relative flex flex-col items-center text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-400">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-              Phase 4 Active
+              Phase 5 · Live Tracking
             </span>
 
             <h1 className="mt-4 text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
@@ -215,11 +262,11 @@ export default function SOSPage() {
                     </div>
 
                     <button
-                      onClick={() => openMap(alert.latitude, alert.longitude)}
+                      onClick={() => openLiveTracking(alert._id)}
                       className="mt-3 flex items-center gap-1.5 rounded-xl bg-red-600/90 hover:bg-red-600 px-4 py-2 text-xs font-bold text-white transition-all shadow-md hover:shadow-red-900/30"
                     >
                       <MapPin size={13} />
-                      Track Location
+                      Track Live
                     </button>
                   </div>
                 ))
@@ -267,11 +314,15 @@ export default function SOSPage() {
                     </p>
 
                     <button
-                      onClick={() => openMap(alert.latitude, alert.longitude)}
+                      onClick={() =>
+                        alert.status?.toLowerCase() === "active"
+                          ? openLiveTracking(alert._id)
+                          : openMap(alert.latitude, alert.longitude)
+                      }
                       className="mt-3 flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/50 px-3.5 py-1.5 text-xs font-semibold text-slate-350 hover:text-white hover:bg-slate-800 transition-all"
                     >
                       <MapPin size={12} />
-                      Open Map
+                      {alert.status?.toLowerCase() === "active" ? "Track Live" : "Open Map"}
                     </button>
                   </div>
                 ))
