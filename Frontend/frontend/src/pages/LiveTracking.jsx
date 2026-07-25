@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Radio, MapPin, ArrowLeft } from "lucide-react";
 import { socket } from "../socket";
-import LiveTrackingMap from "../components/LiveTrackingMap";
+import LiveTrackingMap from "../pages/LiveTrackingMap";
 import { emergencyApi } from "../api/emergencyApi";
 
 export default function LiveTrackingPage() {

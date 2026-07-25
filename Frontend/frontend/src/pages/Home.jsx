@@ -13,491 +13,395 @@ import {
   FileWarning,
   Route,
   Bot,
-  Mail,
-  Camera,
   Building2,
+  Camera,
   Activity,
-  Clock,
   CheckCircle2,
+  Clock,
+  ChevronRight,
+  Shield,
+  Radio,
 } from "lucide-react";
 import Logo from "../components/Logo";
 import { useAuth } from "../context/AuthContext";
 import { dashboardPathForRole } from "../utils/roles";
+import dash2 from "../assets/dash2.png";
+import personal from '../assets/personal.png'
+import Community from '../assets/Community.png'
+import response from '../assets/Response.png'
+import dash3 from '../assets/dash3.png'
+import followme from '../assets/followme.png'
+import banner from '../assets/Bannerimg.png'
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0 },
-};
+const modules = [
+  { icon: PhoneCall, title: "Emergency Circles", text: "Instant communication channels with primary contacts." },
+  { icon: FileWarning, title: "Community Reports", text: "Log lighting gaps, stalking incidents, and unsafe areas." },
+  { icon: Route, title: "Safe Passages", text: "Intelligent navigation prioritizing well-lit, populated routes." },
+  { icon: Bot, title: "AI Assistant", text: "On-demand guidance for personal safety and emergency protocol." },
+  { icon: Building2, title: "Help Hub Locator", text: "Instant mapping to local police, clinics, and safe havens." },
+  { icon: Camera, title: "Evidence Locker", text: "Securely document incident photography with automatic timestamps." },
+];
+
+const roles = [
+  { title: "User", text: "Trigger emergency broadcasts, track routes, manage personal circles.", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" },
+  { title: "Volunteer", text: "Receive localized alerts to provide immediate physical support.", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400" },
+  { title: "Police", text: "Coordinate active emergency dispatches and track incident progress.", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=400" },
+  { title: "Admin", text: "Maintain platform safety, user verification, and analytical reports.", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=400" },
+];
+
+const workflow = [
+  { icon: Siren, title: "01. SOS Triggered", text: "Single press activates encrypted location broadcast." },
+  { icon: Activity, title: "02. Network Broadcast", text: "Local responders and contacts receive immediate alerts." },
+  { icon: MapPinned, title: "03. Real-Time Tracking", text: "Live position updates streamed to authorized monitors." },
+  { icon: CheckCircle2, title: "04. Resolution Logged", text: "Incident secured, audited, and logged into safety metrics." },
+];
 
 const realWorldSafetyFeatures = [
   {
     title: "SOS Button",
-    text: "A large emergency button that instantly sends the user's live location to trusted contacts, volunteers, and police.",
+    text: "A large emergency trigger that instantly broadcasts live location data to trusted contacts and response units.",
+    image: personal
   },
   {
     title: "Live Location Sharing",
-    text: "Share real-time movement with trusted contacts during travel or emergency situations.",
+    text: "Share real-time movement continuously during night travel or high-risk transit situations.",
+    image: dash2,
   },
   {
-    title: "Fake Call",
-    text: "Trigger a realistic fake incoming call to help the user escape uncomfortable situations.",
+    title: "Fake Call Escapes",
+    text: "Trigger a realistic incoming call interface to give you a discreet exit from uncomfortable settings.",
+    image: response,
   },
   {
-    title: "Follow Me Mode",
-    text: "Trusted contacts can follow the user's journey live until they safely reach the destination.",
+    title: "Follow Me Companion",
+    text: "Designated guardians can track your route progress live until your safe arrival is confirmed.",
+    image: followme
   },
   {
     title: "Voice Activation",
-    text: "Activate SOS using a secret voice phrase when the user cannot touch the phone.",
+    text: "Broadcast an alert hands-free using custom secret voice phrases during urgent moments.",
+    image: dash3,
   },
   {
-    title: "Timer Alert",
-    text: "User sets a safety timer. If they do not cancel it before time ends, an SOS alert is sent automatically.",
+    title: "Safety Timers",
+    text: "Set a timed countdown. Automatic emergency signals deploy if the timer expires unverified.",
+    image: Community
   },
-  {
-    title: "Trusted Guardians",
-    text: "Add parents, friends, relatives, or guardians who receive emergency alerts and location updates.",
-  },
-  {
-    title: "Video Evidence",
-    text: "Automatically record audio/video during SOS and store it as evidence.",
-  },
-  {
-    title: "Emergency SMS",
-    text: "Send emergency SMS with location link to trusted contacts.",
-  },
-  {
-    title: "Emergency Email",
-    text: "Send emergency email with user details, location, and incident information.",
-  },
-  {
-    title: "Nearby Help",
-    text: "Show nearby police stations, hospitals, women support centers, and helpline numbers.",
-  },
-  {
-    title: "Safe Route",
-    text: "Suggest safer routes by avoiding unsafe or frequently reported areas.",
-  },
-  {
-    title: "Community Reports",
-    text: "Users can report harassment, stalking, poor lighting, unsafe roads, or suspicious areas.",
-  },
-  {
-    title: "Danger Zone Alerts",
-    text: "Warn users when they enter areas marked unsafe by reports or admin data.",
-  },
-  {
-    title: "Volunteer Network",
-    text: "Nearby verified volunteers receive SOS alerts and can accept response requests.",
-  },
-  {
-    title: "Police Dashboard",
-    text: "Police can view live SOS cases, location, user details, and response status.",
-  },
-  {
-    title: "Admin Verification",
-    text: "Admins can verify reports, approve volunteers, block fake users, and manage incidents.",
-  },
-  {
-    title: "AI Safety Assistant",
-    text: "User can ask questions like 'Someone is following me' and receive immediate safety steps.",
-  },
-];
-
-const features = [
-  {
-    icon: Siren,
-    title: "One Tap SOS",
-    text: "Users can send an emergency alert with live location to volunteers, police teams, and trusted contacts.",
-  },
-  {
-    icon: MapPinned,
-    title: "Live Location Tracking",
-    text: "Emergency responders can view current position, nearby help centers, and route information.",
-  },
-  {
-    icon: Users,
-    title: "Trusted Contacts",
-    text: "Users can manage parents, friends, or relatives who receive emergency updates.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Verified Role Access",
-    text: "Separate access for users, volunteers, police, and admins using JWT authentication.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Volunteer Response",
-    text: "Nearby volunteers can receive SOS alerts and help before official response arrives.",
-  },
-  {
-    icon: BarChart3,
-    title: "Incident Analytics",
-    text: "Admins can monitor unsafe areas, SOS trends, monthly reports, and response activity.",
-  },
-];
-const modules = [
-  {
-    icon: PhoneCall,
-    title: "Trusted Contacts",
-    text: "Add parents, friends, relatives, or guardians who receive emergency SMS and email alerts.",
-  },
-  {
-    icon: FileWarning,
-    title: "Community Reporting",
-    text: "Report harassment, stalking, poor lighting, unsafe areas, and suspicious activity.",
-  },
-  {
-    icon: Route,
-    title: "Safe Route Finder",
-    text: "Find safer routes by avoiding unsafe zones and showing estimated travel time.",
-  },
-  {
-    icon: Bot,
-    title: "AI Safety Assistant",
-    text: "Ask safety questions and get immediate steps, emergency guidance, and legal information.",
-  },
-  {
-    icon: Building2,
-    title: "Nearby Help Centers",
-    text: "Find nearby police stations, hospitals, women support centers, and helplines.",
-  },
-  {
-    icon: Camera,
-    title: "Photo Evidence Upload",
-    text: "Attach photos while reporting unsafe incidents for admin verification.",
-  },
-];
-
-const stats = [
-  {
-    value: "24/7",
-    label: "Emergency access",
-  },
-  {
-    value: "4",
-    label: "Role dashboards",
-  },
-  {
-    value: "Live",
-    label: "SOS tracking",
-  },
-  {
-    value: "OTP",
-    label: "Verified login",
-  },
-];
-
-const workflow = [
-  {
-    icon: Siren,
-    title: "SOS Created",
-    text: "User presses the emergency button and location is captured.",
-  },
-  {
-    icon: Activity,
-    title: "Alert Broadcast",
-    text: "Volunteers and police receive real-time emergency notification.",
-  },
-  {
-    icon: MapPinned,
-    title: "Live Tracking",
-    text: "Responders view location updates and route details.",
-  },
-  {
-    icon: CheckCircle2,
-    title: "Case Resolved",
-    text: "Incident status is updated and stored for analytics.",
-  },
-];
-
-const securityFeatures = [
-  "JWT token authentication",
-  "Password hashing with bcrypt",
-  "OTP email verification",
-  "Protected React routes",
-  "Role-based dashboard access",
-  "Admin control for fake users",
-];
-
-const roles = [
-  {
-    title: "User",
-    text: "Send SOS, manage profile, add trusted contacts, report unsafe areas.",
-  },
-  {
-    title: "Volunteer",
-    text: "Receive nearby emergency alerts and help users in distress.",
-  },
-  {
-    title: "Police",
-    text: "Track active SOS cases and coordinate emergency response.",
-  },
-  {
-    title: "Admin",
-    text: "Manage users, volunteers, reports, SOS cases, and platform safety.",
-  },
-];
-
-const steps = [
-  "User presses SOS",
-  "Location is saved",
-  "Volunteers are notified",
-  "Police dashboard updates",
-  "Trusted contacts receive alert",
 ];
 
 export default function Home() {
   const { isAuthenticated, role } = useAuth();
 
   return (
-    <main className="min-h-screen bg-[#f7faf9] text-slate-950">
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950 text-white">
-        <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
-          <Logo />
+    <main className="min-h-screen bg-[#f8f5f0] text-[#2c2e2b] font-serif selection:bg-[#4d5940] selection:text-[#f8f5f0]">
+      {/* SECTION 1: EDITORIAL HEADER & HERO BANNER */}
+      <section className="relative w-full overflow-hidden  text-[#f8f5f0]">
+        
+  
+        <div className="relative min-h-[75vh] md:min-h-[105vh] w-full flex items-center justify-center">
+       
+          <img
+            src={banner}
+            alt="Editorial Header"
+            className="absolute inset-0 w-full h-full object-cover object-center filter brightness-75 contrast-105"
+          />
+          <div className="absolute inset-0 bg-black/35" />
 
-          <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <Link className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-950" to={dashboardPathForRole(role)}>
-                Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link className="rounded-xl border border-white/20 px-5 py-3 text-sm font-bold text-white hover:bg-white/10" to="/login">
-                  Login
-                </Link>
-                <Link className="rounded-xl bg-teal-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-teal-300" to="/register">
-                  Register
-                </Link>
-              </>
-            )}
-          </div>
-        </nav>
-
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-4 pb-20 pt-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pb-28 lg:pt-20">
-          <motion.div initial="hidden" animate="show" variants={fadeUp} transition={{ duration: 0.55 }}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-teal-300/30 bg-white/10 px-4 py-2 text-sm font-semibold text-teal-100">
-              <LockKeyhole size={16} />
-              JWT Secure Authentication
-            </div>
-
-            <h1 className="mt-7 max-w-3xl text-4xl font-black leading-tight sm:text-6xl">
-              Real-time women safety and emergency response platform.
+          <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
+            <h1 className="text-6xl sm:text-8xl md:text-[110px] lg:text-[130px] font-serif font-extralight tracking-widest leading-none uppercase text-[#f8f5f0]/95 select-none">
+              SAFECIRCLE
             </h1>
 
-            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-              A role-based web application where users can send emergency alerts,
-              volunteers can respond quickly, police can track active incidents,
-              and admins can manage safety reports.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-400 px-6 py-4 text-sm font-black text-slate-950 hover:bg-teal-300" to="/register">
-                Get Started <ArrowRight size={18} />
-              </Link>
-              <Link className="inline-flex items-center justify-center rounded-xl border border-white/20 px-6 py-4 text-sm font-black text-white hover:bg-white/10" to="/login">
-                Login Account
-              </Link>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.55, delay: 0.15 }}
-            className="rounded-[2rem] border border-white/10 bg-white/10 p-5 backdrop-blur-xl"
-          >
-            <div className="rounded-3xl bg-white p-5 text-slate-950">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-bold text-slate-500">Emergency Status</p>
-                  <h2 className="mt-1 text-2xl font-black">Safety Network Active</h2>
-                </div>
-                <div className="grid h-14 w-14 place-items-center rounded-2xl bg-rose-100 text-rose-600">
-                  <Siren size={28} />
-                </div>
-              </div>
-
-              <div className="mt-6 space-y-3">
-                {steps.map((step, index) => (
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.25 + index * 0.08 }}
-                    className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
-                  >
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-slate-950 text-sm font-black text-white">
-                      {index + 1}
-                    </span>
-                    <p className="text-sm font-bold text-slate-800">{step}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-teal-700">Core Features</p>
-          <h2 className="mt-3 text-3xl font-black text-slate-950 sm:text-4xl">
-            Built for real-world emergency workflows
-          </h2>
-          <p className="mt-4 text-base leading-7 text-slate-600">
-            This platform connects users, responders, and administrators through
-            secure authentication, location sharing, live alerts, and safety reporting.
-          </p>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-
-            return (
-              <motion.article
-                key={feature.title}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ y: -6 }}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-              >
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-teal-50 text-teal-700">
-                  <Icon size={24} />
-                </div>
-                <h3 className="mt-5 text-xl font-black text-slate-950">{feature.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{feature.text}</p>
-              </motion.article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="bg-white py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.2em] text-teal-700">User Roles</p>
-              <h2 className="mt-3 text-3xl font-black text-slate-950 sm:text-4xl">
-                One platform, four dashboards
+            <div className="mt-4 md:mt-6 space-y-2 max-w-lg">
+              <h2 className="text-xl md:text-2xl font-serif italic tracking-wide text-amber-50/90 font-light">
+                Meet SafeCircle Network
               </h2>
-              <p className="mt-4 text-base leading-7 text-slate-600">
-                Every account opens only the dashboard allowed by its role.
-                This keeps the system organized and secure.
+              <p className="text-[11px] md:text-xs font-sans tracking-[0.2em] uppercase font-light text-stone-200/80 leading-relaxed">
+                An Interconnected Emergency Response Framework Pairing Location Intelligence With Direct Action
+              </p>
+              <div className="flex gap-4 items-center justify-center ">
+className="w-[120px] h-[30px] rounded-full bg-black text-white hover:bg-stone-100 hover:text-amber-950 transition duration-300 hover:scale-105"                <button>Login</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 2: EDITORIAL ABOUT / COLLAGE SECTION */}
+      <section className="bg-[#f8f5f0] py-28 px-6 md:px-16">
+        <div className="mx-auto max-w-5xl space-y-24">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+            <div className="md:col-span-7 space-y-6 pt-4">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-light tracking-wide text-[#2c2e2b]">
+                Empowering Protection
+              </h2>
+              <p className="font-sans text-xs md:text-sm font-light leading-relaxed text-[#565952] max-w-md">
+                Every individual deserves uncompromised movement and security. Built on fast JWT authentication and instant GPS triggers, our platform transforms how emergency calls reach families, trusted circles, and local authorities.
+              </p>
+              <p className="font-sans text-xs md:text-sm font-light leading-relaxed text-[#565952] max-w-md">
+                We bridge the gap between initial distress signals and real-time response, bringing peace of mind back to daily commutes and high-risk environments.
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {roles.map((item) => (
-                <motion.div
-                  key={item.title}
-                  whileHover={{ y: -5 }}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-6"
-                >
-                  <h3 className="text-xl font-black text-slate-950">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
-                </motion.div>
+            <div className="md:col-span-5 flex justify-end">
+              <div className="w-full max-w-xs h-[340px] overflow-hidden shadow-sm border border-stone-300/40">
+                <img
+                  src={personal}
+                  alt="Personal Security"
+                  className="w-full h-full object-cover filter brightness-95"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end pt-8">
+            <div className="md:col-span-7 flex items-end gap-4">
+              <div className="w-1/2 h-[280px] overflow-hidden shadow-sm border border-stone-300/40">
+                <img
+                  src={Community}
+                  alt="Community Network"
+                  className="w-full h-full object-cover filter brightness-95"
+                />
+              </div>
+              <div className="w-2/5 h-[210px] overflow-hidden shadow-sm border border-stone-300/40 mb-2">
+                <img
+                  src={response}
+                  alt="Response Coordination"
+                  className="w-full h-full object-cover filter brightness-95"
+                />
+              </div>
+            </div>
+
+            <div className="md:col-span-5 space-y-4 md:pb-6">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-light tracking-wide text-[#2c2e2b]">
+                Real-Time <br />
+                <span className="italic">Connectivity</span>
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-4 border-t border-stone-300/60 font-sans text-xs md:text-sm font-light text-[#565952] leading-relaxed">
+            <div>
+              <p className="uppercase tracking-[0.2em] text-[10px] text-[#8c5042] font-medium mb-3">
+                01. Incident Intelligence
+              </p>
+              <p>
+                Integrated with real-time mapping technology, SafeCircle enables instant live tracking that feeds into verified alert hubs for immediate situational awareness.
+              </p>
+            </div>
+            <div>
+              <p className="uppercase tracking-[0.2em] text-[10px] text-[#8c5042] font-medium mb-3">
+                02. Decentralized Network
+              </p>
+              <p>
+                From designated guardians to nearby community volunteers, safety becomes a collaborative ecosystem built for modern mobile living.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3: SAGE GREEN SECTION */}
+      <section className="bg-[#4e5844] text-[#f8f5f0] py-28 px-6 md:px-12 relative overflow-hidden">
+        {/* Subtle decorative background accent line */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[1px] bg-gradient-to-r from-transparent via-[#f8f5f0]/20 to-transparent" />
+
+        <div className="mx-auto max-w-6xl space-y-20">
+          {/* Header & Subtitle */}
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2">
+              <span className="h-[1px] w-6 bg-[#d6705b]" />
+              <p className="text-[10px] font-sans tracking-[0.35em] uppercase text-stone-300/80 font-medium">
+                Philosophy & Vision
+              </p>
+              <span className="h-[1px] w-6 bg-[#d6705b]" />
+            </div>
+
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-light tracking-wide leading-tight">
+              Hello, We Are <span className="italic font-normal text-amber-100">SafeCircle</span>
+            </h2>
+
+            <p className="font-sans text-xs md:text-sm font-light tracking-wider text-stone-200/90 max-w-lg mx-auto leading-relaxed">
+              Designing emergency response networks with discretion, emotional calm, and uncompromising technical rigor.
+            </p>
+          </div>
+
+          {/* Main Content Layout: Collage Imagery + Story Column */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+            {/* Visual Collage Column */}
+            <div className="lg:col-span-6 relative">
+              <div className="relative z-10 w-full max-w-md mx-auto lg:max-w-none h-[420px] overflow-hidden border border-[#f8f5f0]/20 shadow-2xl">
+                <img
+                  src={dash2}
+                  alt="Safe passage overview"
+                  className="w-full h-full object-cover filter brightness-95 contrast-105 transition-transform duration-700 hover:scale-105"
+                />
+              </div>
+
+              {/* Floating Secondary Image Badge */}
+              <div className="hidden md:block absolute -bottom-8 -right-4 z-20 w-48 h-56 border-2 border-[#4e5844] overflow-hidden shadow-xl bg-[#3b4334]">
+                <img
+                  src={dash3}
+                  alt="Community vigil"
+                  className="w-full h-full object-cover filter grayscale contrast-125"
+                />
+              </div>
+            </div>
+
+            {/* Editorial Content Column */}
+            <div className="lg:col-span-6 space-y-8 pl-0 lg:pl-6">
+              <div className="space-y-4">
+                <h3 className="text-xl md:text-2xl font-serif tracking-wide text-amber-50">
+                  Redefining Safety Through Intentional Architecture
+                </h3>
+                <p className="font-sans text-xs md:text-sm font-light text-stone-200/80 leading-relaxed">
+                  Safety isn't just about calling for help—it's about creating an active perimeter of trust before panic sets in. SafeCircle bridges personal autonomy and community protection through real-time telemetry and structured local response.
+                </p>
+              </div>
+
+              {/* Highlight Quote Block */}
+              <blockquote className="border-l-2 border-[#d6705b] pl-4 py-1 italic font-serif text-sm md:text-base text-amber-100/90 leading-relaxed">
+                "When an emergency strikes, technical precision must meet human empathy in fractions of a second."
+              </blockquote>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 font-sans text-xs font-light text-stone-200/80 leading-relaxed">
+                <div className="space-y-2 border-t border-[#f8f5f0]/15 pt-4">
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-medium text-[#d6705b]">
+                    Discrete Intervention
+                  </span>
+                  <p>
+                    Our infrastructure combines low-latency emergency triggers with automated evidence logging, empowering users with tools built specifically for volatile situations.
+                  </p>
+                </div>
+
+                <div className="space-y-2 border-t border-[#f8f5f0]/15 pt-4">
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-medium text-[#d6705b]">
+                    Unified Dispatch
+                  </span>
+                  <p>
+                    By combining role-based access with continuous location streaming, we establish an integrated safety standard trusted across communities and dispatch centers.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Impact Statistics Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 border-t border-[#f8f5f0]/15 text-center font-sans">
+            <div className="space-y-1">
+              <p className="text-3xl md:text-4xl font-serif text-amber-100 font-light">&lt; 1.2s</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-stone-300/70">Broadcast Latency</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl md:text-4xl font-serif text-amber-100 font-light">100%</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-stone-300/70">Encrypted Signals</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl md:text-4xl font-serif text-amber-100 font-light">24/7</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-stone-300/70">Circle Monitoring</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl md:text-4xl font-serif text-amber-100 font-light">4 Roles</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-stone-300/70">Coordinated Response</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4: REAL WORLD SAFETY FEATURES */}
+      <section className="bg-[#e8e1d7] py-24 px-6 md:px-12 border-t border-[#2b2d26]/10">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <p className="text-xs font-sans tracking-[0.25em] uppercase text-[#a35c4e] mb-2">
+                Ecosystem
+              </p>
+              <h2 className="text-3xl md:text-4xl font-serif uppercase tracking-wider">
+                Purpose-Built Tools
+              </h2>
+            </div>
+            <p className="font-sans text-xs max-w-xs text-[#525648] leading-relaxed">
+              Designed around real-world emergencies, ensuring seamless operation when every second counts.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {realWorldSafetyFeatures.map((item) => (
+              <div
+                key={item.title}
+                className="bg-[#dfd7cc] p-6 border border-[#2b2d26]/10 flex flex-col justify-between transition hover:border-[#2b2d26]/40"
+              >
+                <div>
+                  <div className="h-44 overflow-hidden mb-6 filter contrast-95">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-lg font-serif uppercase tracking-wide mb-3">{item.title}</h3>
+                  <p className="font-sans text-xs font-light text-[#4a4d42] leading-relaxed mb-6">
+                    {item.text}
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-[#2b2d26]/10 flex justify-between items-center text-[10px] font-sans tracking-widest uppercase text-[#a35c4e]">
+                  <span>Active Module</span>
+                  <ChevronRight size={14} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 5: OPERATIONAL FLOW & MODULES */}
+      <section className="bg-[#2b2d26] text-[#e8e1d7] py-24 px-6 md:px-12">
+        <div className="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div className="lg:col-span-5 space-y-8">
+            <div>
+              <p className="text-xs font-sans tracking-[0.3em] uppercase text-amber-200/60 mb-2">
+                Operational Flow
+              </p>
+              <h2 className="text-3xl font-serif uppercase tracking-wide">
+                How Emergency <br /> Response Activates
+              </h2>
+            </div>
+
+            <div className="space-y-6 pt-4">
+              {workflow.map((step) => (
+                <div key={step.title} className="border-b border-[#e8e1d7]/15 pb-4">
+                  <h3 className="text-sm font-sans tracking-widest uppercase text-amber-100/90 mb-1">
+                    {step.title}
+                  </h3>
+                  <p className="font-sans text-xs font-light text-[#b3b8aa] leading-relaxed">
+                    {step.text}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((item) => (
-            <motion.div
-              key={item.label}
-              whileHover={{ y: -5 }}
-              className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm"
-            >
-              <h3 className="text-3xl font-black text-slate-950">{item.value}</h3>
-              <p className="mt-2 text-sm font-semibold text-slate-500">{item.label}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
 
-      <section className="bg-slate-950 py-16 text-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-teal-300">
-              Platform Modules
+          <div className="lg:col-span-7">
+            <p className="text-xs font-sans tracking-[0.3em] uppercase text-amber-200/60 mb-6">
+              Extended Protection
             </p>
-            <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-              More than login and registration
-            </h2>
-            <p className="mt-4 text-base leading-7 text-slate-300">
-              The system is designed as a complete safety platform with SOS, maps,
-              reports, analytics, contacts, and AI support.
-            </p>
-          </div>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {modules.map((item, index) => {
-              const Icon = item.icon;
-
-              return (
-                <motion.article
-                  key={item.title}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ y: -6 }}
-                  className="rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur"
-                >
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-teal-400 text-slate-950">
-                    <Icon size={24} />
-                  </div>
-                  <h3 className="mt-5 text-xl font-black">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-300">{item.text}</p>
-                </motion.article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.2em] text-teal-700">
-                Emergency Workflow
-              </p>
-              <h2 className="mt-3 text-3xl font-black text-slate-950 sm:text-4xl">
-                From SOS to response tracking
-              </h2>
-              <p className="mt-4 text-base leading-7 text-slate-600">
-                Every emergency follows a clear flow so users, volunteers, police,
-                and admins know what is happening in real time.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {workflow.map((item, index) => {
-                const Icon = item.icon;
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {modules.map((m) => {
+                const Icon = m.icon;
                 return (
-                  <motion.div
-                    key={item.title}
-                    initial={{ opacity: 0, x: 24 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.08 }}
-                    className="flex gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                  <div
+                    key={m.title}
+                    className="p-5 border border-[#e8e1d7]/15 bg-[#34372e] flex flex-col justify-between"
                   >
-                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-slate-950 text-white">
-                      <Icon size={22} />
-                    </div>
                     <div>
-                      <h3 className="text-lg font-black text-slate-950">{item.title}</h3>
-                      <p className="mt-1 text-sm leading-6 text-slate-600">{item.text}</p>
+                      <Icon className="text-amber-200/80 mb-4" size={20} />
+                      <h4 className="text-sm font-serif uppercase tracking-wider mb-2">{m.title}</h4>
+                      <p className="font-sans text-xs font-light text-[#a4a99b] leading-relaxed">
+                        {m.text}
+                      </p>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -505,177 +409,176 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] bg-teal-50 p-6 sm:p-8 lg:p-10">
-          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.2em] text-teal-700">
-                Security
-              </p>
-              <h2 className="mt-3 text-3xl font-black text-slate-950 sm:text-4xl">
-                Secure by design
-              </h2>
-              <p className="mt-4 text-base leading-7 text-slate-600">
-                The authentication system protects user accounts and separates access
-                based on responsibility.
+      {/* NEW SECTION: CALL-TO-ACTION & DIRECT ENGAGEMENT BANNER */}
+      <section className=" text-black py-28 px-6 md:px-12 border-t border-[#f8f5f0]/10">
+        <div className="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+          {/* Main Headline & Statement Column */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="h-[1px] w-8 bg-[#d6705b]" />
+              <p className="text-[11px] font-sans tracking-[0.25em] uppercase text-[#d6705b] font-medium">
+                Immediate Onboarding
               </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              {securityFeatures.map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-2xl bg-white p-4">
-                  <ShieldCheck className="text-teal-700" size={22} />
-                  <span className="text-sm font-bold text-slate-800">{item}</span>
-                </div>
-              ))}
+            <h2 className="text-3xl md:text-5xl font-serif font-light leading-tight tracking-wide">
+              Ready to Strengthen <br />
+              <span className="italic font-normal text-amber-800">Your Safety Network?</span>
+            </h2>
+
+            <p className="font-sans text-xs md:text-sm font-light leading-relaxed text-stone-500 max-w-xl">
+              Whether you are looking to secure your personal transit, join as a verified neighborhood responder, or coordinate community emergency protocols, registration takes less than two minutes.
+            </p>
+
+            <div className="pt-4 flex flex-wrap items-center gap-5 font-sans">
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-3 rounded-full bg-[#d6705b] px-8 py-3.5 text-xs font-medium uppercase tracking-[0.2em] text-white transition hover:bg-[#c25e4a] shadow-md"
+              >
+                <span>Create An Account</span>
+                <ArrowRight size={14} />
+              </Link>
+
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 rounded-full border border-[#f8f5f0]/30 px-7 py-3.5 text-xs font-medium uppercase tracking-[0.2em] text-[#f8f5f0] transition hover:bg-[#f8f5f0] hover:text-[#2c2e2b]"
+              >
+                <span>Sign In</span>
+              </Link>
             </div>
           </div>
+
+          {/* Side Editorial Highlight Box */}
+          <div className="lg:col-span-5">
+            <div className="bg-[#2d3328] p-8 md:p-10 border border-[#f8f5f0]/10 space-y-6">
+              <div className="flex items-center justify-between border-b border-stone-600/50 pb-4">
+                <span className="text-[10px] font-sans tracking-[0.2em] uppercase text-stone-400">
+                  Infrastructure Status
+                </span>
+                <span className="flex items-center gap-2 text-[10px] font-sans tracking-wider text-emerald-400 uppercase">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Monitoring Active
+                </span>
+              </div>
+
+              <div className="space-y-4 font-sans text-xs font-light text-stone-300">
+                <div className="flex items-start gap-3">
+                  <Shield size={18} className="text-amber-100 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-serif uppercase text-sm tracking-wide text-amber-50 mb-1">
+                      Encrypted Channels
+                    </h4>
+                    <p className="text-[#a8ad9e]">
+                      All emergency broadcasts pass through end-to-end token verification.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 pt-2">
+                  <Radio size={18} className="text-amber-100 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-serif uppercase text-sm tracking-wide text-amber-50 mb-1">
+                      Zero-Lag Dispatch
+                    </h4>
+                    <p className="text-[#a8ad9e]">
+                      Sub-second geolocation updates pushed directly to registered guardians.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-stone-600/50 flex justify-between items-center text-[10px] font-sans tracking-widest uppercase text-stone-400">
+                <span>SafeCircle v2.4</span>
+                <span className="text-amber-100/80">24/7 Response Active</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-16 text-white sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mx-auto max-w-4xl text-center"
-        >
-          <Clock className="mx-auto text-teal-300" size={42} />
-          <h2 className="mt-5 text-3xl font-black sm:text-4xl">
-            Start building the emergency response system
-          </h2>
-          <p className="mt-4 text-base leading-7 text-slate-300">
-            Create your account, verify your email, and open the dashboard for your role.
-          </p>
 
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              to="/register"
-              className="rounded-xl bg-teal-400 px-6 py-4 text-sm font-black text-slate-950 hover:bg-teal-300"
-            >
-              Register Now
-            </Link>
-            <Link
-              to="/login"
-              className="rounded-xl border border-white/20 px-6 py-4 text-sm font-black text-white hover:bg-white/10"
-            >
-              Login
-            </Link>
-          </div>
-        </motion.div>
-      </section>
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-teal-700">
-              bSafe Style Features
-            </p>
-            <h2 className="mt-3 text-3xl font-black text-slate-950 sm:text-4xl">
-              Real-world safety tools for emergency situations
+      {/* SECTION 6: ROLES */}
+      <section className="bg-[#5b6851] text-[#e8e1d7] py-24 px-6 md:px-12">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <h2 className="text-xs font-sans tracking-[0.3em] uppercase text-amber-200/70">
+              Personalized Ecosystem
             </h2>
-            <p className="mt-4 text-base leading-7 text-slate-600">
-              These features make the app useful in real situations, not only for login
-              and dashboard access.
+            <p className="text-2xl md:text-4xl font-serif italic tracking-wide uppercase">
+              Roles Tailored for Instant Action
             </p>
+            <div className="w-8 h-[1px] bg-amber-200/30 mx-auto" />
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {realWorldSafetyFeatures.map((feature, index) => (
-              <motion.article
-                key={feature.title}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.03 }}
-                whileHover={{ y: -6 }}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm"
-              >
-                <h3 className="text-xl font-black text-slate-950">
-                  {feature.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">
-                  {feature.text}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {roles.map((roleItem, idx) => (
+              <div key={roleItem.title} className="group flex flex-col">
+                <div className="h-64 overflow-hidden mb-6 border border-[#e8e1d7]/20">
+                  <img
+                    src={roleItem.img}
+                    alt={roleItem.title}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                </div>
+                <p className="text-[10px] font-sans tracking-widest uppercase opacity-60">0{idx + 1}</p>
+                <h3 className="text-xl font-serif uppercase tracking-wider mb-2">{roleItem.title}</h3>
+                <p className="font-sans text-xs font-light text-[#d0d6c9] leading-relaxed">
+                  {roleItem.text}
                 </p>
-              </motion.article>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <footer className="bg-slate-950 px-4 py-12 text-white sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
-          <div>
-            <h2 className="text-2xl font-black">SafeCircle</h2>
-            <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">
-              A women safety platform for SOS alerts, live location sharing,
-              trusted contacts, volunteer response, police coordination, and
-              community safety reporting.
+
+      {/* FOOTER */}
+      <footer className="bg-[#1e201b] text-[#e8e1d7] py-16 px-6 md:px-12 border-t border-white/5 font-sans">
+        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-4 gap-10 text-xs">
+          <div className="space-y-4">
+            <h3 className="font-serif text-lg uppercase tracking-widest">SafeCircle</h3>
+            <p className="font-light text-[#929688] leading-relaxed">
+              An editorial approach to safety infrastructure. Connecting users, guardians, and local authorities seamlessly.
             </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-teal-200">
-                JWT Secure
-              </span>
-              <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-teal-200">
-                OTP Verified
-              </span>
-              <span className="rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-teal-200">
-                Role Based
-              </span>
-            </div>
           </div>
 
           <div>
-            <h3 className="text-sm font-black uppercase tracking-[0.18em] text-teal-300">
-              Platform
-            </h3>
-            <ul className="mt-4 space-y-3 text-sm text-slate-300">
-              <li>SOS Alerts</li>
-              <li>Live Tracking</li>
-              <li>Safe Route</li>
-              <li>Nearby Help</li>
+            <h4 className="uppercase tracking-widest text-amber-200/70 mb-4">Navigation</h4>
+            <ul className="space-y-2 font-light text-[#b3b8aa]">
+              <li><Link to="/login" className="hover:text-white">Login</Link></li>
+              <li><Link to="/register" className="hover:text-white">Register</Link></li>
+              <li><Link to="/forgot-password" className="hover:text-white">Recovery</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-black uppercase tracking-[0.18em] text-teal-300">
-              Roles
-            </h3>
-            <ul className="mt-4 space-y-3 text-sm text-slate-300">
-              <li>User</li>
-              <li>Volunteer</li>
-              <li>Police</li>
-              <li>Admin</li>
+            <h4 className="uppercase tracking-widest text-amber-200/70 mb-4">Architecture</h4>
+            <ul className="space-y-2 font-light text-[#b3b8aa]">
+              <li>JWT Protection</li>
+              <li>Geolocation Stream</li>
+              <li>Role Access Control</li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-black uppercase tracking-[0.18em] text-teal-300">
-              Account
-            </h3>
-            <ul className="mt-4 space-y-3 text-sm text-slate-300">
-              <li>
-                <Link to="/register" className="hover:text-white">
-                  Register
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="hover:text-white">
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link to="/forgot-password" className="hover:text-white">
-                  Forgot Password
-                </Link>
-              </li>
-            </ul>
+            <h4 className="uppercase tracking-widest text-amber-200/70 mb-4">Direct Contact</h4>
+            <p className="font-light text-[#b3b8aa] leading-relaxed mb-4">
+              24/7 Monitoring & System Support.
+            </p>
+            <Link
+              to="/register"
+              className="inline-block rounded-full bg-[#d6705b] px-6 py-2.5 text-[10px] uppercase tracking-widest text-white hover:bg-[#c25e4a]"
+            >
+              Get Started
+            </Link>
           </div>
         </div>
 
-        <div className="mx-auto mt-10 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 SafeCircle. All rights reserved.</p>
-          <p>Emergency-ready safety network platform.</p>
+        <div className="mx-auto max-w-6xl mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between text-[10px] tracking-widest uppercase text-[#737769]">
+          <p>© 2026 SafeCircle Network. All rights reserved.</p>
+          <p>Earth Tone Editorial Layout System</p>
         </div>
       </footer>
     </main>
