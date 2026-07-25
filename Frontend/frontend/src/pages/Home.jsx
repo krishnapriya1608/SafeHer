@@ -32,7 +32,7 @@ import response from '../assets/Response.png'
 import dash3 from '../assets/dash3.png'
 import followme from '../assets/followme.png'
 import banner from '../assets/Bannerimg.png'
-
+import { useNavigate } from "react-router-dom";
 const modules = [
   { icon: PhoneCall, title: "Emergency Circles", text: "Instant communication channels with primary contacts." },
   { icon: FileWarning, title: "Community Reports", text: "Log lighting gaps, stalking incidents, and unsafe areas." },
@@ -55,6 +55,7 @@ const workflow = [
   { icon: MapPinned, title: "03. Real-Time Tracking", text: "Live position updates streamed to authorized monitors." },
   { icon: CheckCircle2, title: "04. Resolution Logged", text: "Incident secured, audited, and logged into safety metrics." },
 ];
+
 
 const realWorldSafetyFeatures = [
   {
@@ -90,42 +91,94 @@ const realWorldSafetyFeatures = [
 ];
 
 export default function Home() {
+  const navigate=useNavigate()
+
   const { isAuthenticated, role } = useAuth();
 
   return (
     <main className="min-h-screen bg-[#f8f5f0] text-[#2c2e2b] font-serif selection:bg-[#4d5940] selection:text-[#f8f5f0]">
       {/* SECTION 1: EDITORIAL HEADER & HERO BANNER */}
-      <section className="relative w-full overflow-hidden  text-[#f8f5f0]">
-        
-  
-        <div className="relative min-h-[75vh] md:min-h-[105vh] w-full flex items-center justify-center">
-       
-          <img
-            src={banner}
-            alt="Editorial Header"
-            className="absolute inset-0 w-full h-full object-cover object-center filter brightness-75 contrast-105"
-          />
-          <div className="absolute inset-0 bg-black/35" />
+    <section className="relative w-full bg-[#c8d6ba] text-[#2c2a29] py-20 px-6 md:px-12 overflow-hidden">
+  <Logo/>
+  <div className="mx-auto max-w-5xl space-y-12">
+   
+    
+    {/* Asymmetrical Collage Visuals */}
+    <div className="relative w-full max-w-3xl mx-auto h-[380px] sm:h-[460px]">
+      
+      {/* Main Center Image */}
+      <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[65%] sm:w-[55%] h-full overflow-hidden shadow-md">
+        <img
+          src={banner}
+          alt="SafeCircle Main"
+          className="w-full h-full object-cover filter grayscale contrast-110"
+        />
+      </div>
 
-          <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
-            <h1 className="text-6xl sm:text-8xl md:text-[110px] lg:text-[130px] font-serif font-extralight tracking-widest leading-none uppercase text-[#f8f5f0]/95 select-none">
-              SAFECIRCLE
-            </h1>
+      {/* Floating Left Detail Accent Card */}
+      <div className="absolute left-2 sm:left-6 bottom-8 w-[32%] sm:w-[28%] h-[40%] sm:h-[48%] overflow-hidden shadow-lg border-2 border-[#f3f1ec]">
+        <img
+          src={response}
+          alt="Detail view left"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-            <div className="mt-4 md:mt-6 space-y-2 max-w-lg">
-              <h2 className="text-xl md:text-2xl font-serif italic tracking-wide text-amber-50/90 font-light">
-                Meet SafeCircle Network
-              </h2>
-              <p className="text-[11px] md:text-xs font-sans tracking-[0.2em] uppercase font-light text-stone-200/80 leading-relaxed">
-                An Interconnected Emergency Response Framework Pairing Location Intelligence With Direct Action
-              </p>
-              <div className="flex gap-4 items-center justify-center ">
-className="w-[120px] h-[30px] rounded-full bg-black text-white hover:bg-stone-100 hover:text-amber-950 transition duration-300 hover:scale-105"                <button>Login</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Floating Right Detail Accent Card */}
+      <div className="absolute right-2 sm:right-6 top-10 w-[30%] sm:w-[26%] h-[45%] sm:h-[50%] overflow-hidden shadow-lg border-2 border-[#f3f1ec]">
+        <img
+          src={personal}
+          alt="Detail view right"
+          className="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+
+    {/* Editorial Header Section */}
+    <div className="text-center space-y-3 max-w-2xl mx-auto">
+      <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.35em] uppercase text-stone-500 font-medium">
+        Emergency Response Network
+      </p>
+      
+      <h1 className="text-3xl sm:text-5xl font-serif font-normal tracking-wider uppercase text-[#22201f]">
+        Meet SafeCircle Network
+      </h1>
+    </div>
+
+    {/* Two-Column Editorial Copy */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto font-serif text-xs leading-relaxed text-stone-600/90 text-justify">
+      <p>
+        SafeCircle reimagines personal safety through an interconnected emergency response framework. By pairing low-latency location intelligence with automated distress signals, our system provides continuous monitoring and direct action when seconds count.
+      </p>
+      <p>
+        Built with discretion and user autonomy at its core, SafeCircle establishes an active perimeter of trust. Connect your primary circle, configure custom alert thresholds, and navigate daily journeys with total peace of mind.
+      </p>
+    </div>
+
+    {/* Footer Tagline & Rounded Action Buttons */}
+    <div className="flex flex-col items-center space-y-6 pt-2">
+      <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.25em] uppercase font-light text-stone-500 text-center max-w-xl">
+        Location Intelligence paired with real-time community dispatch
+      </p>
+
+      <div className="flex gap-4 items-center justify-center">
+        <button 
+          onClick={() => navigate('/register')} 
+          className="px-8 py-2.5 rounded-full bg-[#22201f] text-[#f3f1ec] text-xs uppercase tracking-widest hover:bg-stone-700 transition duration-300 hover:scale-105 shadow-sm cursor-pointer"
+        >
+          Register
+        </button>
+        <button 
+          onClick={() => navigate('/login')} 
+          className="px-8 py-2.5 rounded-full border border-[#22201f] text-[#22201f] text-xs uppercase tracking-widest hover:bg-[#22201f] hover:text-[#f3f1ec] transition duration-300 hover:scale-105 shadow-sm cursor-pointer"
+        >
+          Login
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* SECTION 2: EDITORIAL ABOUT / COLLAGE SECTION */}
       <section className="bg-[#f8f5f0] py-28 px-6 md:px-16">
