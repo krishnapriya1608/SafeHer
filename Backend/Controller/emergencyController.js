@@ -90,13 +90,59 @@ exports.getAllEmergencies = async (req, res) => {
   }
 };
 
+exports.acceptEmergency = async (req, res) => {
+  try {
+    const { emergencyId } = req.params;
+    const { volunteerId, volunteerName } = req.body;
+
+    if (!volunteerId || !volunteerName) {
+      return res.status(400).json({
+        success: false,
+        message: "volunteerId and volunteerName are required",
+      });
+    }
+
+    const emergency = await Emergency.findByIdAndUpdate(
+      emergencyId,
+      { acceptedBy: volunteerId, acceptedByName: volunteerName },
+      { new: true }
+    );
+
+    if (!emergency) {
+      return res.status(404).json({
+        success: false,
+        message: "Emergency not found",
+      });
+    }
+
+    const io = req.app.get("io");
+
+    io.emit("emergency-accepted", {
+      emergency,
+      message: `${volunteerName} accepted this case`,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Case accepted",
+      emergency,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error accepting emergency",
+      error: error.message,
+    });
+  }
+};
+
 exports.resolveEmergency = async (req, res) => {
   try {
     const { emergencyId } = req.params;
 
     const emergency = await Emergency.findByIdAndUpdate(
       emergencyId,
-      { status: "resolved" },
+      { status: "Resolved" },
       { new: true }
     );
 
@@ -127,3 +173,6 @@ exports.resolveEmergency = async (req, res) => {
     });
   }
 };
+
+
+

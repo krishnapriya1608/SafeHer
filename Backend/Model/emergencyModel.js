@@ -43,6 +43,17 @@ const emergencySchema = new mongoose.Schema(
       enum: ["Active", "Resolved"],
       default: "Active",
     },
+
+    acceptedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
+    acceptedByName: {
+      type: String,
+      default: "",
+    },
        locationHistory: [
       {
         latitude: Number,
