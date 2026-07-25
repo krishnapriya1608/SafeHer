@@ -10,12 +10,7 @@ export default function UserDashboard() {
   const email = localStorage.getItem("email") || "";
 
 
-   <AuthLayout
-      eyebrow="Password help"
-      title="Reset your password"
-      subtitle="Enter your email and we will send a secure reset link."
-
-    ></AuthLayout>
+   
 
   const [profile, setProfile] = useState({
     fullName: username,
