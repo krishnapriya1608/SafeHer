@@ -14,8 +14,9 @@ const createDashboard = async (req, res) => {
     const existingDashboard = await Dashboard.findOne({ userId });
 
     if (existingDashboard) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "Dashboard already exists for this user",
+        dashboard: existingDashboard,
       });
     }
 
@@ -183,8 +184,8 @@ const updateCurrentStatus = async (req, res) => {
         currentStatus === "Emergency"
           ? "danger"
           : currentStatus === "Need Help"
-          ? "warning"
-          : "normal",
+            ? "warning"
+            : "normal",
     });
 
     await dashboard.save();
