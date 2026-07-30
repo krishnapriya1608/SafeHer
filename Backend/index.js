@@ -8,7 +8,7 @@ const fakeCallRoute = require("./Routes/fakeCallRoutes");
 const safeRouteRoute = require("./Routes/safeRouteRoutes");
 const http = require("http");
 const { Server } = require("socket.io");
-const { registerLiveTrackingHandlers } = require("./Controller/liveTrackingController");
+const { registerLiveTrackingHandlers } = require("./Controller/LiveTrackingController");
 require('./DB/connection')
 
 
