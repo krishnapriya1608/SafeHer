@@ -1,5 +1,20 @@
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:5000", {
-  autoConnect: true,
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+
+export const socket = io(SOCKET_URL, {
+  autoConnect: false,
 });
+
+export function connectSocket(token) {
+  socket.auth = { token };
+
+  if (!socket.connected) {
+    socket.connect();
+  }
+}
+
+export function disconnectSocket() {
+  socket.disconnect();
+}

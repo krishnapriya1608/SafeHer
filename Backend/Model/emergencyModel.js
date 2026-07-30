@@ -38,11 +38,11 @@ const emergencySchema = new mongoose.Schema(
       default: "SOS Emergency Alert",
     },
 
-    status: {
-      type: String,
-      enum: ["Active", "Resolved"],
-      default: "Active",
-    },
+   status: {
+  type: String,
+  enum: ["Active", "Accepted", "Resolved"],
+  default: "Active",
+},
 
     acceptedBy: {
       type: mongoose.Schema.Types.ObjectId,

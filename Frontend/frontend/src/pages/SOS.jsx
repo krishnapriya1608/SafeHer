@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useEmergencyTracking } from "../context/EmergencyTrackingContext";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { MapPin, PhoneCall, Radio, History, AlertTriangle } from "lucide-react"; // Highly recommended for clean icons
@@ -12,15 +13,13 @@ export default function SOSPage() {
   const email = localStorage.getItem("email") || "";
 
   const navigate = useNavigate();
+  const { startTracking, stopTracking, emergencyId } = useEmergencyTracking();
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [liveAlerts, setLiveAlerts] = useState([]);
-  const [activeEmergencyId, setActiveEmergencyId] = useState(null);
-
-  const watchIdRef = useRef(null);
 
   const fetchHistory = async () => {
     try {
@@ -32,70 +31,43 @@ export default function SOSPage() {
   };
 
   useEffect(() => {
-    if (userId) {
-      fetchHistory();
+  if (userId) {
+    fetchHistory();
+  }
+
+  const onNewEmergency = (data) => {
+    setLiveAlerts((prev) => [data.emergency, ...prev]);
+  };
+
+  const onEmergencyResolved = (data) => {
+    setLiveAlerts((prev) =>
+      prev.map((alert) =>
+        alert._id === data.emergency._id ? data.emergency : alert
+      )
+    );
+
+    setHistory((prev) =>
+      prev.map((alert) =>
+        alert._id === data.emergency._id ? data.emergency : alert
+      )
+    );
+
+    if (emergencyId === data.emergency._id) {
+      stopTracking();
     }
+  };
 
-    socket.on("new-emergency", (data) => {
-      setLiveAlerts((prev) => [data.emergency, ...prev]);
-    });
+  socket.on("new-emergency", onNewEmergency);
+  socket.on("emergency-resolved", onEmergencyResolved);
 
-    socket.on("emergency-resolved", (data) => {
-      setLiveAlerts((prev) =>
-        prev.map((alert) =>
-          alert._id === data.emergency._id ? data.emergency : alert
-        )
-      );
+  return () => {
+    socket.off("new-emergency", onNewEmergency);
+    socket.off("emergency-resolved", onEmergencyResolved);
+  };
+}, [userId, emergencyId]);
 
-      setHistory((prev) =>
-        prev.map((alert) =>
-          alert._id === data.emergency._id ? data.emergency : alert
-        )
-      );
 
-      setActiveEmergencyId((current) =>
-        current === data.emergency._id ? null : current
-      );
-    });
 
-    return () => {
-      socket.off("new-emergency");
-      socket.off("emergency-resolved");
-    };
-  }, [userId]);
-
-  // Phase 5: Live Tracking — once an SOS is active, keep streaming this
-  // device's GPS position into the emergency's Socket.IO room so anyone
-  // watching the live map sees the marker move in real time.
-  useEffect(() => {
-    if (!activeEmergencyId) return;
-
-    socket.emit("join-emergency-room", activeEmergencyId);
-
-    if ("geolocation" in navigator) {
-      watchIdRef.current = navigator.geolocation.watchPosition(
-        (position) => {
-          socket.emit("send-location-update", {
-            emergencyId: activeEmergencyId,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        (err) => {
-          console.log("Live tracking GPS error:", err.message);
-        },
-        { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
-      );
-    }
-
-    return () => {
-      if (watchIdRef.current !== null) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-        watchIdRef.current = null;
-      }
-      socket.emit("leave-emergency-room", activeEmergencyId);
-    };
-  }, [activeEmergencyId]);
 
   const triggerSOS = () => {
     setError("");
@@ -129,7 +101,7 @@ export default function SOSPage() {
 
           setMessage(response.data.message || "SOS alert sent successfully");
           setHistory((prev) => [response.data.emergency, ...prev]);
-          setActiveEmergencyId(response.data.emergency._id);
+          startTracking(response.data.emergency._id);
         } catch (err) {
           setError(err.response?.data?.message || "Failed to send SOS alert");
         } finally {
@@ -162,12 +134,12 @@ export default function SOSPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black px-4 py-12 text-white selection:bg-red-500 selection:text-white">
       <div className="mx-auto max-w-5xl space-y-8">
-        
+
         {/* Main SOS Control Panel */}
         <section className="relative overflow-hidden rounded-3xl border border-red-500/20 bg-slate-900/60 p-8 backdrop-blur-xl shadow-[0_0_50px_rgba(239,68,68,0.1)]">
           {/* Subtle background glow */}
           <div className="absolute -top-24 -left-24 h-48 w-48 rounded-full bg-red-600/10 blur-3xl" />
-          
+
           <div className="relative flex flex-col items-center text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-400">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
@@ -227,7 +199,7 @@ export default function SOSPage() {
 
         {/* Bottom Split Dashboards */}
         <section className="grid gap-6 md:grid-cols-2">
-          
+
           {/* Live Alerts Panel */}
           <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-6 backdrop-blur-md flex flex-col">
             <div className="flex items-center gap-2 pb-4 border-b border-slate-850">
@@ -299,11 +271,10 @@ export default function SOSPage() {
                       </h3>
 
                       <span
-                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                          alert.status === "active"
+                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${alert.status?.toLowerCase() === "active"
                             ? "bg-red-500/10 text-red-400 border border-red-500/20"
                             : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        }`}
+                          }`}
                       >
                         {alert.status}
                       </span>

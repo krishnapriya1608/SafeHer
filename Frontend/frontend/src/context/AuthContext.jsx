@@ -1,4 +1,11 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { connectSocket, disconnectSocket } from "../socket";
 
 const AuthContext = createContext(null);
 
@@ -15,6 +22,16 @@ const readStoredUser = () => {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [user, setUser] = useState(readStoredUser);
+
+  useEffect(() => {
+    if (token) {
+      connectSocket(token);
+    }
+
+    return () => {
+      disconnectSocket();
+    };
+  }, [token]);
 
   const login = ({ token: nextToken, user: nextUser }) => {
     localStorage.setItem("token", nextToken);

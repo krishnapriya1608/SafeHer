@@ -1,41 +1,86 @@
-require('dotenv').config()
-const express=require('express')
-const cors=require('cors')
-const userRoutes=require('./Routes/routes')
-const dashboardRoutes=require('./Routes/dashRoutes')
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const http = require("http");
+const jwt = require("jsonwebtoken");
+const { Server } = require("socket.io");
+
+const userRoutes = require("./Routes/routes");
+const dashboardRoutes = require("./Routes/dashRoutes");
 const emergencyRoute = require("./Routes/emergencyRoutes");
 const fakeCallRoute = require("./Routes/fakeCallRoutes");
 const safeRouteRoute = require("./Routes/safeRouteRoutes");
-const http = require("http");
-const { Server } = require("socket.io");
-const { registerLiveTrackingHandlers } = require("./Controller/LiveTrackingController");
-require('./DB/connection')
+const User = require("./Model/userModel");
+const { registerLiveTrackingHandlers } = require("./Controller/LivetrackingController");
 
+require("./DB/connection");
 
-const app=express()
+const app = express();
+const server = http.createServer(app);
 
-app.use(cors())
-
-app.use(express.json())
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
+app.use(express.json());
 
 app.use("/api/user", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/emergency", emergencyRoute);
 app.use("/api/fakecall", fakeCallRoute);
 app.use("/api/saferoute", safeRouteRoute);
-const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
 
 app.set("io", io);
 
+// Require a valid JWT before allowing a Socket.IO connection.
+io.use(async (socket, next) => {
+  try {
+    const token = socket.handshake.auth?.token;
+
+    if (!token) {
+      return next(new Error("Unauthorized"));
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id).select(
+      "_id username email role"
+    );
+
+    if (!user) {
+      return next(new Error("Unauthorized"));
+    }
+
+    socket.user = {
+      id: user._id.toString(),
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
+
+    next();
+  } catch {
+    next(new Error("Unauthorized"));
+  }
+});
+
 io.on("connection", (socket) => {
-  console.log("Socket connected:", socket.id);
+  console.log(`Socket connected: ${socket.id} (${socket.user.role})`);
+
+  // Only responders receive new emergency broadcasts.
+  if (["volunteer", "police", "admin"].includes(socket.user.role)) {
+    socket.join("responders");
+  }
 
   registerLiveTrackingHandlers(io, socket);
 
@@ -43,8 +88,9 @@ io.on("connection", (socket) => {
     console.log("Socket disconnected:", socket.id);
   });
 });
-const PORT=5000
 
-server.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

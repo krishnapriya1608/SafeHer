@@ -14,7 +14,7 @@ import Home from "./pages/Home";
 import SOSPage from "./pages/SOS";
 import FakeCallPage from "./pages/FakeCall";
 import LiveTrackingPage from "./pages/LiveTracking";
-import SafeRoutePage from "./pages/SafeRoute";
+import SafeRoute from "./pages/SafeRoute";
 
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
@@ -51,7 +51,7 @@ export default function App() {
         <Route path="/fake-call" element={<FakeCallPage />} />
         <Route path="/live-tracking/:emergencyId" element={<LiveTrackingPage />} />
           
-              <Route path="/safe-route" element={<SafeRouteMap />} />
+              <Route path="/safe-route" element={<SafeRoute />} />
 
       </Routes>
     </>

@@ -6,13 +6,31 @@ const {
   acceptEmergency,
   resolveEmergency,
 } = require("../Controller/emergencyController");
+const { protect, authorize } = require("../utils/generateToken");
 
 const router = express.Router();
 
-router.post("/create", createEmergency);
+router.use(protect);
+
+router.post("/create", authorize("user"), createEmergency);
 router.get("/history/:userId", getEmergencyHistory);
-router.get("/all", getAllEmergencies);
-router.put("/accept/:emergencyId", acceptEmergency);
-router.put("/resolve/:emergencyId", resolveEmergency);
+
+router.get(
+  "/all",
+  authorize("volunteer", "police", "admin"),
+  getAllEmergencies
+);
+
+router.put(
+  "/accept/:emergencyId",
+  authorize("volunteer", "police"),
+  acceptEmergency
+);
+
+router.put(
+  "/resolve/:emergencyId",
+  authorize("volunteer", "police", "admin"),
+  resolveEmergency
+);
 
 module.exports = router;

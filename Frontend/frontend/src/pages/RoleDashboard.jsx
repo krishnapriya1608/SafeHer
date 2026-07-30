@@ -1,5 +1,5 @@
 import UserLayout from "../components/dashboards/UserLayout";
-import VolunteerLayout from "../components/dashboards/VolunteerLayout";
+// import VolunteerLayout from "../components/dashboards/VolunteerLayout";
 
 
 export default function RoleDashboard({ roleName }) {
@@ -9,14 +9,14 @@ export default function RoleDashboard({ roleName }) {
     case "user":
       return <UserLayout  roleName={roleName} />;
 
-    case "volunteer":
-      return <VolunteerLayout />;
+    // case "volunteer":
+    //   return <VolunteerLayout />;
 
-    case "police":
-      return <PoliceLayout />;
+    // case "police":
+    //   return <PoliceLayout />;
 
-    case "admin":
-      return <AdminLayout />;
+    // case "admin":
+    //   return <AdminLayout />;
 
     default:
       return <UserLayout />;
