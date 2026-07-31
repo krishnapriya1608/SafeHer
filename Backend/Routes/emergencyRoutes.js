@@ -5,6 +5,7 @@ const {
   getAllEmergencies,
   acceptEmergency,
   resolveEmergency,
+  getEmergencyById
 } = require("../Controller/emergencyController");
 const { protect, authorize } = require("../utils/generateToken");
 
@@ -20,6 +21,8 @@ router.get(
   authorize("volunteer", "police", "admin"),
   getAllEmergencies
 );
+router.get("/single/:emergencyId",getEmergencyById); 
+
 
 router.put(
   "/accept/:emergencyId",

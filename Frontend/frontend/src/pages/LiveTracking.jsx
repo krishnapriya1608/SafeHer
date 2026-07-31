@@ -17,9 +17,9 @@ export default function LiveTrackingPage() {
   // before the first live "location-update" event arrives.
   useEffect(() => {
     emergencyApi
-      .getAllEmergencies()
+      .getEmergencyById(emergencyId)
       .then((res) => {
-        const match = (res.data.emergencies || []).find((e) => e._id === emergencyId);
+        const match = res.data.emergency;
         if (match) {
           setPosition({ latitude: match.latitude, longitude: match.longitude });
           setUsername(match.username);

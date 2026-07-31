@@ -7,6 +7,8 @@ export const emergencyApi = {
   getEmergencyHistory: (userId) =>
     api.get(`/api/emergency/history/${userId}`),
 
+  getEmergencyById: (emergencyId) => api.get(`/api/emergency/single/${emergencyId}`),
+
   getAllEmergencies: () =>
     api.get("/api/emergency/all"),
 

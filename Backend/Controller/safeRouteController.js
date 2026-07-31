@@ -5,7 +5,10 @@ const { boundingBox, minDistanceToPath, sampleRoute } = require("../utils/geo");
 const OSRM_BASE = "https://router.project-osrm.org/route/v1";
 const OVERPASS_BASE = "https://overpass-api.de/api/interpreter";
 const NOMINATIM_BASE = "https://nominatim.openstreetmap.org";
-
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
 // GET /api/saferoute/search?q=<query>
 // Address / place-name autocomplete, proxied from Nominatim.
 const searchPlaces = async (req, res) => {
@@ -20,9 +23,11 @@ const searchPlaces = async (req, res) => {
       headers: { "User-Agent": "SafeHer-App/1.0" },
     });
 
-    if (!response.ok) {
-      return res.status(502).json({ message: "Address search failed upstream" });
-    }
+  if (!response.ok) {
+  const body = await response.text().catch(() => "");
+  console.log("Overpass failed:", response.status, response.statusText, body.slice(0, 300));
+  throw new Error("Emergency service lookup failed upstream");
+}
 
     const data = await response.json();
     const results = data.map((item) => ({
@@ -34,6 +39,7 @@ const searchPlaces = async (req, res) => {
     res.json({ results });
   } catch (err) {
     res.status(500).json({ message: "Address search failed", error: err.message });
+    console.log(err)
   }
 };
 
@@ -62,7 +68,6 @@ async function fetchRoutesFromOSRM(origin, destination, profile) {
 async function fetchServicesFromOverpass(points) {
   const { south, west, north, east } = boundingBox(points);
   const bbox = `${south},${west},${north},${east}`;
-
   const query = `
     [out:json][timeout:25];
     (
@@ -73,32 +78,43 @@ async function fetchServicesFromOverpass(points) {
     );
     out center tags;
   `;
-
-  const response = await fetch(OVERPASS_BASE, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: query,
-  });
-
-  if (!response.ok) throw new Error("Emergency service lookup failed upstream");
-
-  const data = await response.json();
-
-  return data.elements
-    .map((el) => {
-      const lat = el.lat ?? el.center?.lat;
-      const lng = el.lon ?? el.center?.lon;
-      if (lat == null || lng == null) return null;
-
-      return {
-        id: `${el.type}-${el.id}`,
-        type: el.tags?.amenity === "police" ? "police" : "hospital",
-        name: el.tags?.name || (el.tags?.amenity === "police" ? "Police Station" : "Hospital"),
-        lat,
-        lng,
-      };
-    })
-    .filter(Boolean);
+  let lastErr;
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+          "User-Agent": "SafeHer-App/1.0 (contact: rishnak10@gmail.com)",
+        },
+        body: query,
+      });
+      if (!response.ok) {
+        const body = await response.text().catch(() => "");
+        console.log(`Overpass (${endpoint}) failed:`, response.status, body.slice(0, 300));
+        throw new Error(`Overpass returned ${response.status}`);
+      }
+      const data = await response.json();
+      return data.elements
+        .map((el) => {
+          const lat = el.lat ?? el.center?.lat;
+          const lng = el.lon ?? el.center?.lon;
+          if (lat == null || lng == null) return null;
+          return {
+            id: `${el.type}-${el.id}`,
+            type: el.tags?.amenity === "police" ? "police" : "hospital",
+            name: el.tags?.name || (el.tags?.amenity === "police" ? "Police Station" : "Hospital"),
+            lat,
+            lng,
+          };
+        })
+        .filter(Boolean);
+    } catch (err) {
+      lastErr = err;
+      console.log(`Overpass endpoint ${endpoint} failed, trying next...`);
+    }
+  }
+  throw new Error("Emergency service lookup failed upstream: " + lastErr?.message);
 }
 
 // Ranks each route by how many distinct police/hospitals sit within
@@ -152,6 +168,7 @@ const getSafeRoute = async (req, res) => {
     res.json({ routes: scored, services });
   } catch (err) {
     res.status(500).json({ message: err.message || "Failed to compute safe route" });
+    console.log(err)
   }
 };
 
@@ -163,6 +180,7 @@ const getHistory = async (req, res) => {
     res.json({ history });
   } catch (err) {
     res.status(500).json({ message: "Failed to load route history", error: err.message });
+    console.log(err)
   }
 };
 
