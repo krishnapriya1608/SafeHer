@@ -3,10 +3,10 @@ const https = require("https");
 // Public ElevenLabs premade voices — swap these for your own cloned/library
 // voices anytime from your ElevenLabs dashboard if these don't fit.
 const VOICE_IDS = {
-  mom: "21m00Tcm4TlvDq8ikWAM",      // Rachel — warm, mature female
-  friend: "EXAVITQu4vr4xnSDxMaL",   // Bella — younger female
-  boss: "pNInz6obpgDQGcFmaJgB",     // Adam — male, authoritative
-  delivery: "ErXwobaYiN019PkySvjV", // Antoni — male, neutral
+  mom: "EXAVITQu4vr4xnSDxMaL",      // Sarah - Mature, Reassuring, Confident (female)
+  friend: "hpp4J3VqNfWAUOO0d1Us",   // Bella - Professional, Bright, Warm (female)
+  boss: "nPczCjzI2devNBz1zQrb",     // Brian - Deep, Resonant and Comforting (male)
+  delivery: "cjVigY5qzO86Huf0OWal", // Eric - Smooth, Trustworthy (male)
 };
 
 function textToSpeech(text, callerType) {

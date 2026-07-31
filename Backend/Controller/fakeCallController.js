@@ -143,26 +143,25 @@ pauseAfterMs should be between 2000 and 4000, representing a natural pause for t
 // Generates real audio per line via ElevenLabs and attaches it as base64.
 // If no key is set, or a line fails, that line just has no audioBase64 —
 // the frontend falls back to browser speechSynthesis for that line only.
+// Generates real audio per line via ElevenLabs and attaches it as base64.
+// Lines are processed ONE AT A TIME (not in parallel) because free-tier
+// ElevenLabs accounts allow a maximum of 4 concurrent requests.
 async function attachAudio(script, callerType) {
   if (!process.env.ELEVENLABS_API_KEY) return script;
 
-  try {
-    const linesWithAudio = await Promise.all(
-      script.lines.map(async (line) => {
-        try {
-          const audioBuffer = await textToSpeech(line.text, callerType);
-          return { ...line, audioBase64: audioBuffer.toString("base64") };
-        } catch (err) {
-          console.log("ElevenLabs line failed, falling back for this line:", err.message);
-          return line;
-        }
-      })
-    );
-    return { ...script, lines: linesWithAudio };
-  } catch (err) {
-    console.log("ElevenLabs batch failed entirely:", err.message);
-    return script;
+  const linesWithAudio = [];
+
+  for (const line of script.lines) {
+    try {
+      const audioBuffer = await textToSpeech(line.text, callerType);
+      linesWithAudio.push({ ...line, audioBase64: audioBuffer.toString("base64") });
+    } catch (err) {
+      console.log("ElevenLabs line failed, falling back for this line:", err.message);
+      linesWithAudio.push(line);
+    }
   }
+
+  return { ...script, lines: linesWithAudio };
 }
 
 exports.generateFakeCall = async (req, res) => {

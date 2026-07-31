@@ -1,11 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useEmergencyTracking } from "../context/EmergencyTrackingContext";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, PhoneCall, Radio, History, AlertTriangle } from "lucide-react"; // Highly recommended for clean icons
+import {
+  MapPin,
+  PhoneCall,
+  Radio,
+  History,
+  AlertTriangle,
+  ShieldAlert,
+  Activity,
+  CheckCircle2,
+  ExternalLink,
+  Mail,
+  Clock,
+} from "lucide-react";
 import StatusMessage from "../components/StatusMessage";
 import { emergencyApi } from "../api/emergencyApi";
 import { socket } from "../socket";
+import alone from '../assets/ALoneimg.png'
 
 export default function SOSPage() {
   const userId = localStorage.getItem("userId");
@@ -124,67 +137,133 @@ export default function SOSPage() {
     );
   };
 
-  const openLiveTracking = (emergencyId) => {
-    navigate(`/live-tracking/${emergencyId}`);
+  const openLiveTracking = (id) => {
+    navigate(`/live-tracking/${id}`);
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black px-4 py-12 text-white selection:bg-red-500 selection:text-white">
-      <div className="mx-auto max-w-5xl space-y-8">
+    <main className="min-h-screen bg-[#f8f6ee] text-[#2c3e2e] font-sans pb-16">
+      {/* Hero Header Banner */}
+      <header className="relative bg-[#2e4f32] text-white pt-12 pb-24 px-6 text-center overflow-hidden">
+        {/* Subtle Background Image Mask */}
+        <div className="absolute inset-0 opacity-15 pointer-events-none">
+          <img
+            src={alone}
+            alt="Safety Background"
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-        {/* Main SOS Control Panel */}
-        <section className="relative overflow-hidden rounded-3xl border border-red-500/20 bg-slate-900/60 p-8 backdrop-blur-xl shadow-[0_0_50px_rgba(239,68,68,0.1)]">
-          {/* Subtle background glow */}
-          <div className="absolute -top-24 -left-24 h-48 w-48 rounded-full bg-red-600/10 blur-3xl" />
+        {/* Navigation Bar */}
+        <nav className="max-w-5xl mx-auto flex items-center justify-between pb-8 border-b border-white/20 text-xs font-semibold tracking-wider uppercase">
+          <div className="flex items-center gap-2 text-lg font-black tracking-widest text-[#a8d59d]">
+            <ShieldAlert size={22} />
+            <span>SAFEHER</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="hover:text-[#a8d59d] transition-colors">Home</Link>
+            <Link to="/about" className="hover:text-[#a8d59d] transition-colors">About Us</Link>
+            <Link to="/dashboard/user" className="hover:text-[#a8d59d] transition-colors">Dashboard</Link>
+            <Link to="/sos" className="text-[#a8d59d] font-bold">SOS Center</Link>
+          </div>
+        </nav>
 
-          <div className="relative flex flex-col items-center text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-              Phase 5 · Live Tracking
-            </span>
+        {/* Header Hero Content */}
+        <div className="relative z-10 max-w-2xl mx-auto mt-8">
+          <span className="inline-block border border-white/30 rounded-full px-5 py-1 text-xs font-semibold tracking-wide bg-white/10 mb-4">
+            Rapid Response Hub
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
+            Emergency Contacts
+          </h1>
+          <p className="mt-3 text-sm text-emerald-100/80 leading-relaxed max-w-lg mx-auto">
+            Broadcast live alerts and share real-time GPS locations instantly with your trusted network.
+          </p>
+        </div>
 
-            <h1 className="mt-4 text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-              SOS Emergency System
-            </h1>
+        {/* Torn/Wavy Bottom Paper Divider */}
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none z-20">
+          <svg
+            className="relative block w-full h-12 text-[#f8f6ee]"
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,0 C150,90 350,-40 500,65 C650,170 900,-20 1200,40 L1200,120 L0,120 Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </div>
+      </header>
 
-            <p className="mt-2 max-w-md text-sm text-slate-400">
-              Trigger instant emergency alerts with real-time live location broadcasted to your network.
+      {/* Main Content Container */}
+      <div className="max-w-5xl mx-auto px-6 -mt-12 relative z-30 space-y-12">
+        {/* Top 3 Info & Action Cards */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Card 1: Phone Support / Fake Call */}
+          <div className="bg-[#f0ece1] border-2 border-dashed border-[#d8d0ba] rounded-3xl p-6 text-center flex flex-col items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-full bg-[#2e4f32] text-white flex items-center justify-center mb-4 shadow">
+              <PhoneCall size={20} />
+            </div>
+            <h3 className="font-extrabold text-lg text-[#2e4f32]">
+              Fake Call Escort
+            </h3>
+            <p className="text-xs text-[#5a6b5c] mt-2 leading-relaxed">
+              Simulate an incoming phone call to help exit uncomfortable situations discreetly.
             </p>
+            <Link
+              to="/fake-call"
+              className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#2e4f32] hover:underline"
+            >
+              <span>Trigger Call</span> →
+            </Link>
+          </div>
 
-            {/* Glowing SOS Button */}
-            <div className="relative mt-10 flex items-center justify-center">
-              {!loading && (
-                <div className="absolute inset-0 h-44 w-44 rounded-full bg-red-600/30 blur-2xl animate-pulse" />
-              )}
-              <motion.button
-                whileHover={!loading ? { scale: 1.05 } : {}}
-                whileTap={!loading ? { scale: 0.95 } : {}}
-                onClick={triggerSOS}
-                disabled={loading}
-                className="relative z-10 h-44 w-44 rounded-full border-[6px] border-red-500/40 bg-gradient-to-tr from-red-700 to-red-500 text-4xl font-black tracking-wider text-white shadow-2xl transition-all duration-300 hover:border-red-400/60 disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center"
-              >
-                {loading ? (
-                  <span className="flex gap-1 items-center">
-                    <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce" />
-                  </span>
-                ) : (
-                  "SOS"
-                )}
-              </motion.button>
+          {/* Card 2: Main Dynamic SOS Button */}
+          <div className="bg-[#2e4f32] text-white border-2 border-dashed border-[#446b49] rounded-3xl p-6 text-center flex flex-col items-center justify-between shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-[#a8d59d] text-[#2e4f32] flex items-center justify-center mb-2 shadow">
+              <ShieldAlert size={22} />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-lg text-[#a8d59d]">
+                Send SOS Alert
+              </h3>
+              <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
+                Press to send live location coordinates immediately.
+              </p>
             </div>
 
-            {/* Quick Action Actions */}
-            <div className="mt-8 w-full border-t border-slate-800/80 pt-6 flex justify-center">
-              <Link
-                to="/fake-call"
-                className="group flex items-center gap-2 rounded-2xl border border-slate-850 bg-slate-950/60 px-6 py-3 text-sm font-semibold text-slate-350 hover:text-white transition-all duration-300 hover:border-red-500/30 hover:bg-slate-900"
-              >
-                <PhoneCall size={16} className="text-red-400 transition-transform group-hover:scale-110" />
-                Simulate a Fake Call
-              </Link>
+            <motion.button
+              whileHover={!loading ? { scale: 1.05 } : {}}
+              whileTap={!loading ? { scale: 0.95 } : {}}
+              onClick={triggerSOS}
+              disabled={loading}
+              className="mt-4 px-6 py-2.5 rounded-full bg-[#8cc63f] hover:bg-[#7bb335] text-[#1c331e] font-extrabold text-xs uppercase tracking-wider shadow transition-all disabled:opacity-50"
+            >
+              {loading ? "Sending Signal..." : "Trigger SOS Now"}
+            </motion.button>
+          </div>
+
+          {/* Card 3: Location / Map Link */}
+          <div className="bg-[#f0ece1] border-2 border-dashed border-[#d8d0ba] rounded-3xl p-6 text-center flex flex-col items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-full bg-[#2e4f32] text-white flex items-center justify-center mb-4 shadow">
+              <MapPin size={20} />
             </div>
+            <h3 className="font-extrabold text-lg text-[#2e4f32]">
+              Emergency Network
+            </h3>
+            <p className="text-xs text-[#5a6b5c] mt-2 leading-relaxed">
+              Active tracking monitoring center for nearby security services and contacts.
+            </p>
+             <Link
+              to="/safe-route"
+              className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#2e4f32] hover:underline"
+            >
+             <span className="mt-5 text-xs font-bold text-[#2e4f32]">
+              GPS Live Signal Active
+            </span>
+            </Link>
+            
           </div>
         </section>
 
@@ -194,111 +273,152 @@ export default function SOSPage() {
           {error && <StatusMessage type="error">{error}</StatusMessage>}
         </div>
 
-        {/* Bottom Split Dashboards */}
-        <section className="grid gap-6 md:grid-cols-2">
-
-          {/* Live Alerts Panel */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-6 backdrop-blur-md flex flex-col">
-            <div className="flex items-center gap-2 pb-4 border-b border-slate-850">
-              <Radio size={18} className="text-red-400 animate-pulse" />
-              <h2 className="text-lg font-bold text-slate-100">Live Emergency Broadcast</h2>
+        {/* Bottom Section: Working Time / Details & History Card */}
+        <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Information & Map Preview */}
+          <div className="md:col-span-5 space-y-6">
+            <div>
+              <span className="inline-block border border-[#d8d0ba] rounded-full px-4 py-1 text-[11px] font-bold text-[#2e4f32] bg-[#f0ece1]">
+                System Info
+              </span>
+              <h2 className="text-2xl font-extrabold text-[#2e4f32] mt-2">
+                Get In Touch !
+              </h2>
+              <p className="text-xs text-[#5a6b5c] mt-2 leading-relaxed">
+                Emergency services operate 24/7. Instant broadcasts automatically alert registered responders.
+              </p>
             </div>
 
-            <div className="mt-4 flex-1 space-y-3 overflow-y-auto max-h-[350px] pr-1 scrollbar-thin scrollbar-thumb-slate-800">
-              {liveAlerts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center text-slate-500">
-                  <AlertTriangle size={32} className="opacity-25 mb-2" />
-                  <p className="text-sm">No active emergency broadcasts at this time.</p>
+            {/* Operating Hours */}
+            <div className="space-y-2 text-xs font-medium text-[#3b4e3e] bg-white p-4 rounded-2xl border border-[#e5dfce]">
+              <div className="flex items-center gap-2">
+                <Clock size={14} className="text-[#8cc63f]" />
+                <span>Monday - Sunday : 24/7 Active Monitoring</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail size={14} className="text-[#8cc63f]" />
+                <span>{email || "support@safeher.com"}</span>
+              </div>
+            </div>
+
+            {/* Map Preview Card */}
+            <div>
+              <h4 className="text-xs font-bold text-[#2e4f32] uppercase tracking-wider mb-2">
+                Location Preview:
+              </h4>
+              <div className="relative rounded-2xl overflow-hidden border-2 border-[#d8d0ba] shadow-sm h-48 bg-[#e8e4d8]">
+                <img
+                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=600"
+                  alt="Map Location"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/10" />
+                <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-xl border border-white text-[11px] font-semibold text-[#2e4f32] shadow-sm flex items-center gap-1.5">
+                  <MapPin size={13} className="text-red-500" />
+                  <span>GPS System Connected</span>
                 </div>
-              ) : (
-                liveAlerts.map((alert) => (
-                  <div
-                    key={alert._id}
-                    className="group relative overflow-hidden rounded-2xl border border-red-500/20 bg-gradient-to-r from-red-500/5 to-transparent p-4 transition-all hover:border-red-500/40"
-                  >
-                    <div className="flex justify-between items-start">
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Live Broadcasts & Emergency History Log */}
+          <div className="md:col-span-7 bg-white rounded-3xl border border-[#e5dfce] p-6 shadow-sm space-y-6">
+            {/* Live Alerts Panel */}
+            <div>
+              <div className="flex items-center gap-2 pb-3 border-b border-[#f0ece1]">
+                <Radio size={18} className="text-red-500 animate-pulse" />
+                <h3 className="font-extrabold text-base text-[#2e4f32]">
+                  Live Emergency Broadcasts
+                </h3>
+              </div>
+
+              <div className="mt-3 space-y-3 max-h-48 overflow-y-auto pr-1">
+                {liveAlerts.length === 0 ? (
+                  <p className="text-xs text-[#8a9a8c] text-center py-6">
+                    No active emergency broadcasts at this time.
+                  </p>
+                ) : (
+                  liveAlerts.map((alert) => (
+                    <div
+                      key={alert._id}
+                      className="p-3.5 rounded-2xl bg-[#f0ece1] border border-[#d8d0ba] flex items-center justify-between gap-3"
+                    >
                       <div>
-                        <h3 className="font-semibold text-red-200 text-sm">
+                        <span className="text-xs font-extrabold text-[#2e4f32]">
                           {alert.username}
-                        </h3>
-                        <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                        </span>
+                        <p className="text-[11px] text-[#5a6b5c]">
                           {alert.message}
                         </p>
                       </div>
-                      <span className="text-[10px] bg-red-500/20 text-red-300 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider animate-pulse">
-                        Live
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={() => openLiveTracking(alert._id)}
-                      className="mt-3 flex items-center gap-1.5 rounded-xl bg-red-600/90 hover:bg-red-600 px-4 py-2 text-xs font-bold text-white transition-all shadow-md hover:shadow-red-900/30"
-                    >
-                      <MapPin size={13} />
-                      Track Live
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Emergency History Panel */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-6 backdrop-blur-md flex flex-col">
-            <div className="flex items-center gap-2 pb-4 border-b border-slate-850">
-              <History size={18} className="text-slate-400" />
-              <h2 className="text-lg font-bold text-slate-100">Emergency History</h2>
-            </div>
-
-            <div className="mt-4 flex-1 space-y-3 overflow-y-auto max-h-[350px] pr-1 scrollbar-thin scrollbar-thumb-slate-800">
-              {history.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center text-slate-500">
-                  <History size={32} className="opacity-25 mb-2" />
-                  <p className="text-sm">No historical log found.</p>
-                </div>
-              ) : (
-                history.map((alert) => (
-                  <div
-                    key={alert._id}
-                    className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 hover:border-slate-700 transition-all"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <h3 className="font-semibold text-sm text-slate-200">
-                        {alert.message}
-                      </h3>
-
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                          alert.status?.toLowerCase() === "active"
-                            ? "bg-red-500/10 text-red-400 border border-red-500/20"
-                            : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        }`}
+                      <button
+                        onClick={() => openLiveTracking(alert._id)}
+                        className="px-3 py-1.5 rounded-full bg-[#8cc63f] hover:bg-[#7bb335] text-[#1c331e] text-[11px] font-bold shrink-0"
                       >
-                        {alert.status}
-                      </span>
+                        Track Live
+                      </button>
                     </div>
+                  ))
+                )}
+              </div>
+            </div>
 
-                    <p className="mt-1 text-xs text-slate-500">
-                      {new Date(alert.createdAt).toLocaleString()}
-                    </p>
+            {/* History Log Panel */}
+            <div>
+              <div className="flex items-center gap-2 pb-3 border-b border-[#f0ece1]">
+                <History size={18} className="text-[#2e4f32]" />
+                <h3 className="font-extrabold text-base text-[#2e4f32]">
+                  Emergency History Log
+                </h3>
+              </div>
 
-                    <button
-                      onClick={() =>
-                        alert.status?.toLowerCase() === "active"
-                          ? openLiveTracking(alert._id)
-                          : openMap(alert.latitude, alert.longitude)
-                      }
-                      className="mt-3 flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/50 px-3.5 py-1.5 text-xs font-semibold text-slate-350 hover:text-white hover:bg-slate-800 transition-all"
+              <div className="mt-3 space-y-3 max-h-56 overflow-y-auto pr-1">
+                {history.length === 0 ? (
+                  <p className="text-xs text-[#8a9a8c] text-center py-6">
+                    No historical emergency logs found.
+                  </p>
+                ) : (
+                  history.map((alert) => (
+                    <div
+                      key={alert._id}
+                      className="p-3.5 rounded-2xl bg-[#faf8f2] border border-[#e5dfce] flex items-center justify-between gap-3"
                     >
-                      <MapPin size={12} />
-                      {alert.status?.toLowerCase() === "active" ? "Track Live" : "Open Map"}
-                    </button>
-                  </div>
-                ))
-              )}
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-[#2e4f32] truncate">
+                            {alert.message}
+                          </span>
+                          <span
+                            className={`text-[9px] px-2 py-0.5 rounded-full font-extrabold uppercase ${
+                              alert.status?.toLowerCase() === "active"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-emerald-100 text-emerald-800"
+                            }`}
+                          >
+                            {alert.status}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-[#8a9a8c] block mt-0.5">
+                          {new Date(alert.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          alert.status?.toLowerCase() === "active"
+                            ? openLiveTracking(alert._id)
+                            : openMap(alert.latitude, alert.longitude)
+                        }
+                        className="p-2 rounded-xl bg-[#e8e4d8] hover:bg-[#d8d0ba] text-[#2e4f32] shrink-0 transition-colors"
+                      >
+                        <ExternalLink size={14} />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </div>
-
         </section>
       </div>
     </main>
