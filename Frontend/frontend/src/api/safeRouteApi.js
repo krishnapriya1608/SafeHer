@@ -25,7 +25,7 @@ export function sortByDistance(origin, services) {
   return services
     .map((service) => ({
       ...service,
-      distance: distanceMeters(origin, [service.lat, service.lng]),
+      distance: distanceMeters([origin.lat, origin.lng], [service.lat, service.lng]),
     }))
     .sort((a, b) => a.distance - b.distance);
 }

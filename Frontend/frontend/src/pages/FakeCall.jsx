@@ -8,6 +8,7 @@ const CALLER_OPTIONS = [
   { id: "boss", label: "Mr. Sharma", subtitle: "Manager" },
   { id: "delivery", label: "Delivery Executive", subtitle: "+91 98••• ••210" },
 ];
+const currentAudioRef = useRef(null);
 
 const STAGE = {
   PICK: "pick",
@@ -24,6 +25,13 @@ function initials(name) {
     .slice(0, 2)
     .toUpperCase();
 }
+const VOICE_PROFILES = {
+  mom:      { genderPref: "female", pitch: 1.15, rate: 0.95 },
+  friend:   { genderPref: "female", pitch: 1.05, rate: 1.05 },
+  boss:     { genderPref: "male",   pitch: 0.9,  rate: 0.98 },
+  delivery: { genderPref: "male",   pitch: 1.0,  rate: 1.02 },
+};
+
 
 export default function FakeCallPage() {
   const [stage, setStage] = useState(STAGE.PICK);
@@ -47,14 +55,17 @@ export default function FakeCallPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const cleanup = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    if (ringTimeoutRef.current) clearTimeout(ringTimeoutRef.current);
-    speakTimeouts.current.forEach((t) => clearTimeout(t));
-    speakTimeouts.current = [];
-    if (supportsSpeech) window.speechSynthesis.cancel();
-  };
-
+ const cleanup = () => {
+  if (timerRef.current) clearInterval(timerRef.current);
+  if (ringTimeoutRef.current) clearTimeout(ringTimeoutRef.current);
+  speakTimeouts.current.forEach((t) => clearTimeout(t));
+  speakTimeouts.current = [];
+  if (supportsSpeech) window.speechSynthesis.cancel();
+  if (currentAudioRef.current) {
+    currentAudioRef.current.pause();
+    currentAudioRef.current = null;
+  }
+};
   const startCallFlow = async (option) => {
     setError("");
     setCallerOption(option);
@@ -79,32 +90,51 @@ export default function FakeCallPage() {
     }
   };
 
-  const answerCall = (activeScript) => {
-    setStage(STAGE.IN_CALL);
-    setSeconds(0);
+ const answerCall = (activeScript) => {
+  setStage(STAGE.IN_CALL);
+  setSeconds(0);
 
-    timerRef.current = setInterval(() => {
-      setSeconds((s) => s + 1);
-    }, 1000);
+  timerRef.current = setInterval(() => {
+    setSeconds((s) => s + 1);
+  }, 1000);
 
-    speakScript(activeScript);
-  };
+  speakScript(activeScript, callerOption?.id);
+};
 
-  const speakScript = (activeScript) => {
-    if (!activeScript?.lines?.length) return;
+const speakScript = (activeScript) => {
+  if (!activeScript?.lines?.length) return;
 
-    let elapsed = 400;
+  const runFrom = (idx) => {
+    if (idx >= activeScript.lines.length) return;
+    setCurrentLine(idx);
 
-    activeScript.lines.forEach((line, idx) => {
-      const t = setTimeout(() => {
-        setCurrentLine(idx);
-        speak(line.text);
-      }, elapsed);
+    const line = activeScript.lines[idx];
 
+    const advance = () => {
+      const t = setTimeout(() => runFrom(idx + 1), line.pauseAfterMs || 3000);
       speakTimeouts.current.push(t);
-      elapsed += line.pauseAfterMs || 3000;
-    });
+    };
+
+    if (line.audioBase64) {
+      const audio = new Audio(`data:audio/mpeg;base64,${line.audioBase64}`);
+      currentAudioRef.current = audio;
+      audio.onended = advance;
+      audio.onerror = advance;
+      audio.play().catch(advance);
+    } else if (supportsSpeech) {
+      const utterance = new SpeechSynthesisUtterance(line.text);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.onend = advance;
+      utterance.onerror = advance;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      advance();
+    }
   };
+
+  runFrom(0);
+};
 
   const speak = (text) => {
     if (!supportsSpeech) return;
@@ -136,6 +166,22 @@ export default function FakeCallPage() {
     const sec = (s % 60).toString().padStart(2, "0");
     return `${m}:${sec}`;
   };
+  function pickVoiceForGender(genderPref) {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return null;
+
+  const femaleHints = /female|zira|samantha|victoria|susan|karen|moira|tessa|fiona/i;
+  const maleHints = /male|david|daniel|alex|fred|george|james|mark/i;
+
+  const hints = genderPref === "female" ? femaleHints : maleHints;
+  const match = voices.find((v) => hints.test(v.name) && v.lang.startsWith("en"));
+  if (match) return match;
+
+
+  const enVoices = voices.filter((v) => v.lang.startsWith("en"));
+  if (!enVoices.length) return voices[0];
+  return genderPref === "female" ? enVoices[0] : enVoices[enVoices.length - 1];
+}
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-8 text-white">

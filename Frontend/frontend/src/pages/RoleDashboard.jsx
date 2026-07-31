@@ -9,8 +9,8 @@ export default function RoleDashboard({ roleName }) {
     case "user":
       return <UserLayout  roleName={roleName} />;
 
-    // case "volunteer":
-    //   return <VolunteerLayout />;
+    case "volunteer":
+      return <VolunteerLayout />;
 
     // case "police":
     //   return <PoliceLayout />;

@@ -31,43 +31,40 @@ export default function SOSPage() {
   };
 
   useEffect(() => {
-  if (userId) {
-    fetchHistory();
-  }
-
-  const onNewEmergency = (data) => {
-    setLiveAlerts((prev) => [data.emergency, ...prev]);
-  };
-
-  const onEmergencyResolved = (data) => {
-    setLiveAlerts((prev) =>
-      prev.map((alert) =>
-        alert._id === data.emergency._id ? data.emergency : alert
-      )
-    );
-
-    setHistory((prev) =>
-      prev.map((alert) =>
-        alert._id === data.emergency._id ? data.emergency : alert
-      )
-    );
-
-    if (emergencyId === data.emergency._id) {
-      stopTracking();
+    if (userId) {
+      fetchHistory();
     }
-  };
 
-  socket.on("new-emergency", onNewEmergency);
-  socket.on("emergency-resolved", onEmergencyResolved);
+    const onNewEmergency = (data) => {
+      setLiveAlerts((prev) => [data.emergency, ...prev]);
+    };
 
-  return () => {
-    socket.off("new-emergency", onNewEmergency);
-    socket.off("emergency-resolved", onEmergencyResolved);
-  };
-}, [userId, emergencyId]);
+    const onEmergencyResolved = (data) => {
+      setLiveAlerts((prev) =>
+        prev.map((alert) =>
+          alert._id === data.emergency._id ? data.emergency : alert
+        )
+      );
 
+      setHistory((prev) =>
+        prev.map((alert) =>
+          alert._id === data.emergency._id ? data.emergency : alert
+        )
+      );
 
+      if (emergencyId === data.emergency._id) {
+        stopTracking();
+      }
+    };
 
+    socket.on("new-emergency", onNewEmergency);
+    socket.on("emergency-resolved", onEmergencyResolved);
+
+    return () => {
+      socket.off("new-emergency", onNewEmergency);
+      socket.off("emergency-resolved", onEmergencyResolved);
+    };
+  }, [userId, emergencyId]);
 
   const triggerSOS = () => {
     setError("");
@@ -271,10 +268,11 @@ export default function SOSPage() {
                       </h3>
 
                       <span
-                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${alert.status?.toLowerCase() === "active"
+                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                          alert.status?.toLowerCase() === "active"
                             ? "bg-red-500/10 text-red-400 border border-red-500/20"
                             : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                          }`}
+                        }`}
                       >
                         {alert.status}
                       </span>

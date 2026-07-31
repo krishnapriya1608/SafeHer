@@ -1,5 +1,5 @@
 const https = require("https");
-
+const { textToSpeech } = require("../utils/elevenLabsService");
 // =======================================================
 // Fallback scripts — used whenever no API key is configured
 // yet, or if the live API call fails for any reason. This
@@ -140,37 +140,56 @@ pauseAfterMs should be between 2000 and 4000, representing a natural pause for t
     req.end();
   });
 }
+// Generates real audio per line via ElevenLabs and attaches it as base64.
+// If no key is set, or a line fails, that line just has no audioBase64 —
+// the frontend falls back to browser speechSynthesis for that line only.
+async function attachAudio(script, callerType) {
+  if (!process.env.ELEVENLABS_API_KEY) return script;
+
+  try {
+    const linesWithAudio = await Promise.all(
+      script.lines.map(async (line) => {
+        try {
+          const audioBuffer = await textToSpeech(line.text, callerType);
+          return { ...line, audioBase64: audioBuffer.toString("base64") };
+        } catch (err) {
+          console.log("ElevenLabs line failed, falling back for this line:", err.message);
+          return line;
+        }
+      })
+    );
+    return { ...script, lines: linesWithAudio };
+  } catch (err) {
+    console.log("ElevenLabs batch failed entirely:", err.message);
+    return script;
+  }
+}
 
 exports.generateFakeCall = async (req, res) => {
   try {
     const { callerType } = req.body;
     const apiKey = process.env.ANTHROPIC_API_KEY;
 
-    // No key configured yet -> serve a fallback script so the feature
-    // still works end-to-end while the user sets up their API key.
+    let script;
+    let source;
+
     if (!apiKey) {
-      return res.status(200).json({
-        success: true,
-        source: "fallback",
-        script: pickFallback(callerType),
-      });
+      script = pickFallback(callerType);
+      source = "fallback";
+    } else {
+      try {
+        script = await callClaude({ apiKey, callerType });
+        source = "ai";
+      } catch (aiError) {
+        console.log("Fake call AI generation failed, using fallback:", aiError.message);
+        script = pickFallback(callerType);
+        source = "fallback";
+      }
     }
 
-    try {
-      const script = await callClaude({ apiKey, callerType });
-      return res.status(200).json({
-        success: true,
-        source: "ai",
-        script,
-      });
-    } catch (aiError) {
-      console.log("Fake call AI generation failed, using fallback:", aiError.message);
-      return res.status(200).json({
-        success: true,
-        source: "fallback",
-        script: pickFallback(callerType),
-      });
-    }
+    script = await attachAudio(script, callerType);
+
+    return res.status(200).json({ success: true, source, script });
   } catch (error) {
     res.status(500).json({
       success: false,
