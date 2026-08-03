@@ -18,8 +18,7 @@ export default function VolunteerDashboard() {
   const [message, setMessage] = useState("");
   const [acceptingId, setAcceptingId] = useState(null);
 
-  // This volunteer's own current location, used to compute distance to
-  // each SOS and to plot a "you are here" pin on the map.
+  // Volunteer's own current location
   useEffect(() => {
     if (!("geolocation" in navigator)) return;
     navigator.geolocation.getCurrentPosition(
@@ -70,7 +69,7 @@ export default function VolunteerDashboard() {
     };
   }, []);
 
-  // Distance (km) from this volunteer to each alert, when we know both points.
+  // Distance (km) computation
   const withDistance = useMemo(() => {
     return emergencies.map((e) => ({
       ...e,
@@ -121,127 +120,184 @@ export default function VolunteerDashboard() {
   const mapAlerts = [...newAlerts, ...acceptedByMe];
 
   return (
-    <div className="min-h-screen bg-zinc-950 px-4 py-8 md:py-12">
-      <div className="mx-auto max-w-4xl space-y-6">
-        {/* Header */}
-        <section className="rounded-3xl bg-blue-900 p-8 text-white">
-          <h1 className="text-4xl font-bold">Volunteer Dashboard</h1>
-          <p className="mt-2">
-            Welcome, {volunteerName}. Respond to nearby SOS alerts and assist users.
-          </p>
+    <div className="min-h-screen bg-[#F4F1EA] text-[#3D473D] font-serif px-4 py-8 md:py-12">
+      <div className="mx-auto max-w-4xl space-y-10">
+
+        {/* Hero Header Section */}
+        <section className="relative overflow-hidden rounded-2xl bg-[#4A5D4E] p-8 md:p-12 text-[#F4F1EA] shadow-xl border border-[#3E4E41]">
+          <div className="relative z-10 max-w-2xl space-y-3">
+            <span className="font-serif italic text-2xl text-[#C9D6C5] tracking-wide block">
+              welcome back,
+            </span>
+            <h1 className="text-3xl md:text-5xl font-light uppercase tracking-widest leading-tight text-[#FAF8F5]">
+              {volunteerName}
+            </h1>
+            <p className="text-sm md:text-base text-[#D3DEC2] font-sans font-light tracking-wide leading-relaxed pt-2">
+              Nourish your community with care and swift action. Respond to nearby SOS alerts and offer support where it’s needed most.
+            </p>
+          </div>
+          {/* Faded background accent text */}
+          <div className="absolute -bottom-6 -right-6 select-none opacity-5 font-serif text-8xl italic text-white pointer-events-none">
+            Cup of Care
+          </div>
         </section>
 
         {(message || error) && (
-          <div className="space-y-2">
+          <div className="space-y-2 font-sans">
             {message && <StatusMessage type="success">{message}</StatusMessage>}
             {error && <StatusMessage type="error">{error}</StatusMessage>}
           </div>
         )}
 
-        {/* Stats */}
-        <section className="grid md:grid-cols-3 gap-5">
-          <div className="rounded-xl bg-white p-6 shadow">
-            <h2 className="text-sm font-semibold text-stone-500">New Alerts</h2>
-            <p className="text-3xl font-bold text-stone-900">{newAlerts.length}</p>
+        {/* Stats Grid */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="relative rounded-xl bg-white/80 backdrop-blur-sm p-6 shadow-sm border border-[#DCD6CD] text-center">
+            <span className="text-xs uppercase tracking-widest text-[#788577] font-sans font-medium block mb-2">
+              New Alerts
+            </span>
+            <p className="text-4xl font-light text-[#3D473D]">{newAlerts.length}</p>
           </div>
 
-          <div className="rounded-xl bg-white p-6 shadow">
-            <h2 className="text-sm font-semibold text-stone-500">Accepted Cases</h2>
-            <p className="text-3xl font-bold text-stone-900">{acceptedByMe.length}</p>
+          <div className="relative rounded-xl bg-white/80 backdrop-blur-sm p-6 shadow-sm border border-[#DCD6CD] text-center">
+            <span className="text-xs uppercase tracking-widest text-[#788577] font-sans font-medium block mb-2">
+              Accepted Cases
+            </span>
+            <p className="text-4xl font-light text-[#3D473D]">{acceptedByMe.length}</p>
           </div>
 
-          <div className="rounded-xl bg-white p-6 shadow">
-            <h2 className="text-sm font-semibold text-stone-500">Completed</h2>
-            <p className="text-3xl font-bold text-stone-900">{completedByMe.length}</p>
+          <div className="relative rounded-xl bg-white/80 backdrop-blur-sm p-6 shadow-sm border border-[#DCD6CD] text-center">
+            <span className="text-xs uppercase tracking-widest text-[#788577] font-sans font-medium block mb-2">
+              Completed
+            </span>
+            <p className="text-4xl font-light text-[#3D473D]">{completedByMe.length}</p>
           </div>
         </section>
 
-        {/* Accepted by me — active cases this volunteer is handling right now */}
+        {/* Accepted Cases Section */}
         {acceptedByMe.length > 0 && (
           <section className="space-y-4">
-            <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-wider">
+            <h2 className="text-xs uppercase tracking-widest font-sans font-semibold text-[#627061] border-b border-[#DCD6CD] pb-2">
               Your Active Cases
             </h2>
-            {acceptedByMe.map((alert) => (
-              <div key={alert._id} className="rounded-xl bg-white p-5 shadow">
-                <h2 className="font-bold">🚨 SOS Alert — You accepted this</h2>
-                <p>User : {alert.username}</p>
-                <p>
-                  Distance :{" "}
-                  {alert.distanceKm != null ? `${alert.distanceKm.toFixed(1)} km` : "Unknown"}
-                </p>
-                <div className="mt-3 flex gap-2">
-                  <button
-                    onClick={() => navigate(`/live-tracking/${alert._id}`)}
-                    className="rounded bg-blue-600 px-4 py-2 text-white text-sm font-semibold"
-                  >
-                    Track Live
-                  </button>
-                  <button
-                    onClick={() => handleResolve(alert._id)}
-                    className="rounded border border-emerald-600 px-4 py-2 text-emerald-700 text-sm font-semibold"
-                  >
-                    Mark Resolved
-                  </button>
+            <div className="grid gap-4">
+              {acceptedByMe.map((alert) => (
+                <div
+                  key={alert._id}
+                  className="relative rounded-xl bg-white p-6 shadow-md border-l-4 border-[#4A5D4E] space-y-3"
+                >
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-light uppercase tracking-wider text-[#3D473D]">
+                      🚨 SOS Alert — Active Case
+                    </h3>
+                    <span className="text-xs font-sans bg-[#EBF0E9] text-[#4A5D4E] px-3 py-1 rounded-full border border-[#D0DDD0]">
+                      In Progress
+                    </span>
+                  </div>
+                  <div className="font-sans text-sm text-[#5C665B] space-y-1">
+                    <p><strong className="text-[#3D473D]">User:</strong> {alert.username}</p>
+                    <p>
+                      <strong className="text-[#3D473D]">Distance:</strong>{" "}
+                      {alert.distanceKm != null ? `${alert.distanceKm.toFixed(1)} km away` : "Unknown"}
+                    </p>
+                  </div>
+                  <div className="pt-3 flex flex-wrap gap-3 font-sans">
+                    <button
+                      onClick={() => navigate(`/live-tracking/${alert._id}`)}
+                      className="rounded-lg bg-[#4A5D4E] hover:bg-[#3D473D] text-[#FAF8F5] px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm"
+                    >
+                      Track Live
+                    </button>
+                    <button
+                      onClick={() => handleResolve(alert._id)}
+                      className="rounded-lg border border-[#B1C2AF] bg-transparent hover:bg-[#EBF0E9] text-[#4A5D4E] px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors"
+                    >
+                      Mark Resolved
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </section>
         )}
 
-        {/* SOS Cards — new, unclaimed alerts, nearest first */}
+        {/* New SOS Alerts Section */}
         <section className="space-y-4">
-          <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-wider">
+          <h2 className="text-xs uppercase tracking-widest font-sans font-semibold text-[#627061] border-b border-[#DCD6CD] pb-2">
             New SOS Alerts
           </h2>
 
           {loading ? (
-            <p className="text-sm text-zinc-500">Loading…</p>
+            <p className="text-sm font-sans text-[#788577]">Loading nearby alerts…</p>
           ) : newAlerts.length === 0 ? (
-            <div className="rounded-xl bg-white p-5 shadow text-sm text-stone-500">
+            <div className="rounded-xl bg-white/60 p-8 shadow-sm border border-[#DCD6CD] text-center text-sm font-sans text-[#788577]">
               No unclaimed alerts right now.
             </div>
           ) : (
-            newAlerts.map((alert) => (
-              <div key={alert._id} className="rounded-xl bg-white p-5 shadow">
-                <h2 className="font-bold">🚨 SOS Alert</h2>
-                <p>User : {alert.username}</p>
-                <p>
-                  Distance :{" "}
-                  {alert.distanceKm != null ? `${alert.distanceKm.toFixed(1)} km` : "Unknown"}
-                </p>
-                {alert.message && <p className="text-sm text-stone-500 italic">"{alert.message}"</p>}
+            <div className="grid gap-4">
+              {newAlerts.map((alert) => (
+                <div
+                  key={alert._id}
+                  className="rounded-xl bg-white p-6 shadow-sm border border-[#E3DDD4] hover:border-[#B8C7B5] transition-all space-y-3"
+                >
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-light uppercase tracking-wider text-[#3D473D]">
+                      🚨 SOS Alert
+                    </h3>
+                    {alert.distanceKm != null && (
+                      <span className="text-xs font-sans text-[#788577] bg-[#F4F1EA] px-2.5 py-1 rounded">
+                        {alert.distanceKm.toFixed(1)} km
+                      </span>
+                    )}
+                  </div>
 
-                <div className="mt-3 flex gap-2">
-                  <button
-                    onClick={() => handleAccept(alert._id)}
-                    disabled={acceptingId === alert._id}
-                    className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
-                  >
-                    {acceptingId === alert._id ? "Accepting…" : "Accept"}
-                  </button>
-                  <button
-                    onClick={() => navigate(`/live-tracking/${alert._id}`)}
-                    className="rounded border border-blue-600 px-4 py-2 text-blue-700 text-sm font-semibold"
-                  >
-                    Track Live
-                  </button>
+                  <div className="font-sans text-sm text-[#5C665B] space-y-1">
+                    <p><strong className="text-[#3D473D]">User:</strong> {alert.username}</p>
+                    {alert.message && (
+                      <p className="italic text-[#788577] pt-1">"{alert.message}"</p>
+                    )}
+                  </div>
+
+                  <div className="pt-3 flex flex-wrap gap-3 font-sans">
+                    <button
+                      onClick={() => handleAccept(alert._id)}
+                      disabled={acceptingId === alert._id}
+                      className="rounded-lg bg-[#C2A382] hover:bg-[#B39270] disabled:opacity-50 text-white px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm"
+                    >
+                      {acceptingId === alert._id ? "Accepting…" : "Accept"}
+                    </button>
+                    <button
+                      onClick={() => navigate(`/live-tracking/${alert._id}`)}
+                      className="rounded-lg border border-[#DCD6CD] bg-transparent hover:bg-[#F4F1EA] text-[#4A5D4E] px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors"
+                    >
+                      Track Live
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </section>
 
-        {/* Map — nearby unclaimed + your own accepted cases, plus your position */}
-        <section className="rounded-xl bg-white p-5 shadow">
-          <h2 className="font-bold mb-3">Nearby Alerts Map</h2>
-          <NearbyAlertsMap self={self} alerts={mapAlerts} />
+        {/* Map Section */}
+        <section className="rounded-2xl bg-white p-6 shadow-sm border border-[#DCD6CD] space-y-4">
+          <div className="flex items-center justify-between border-b border-[#F4F1EA] pb-3">
+            <h2 className="text-lg font-light uppercase tracking-wider text-[#3D473D]">
+              Nearby Alerts Map
+            </h2>
+            <span className="text-xs font-sans italic text-[#8C988B]">Live Overview</span>
+          </div>
+
+          <div className="rounded-xl overflow-hidden border border-[#E3DDD4]">
+            <NearbyAlertsMap self={self} alerts={mapAlerts} />
+          </div>
+
           {!self && (
-            <p className="mt-2 text-xs text-stone-400">
-              Allow location access to see your position and distances to each alert.
+            <p className="text-xs font-sans text-[#8C988B] text-center pt-1">
+              Allow location access to see your position and exact distances on the map.
             </p>
           )}
         </section>
+
       </div>
     </div>
   );

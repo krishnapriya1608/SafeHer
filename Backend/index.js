@@ -23,7 +23,9 @@ const server = http.createServer(app);
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST","PATCH", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+     credentials: true,
   })
 );
 app.use(express.json());
@@ -39,7 +41,7 @@ app.use("/api/reports", reportRoutes);
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL || "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST","PATCH", "PUT", "DELETE"],
   },
 });
 

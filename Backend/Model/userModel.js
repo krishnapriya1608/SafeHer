@@ -37,6 +37,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    approvalStatus: {
+  type: String,
+  enum: ["pending", "approved", "rejected"],
+  default: function () {
+    return ["volunteer", "police"].includes(this.role) ? "pending" : "approved";
+  },
+},
   },
 
   {

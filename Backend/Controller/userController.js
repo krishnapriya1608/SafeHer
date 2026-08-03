@@ -338,6 +338,15 @@ exports.loginUser = async (req, res) => {
         message: "Please verify your email first.",
       });
     }
+    if (["volunteer", "police"].includes(user.role) && user.approvalStatus !== "approved") {
+      return res.status(403).json({
+        success: false,
+        message:
+          user.approvalStatus === "rejected"
+            ? "Your application was rejected. Contact support for details."
+            : "Your account is pending admin approval.",
+      });
+    }
 
     // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
