@@ -1,6 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
+const adminOnly = require("../middleware/adminOnly");
 
 const userController = require("../Controller/userController");
 const dashController=require("../Controller/dashController")
@@ -16,6 +17,8 @@ router.post("/login", userController.loginUser);
 router.post("/forgot-password", userController.forgotPassword);
 
 router.post("/reset-password/:token", userController.resetPassword);
+router.get("/pending-approvals", adminOnly, userController.getPendingApprovals);
+router.patch("/:id/approval", adminOnly, userController.updateApprovalStatus);
 
 // router.post("/logout", userController.logoutUser);
 

@@ -383,3 +383,53 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+
+
+// =======================
+// Admin: List Pending Approvals
+// =======================
+exports.getPendingApprovals = async (req, res) => {
+  try {
+    const pendingUsers = await User.find({
+      role: { $in: ["volunteer", "police"] },
+      approvalStatus: "pending",
+    }).select("-password -otp -otpExpiry");
+
+    res.status(200).json({ success: true, users: pendingUsers });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+// =======================
+// Admin: Approve / Reject User
+// =======================
+exports.updateApprovalStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // "approved" | "rejected"
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ success: false, message: "Invalid status" });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    user.approvalStatus = status;
+    await user.save();
+
+    const userData = user.toObject();
+    delete userData.password;
+    delete userData.otp;
+    delete userData.otpExpiry;
+
+    res.status(200).json({ success: true, message: `User ${status}`, user: userData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
