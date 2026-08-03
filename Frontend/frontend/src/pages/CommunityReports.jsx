@@ -190,8 +190,7 @@ export default function CommunityReports({ userId }) {
                       {report.images.map((src, i) => (
                         <img
                           key={i}
-                          src={`${import.meta.env.VITE_API_BASE_URL || ""}${src}`}
-                          alt="Report evidence"
+                          src={`${import.meta.env.VITE_API_BASE_URL || ""}${src}`} alt="Report evidence"
                           className="h-20 w-20 shrink-0 rounded-lg object-cover border border-zinc-800"
                         />
                       ))}

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { emergencyApi } from "../api/emergencyApi";
-import { socket } from "../socket";
-import { distanceMeters } from "../utils/geo";
-import NearbyAlertsMap from "../components/NearbyAlertsMap";
-import StatusMessage from "../components/StatusMessage";
+import { emergencyApi } from "../../api/emergencyApi";
+import { socket } from "../../socket";
+import { distanceMeters } from "../../utils/geo";
+import NearbyAlertsMap from "../../components/NearbyAlertsMap";
+import StatusMessage from "../../components/StatusMessage";
 
 export default function VolunteerDashboard() {
   const navigate = useNavigate();
