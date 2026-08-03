@@ -243,6 +243,8 @@ export default function UserDashboard() {
                                 <Link to="/sos" className="hover:text-[#1c1917] transition">
                                     SOS Signal
                                 </Link>
+                                <Link to="/reports" className="hover:text-[#1c1917] transition">
+                                    CommunityReports                                 </Link>
                                 <button onClick={handleLogout} className="hover:text-[#1c1917] transition">
                                     Logout
                                 </button>
@@ -263,7 +265,7 @@ export default function UserDashboard() {
                                 Safe Circle <span className="italic font-normal lowercase font-serif">&amp; Protection</span>
                             </h1>
                             <p className="text-sm font-sans tracking-wide text-[#6e665d] leading-relaxed">
-                                Continuous vigilance interface and emergency broadcast response system. 
+                                Continuous vigilance interface and emergency broadcast response system.
                                 Keep your trusted circle updated seamlessly.
                             </p>
                             <div className="pt-2">
@@ -323,11 +325,10 @@ export default function UserDashboard() {
                                     type="button"
                                     onClick={() => handleStatusChange("Safe")}
                                     disabled={loading}
-                                    className={`p-6 border text-left transition duration-300 ${
-                                        currentStatus === "Safe"
+                                    className={`p-6 border text-left transition duration-300 ${currentStatus === "Safe"
                                             ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
                                             : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
-                                    }`}
+                                        }`}
                                 >
                                     <span className="text-[10px] tracking-[0.2em] uppercase text-[#a89f91] block mb-2">
                                         Protocol I
@@ -340,11 +341,10 @@ export default function UserDashboard() {
                                     type="button"
                                     onClick={() => handleStatusChange("Need Help")}
                                     disabled={loading}
-                                    className={`p-6 border text-left transition duration-300 ${
-                                        currentStatus === "Need Help"
+                                    className={`p-6 border text-left transition duration-300 ${currentStatus === "Need Help"
                                             ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
                                             : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
-                                    }`}
+                                        }`}
                                 >
                                     <span className="text-[10px] tracking-[0.2em] uppercase text-[#a89f91] block mb-2">
                                         Protocol II
@@ -357,11 +357,10 @@ export default function UserDashboard() {
                                     type="button"
                                     onClick={() => handleStatusChange("Emergency")}
                                     disabled={loading}
-                                    className={`p-6 border text-left transition duration-300 ${
-                                        currentStatus === "Emergency"
+                                    className={`p-6 border text-left transition duration-300 ${currentStatus === "Emergency"
                                             ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
                                             : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
-                                    }`}
+                                        }`}
                                 >
                                     <span className="text-[10px] tracking-[0.2em] uppercase text-[#a89f91] block mb-2">
                                         Protocol III

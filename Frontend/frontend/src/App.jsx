@@ -15,6 +15,7 @@ import SOSPage from "./pages/SOS";
 import FakeCallPage from "./pages/FakeCall";
 import LiveTrackingPage from "./pages/LiveTracking";
 import SafeRoute from "./pages/SafeRoute";
+import CommunityReports from "./pages/CommunityReports";
 
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
@@ -22,6 +23,8 @@ function HomeRedirect() {
 }
 
 export default function App() {
+  const { user } = useAuth();
+
   return (
     <>
       <Routes>
@@ -50,9 +53,9 @@ export default function App() {
         <Route path="/sos" element={<SOSPage />} />
         <Route path="/fake-call" element={<FakeCallPage />} />
         <Route path="/live-tracking/:emergencyId" element={<LiveTrackingPage />} />
-          
-              <Route path="/safe-route" element={<SafeRoute />} />
 
+        <Route path="/safe-route" element={<SafeRoute />} />
+        <Route path="/reports" element={<CommunityReports userId={user?._id} />} />
       </Routes>
     </>
   );

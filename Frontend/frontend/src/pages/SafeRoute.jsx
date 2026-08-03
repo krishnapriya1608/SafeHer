@@ -129,8 +129,12 @@ export default function SafeRoute() {
   const formatDistance = (meters) =>
     meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toFixed(1)} km`;
 
-  const nearestServices = origin ? sortByDistance(origin, services).slice(0, 8) : [];
-
+const nearestServices = origin
+  ? [
+      ...sortByDistance(origin, services.filter((s) => s.type === "police")).slice(0, 4),
+      ...sortByDistance(origin, services.filter((s) => s.type === "hospital")).slice(0, 4),
+    ]
+  : [];
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-emerald-500/30">
       {/* Sticky Glass Top Header */}

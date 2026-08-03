@@ -12,6 +12,7 @@ const emergencyRoute = require("./Routes/emergencyRoutes");
 const fakeCallRoute = require("./Routes/fakeCallRoutes");
 const safeRouteRoute = require("./Routes/safeRouteRoutes");
 const User = require("./Model/userModel");
+const reportRoutes = require("./routes/reportRoutes");
 const { registerLiveTrackingHandlers } = require("./Controller/LivetrackingController");
 
 require("./DB/connection");
@@ -32,6 +33,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/emergency", emergencyRoute);
 app.use("/api/fakecall", fakeCallRoute);
 app.use("/api/saferoute", safeRouteRoute);
+app.use("/api/reports", reportRoutes);
 
 const io = new Server(server, {
   cors: {

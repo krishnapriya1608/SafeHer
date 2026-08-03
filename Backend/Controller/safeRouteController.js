@@ -23,11 +23,11 @@ const searchPlaces = async (req, res) => {
       headers: { "User-Agent": "SafeHer-App/1.0" },
     });
 
-  if (!response.ok) {
-  const body = await response.text().catch(() => "");
-  console.log("Overpass failed:", response.status, response.statusText, body.slice(0, 300));
-  throw new Error("Emergency service lookup failed upstream");
-}
+    if (!response.ok) {
+      const body = await response.text().catch(() => "");
+      console.log("Nominatim failed:", response.status, response.statusText, body.slice(0, 300));
+      throw new Error("Address search failed upstream");
+    }
 
     const data = await response.json();
     const results = data.map((item) => ({
@@ -39,7 +39,7 @@ const searchPlaces = async (req, res) => {
     res.json({ results });
   } catch (err) {
     res.status(500).json({ message: "Address search failed", error: err.message });
-    console.log(err)
+    console.log(err);
   }
 };
 
@@ -65,11 +65,13 @@ async function fetchRoutesFromOSRM(origin, destination, profile) {
 }
 
 // Fetch police stations + hospitals inside a bounding box via Overpass.
-async function fetchServicesFromOverpass(points) {
+// Retries each endpoint once more before giving up, since the public
+// Overpass servers occasionally time out (504) under load.
+async function fetchServicesFromOverpass(points, retries = 1) {
   const { south, west, north, east } = boundingBox(points);
   const bbox = `${south},${west},${north},${east}`;
   const query = `
-    [out:json][timeout:25];
+    [out:json][timeout:50];
     (
       node["amenity"="police"](${bbox});
       way["amenity"="police"](${bbox});
@@ -78,40 +80,45 @@ async function fetchServicesFromOverpass(points) {
     );
     out center tags;
   `;
+
   let lastErr;
-  for (const endpoint of OVERPASS_ENDPOINTS) {
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain",
-          "User-Agent": "SafeHer-App/1.0 (contact: rishnak10@gmail.com)",
-        },
-        body: query,
-      });
-      if (!response.ok) {
-        const body = await response.text().catch(() => "");
-        console.log(`Overpass (${endpoint}) failed:`, response.status, body.slice(0, 300));
-        throw new Error(`Overpass returned ${response.status}`);
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    for (const endpoint of OVERPASS_ENDPOINTS) {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain",
+            "User-Agent": "SafeHer-App/1.0 (contact: rishnak10@gmail.com)",
+          },
+          body: query,
+        });
+
+        if (!response.ok) {
+          const body = await response.text().catch(() => "");
+          console.log(`Overpass (${endpoint}) failed:`, response.status, body.slice(0, 300));
+          throw new Error(`Overpass returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.elements
+          .map((el) => {
+            const lat = el.lat ?? el.center?.lat;
+            const lng = el.lon ?? el.center?.lon;
+            if (lat == null || lng == null) return null;
+            return {
+              id: `${el.type}-${el.id}`,
+              type: el.tags?.amenity === "police" ? "police" : "hospital",
+              name: el.tags?.name || (el.tags?.amenity === "police" ? "Police Station" : "Hospital"),
+              lat,
+              lng,
+            };
+          })
+          .filter(Boolean);
+      } catch (err) {
+        lastErr = err;
+        console.log(`Overpass endpoint ${endpoint} failed (attempt ${attempt + 1}), trying next...`);
       }
-      const data = await response.json();
-      return data.elements
-        .map((el) => {
-          const lat = el.lat ?? el.center?.lat;
-          const lng = el.lon ?? el.center?.lon;
-          if (lat == null || lng == null) return null;
-          return {
-            id: `${el.type}-${el.id}`,
-            type: el.tags?.amenity === "police" ? "police" : "hospital",
-            name: el.tags?.name || (el.tags?.amenity === "police" ? "Police Station" : "Hospital"),
-            lat,
-            lng,
-          };
-        })
-        .filter(Boolean);
-    } catch (err) {
-      lastErr = err;
-      console.log(`Overpass endpoint ${endpoint} failed, trying next...`);
     }
   }
   throw new Error("Emergency service lookup failed upstream: " + lastErr?.message);
@@ -144,6 +151,9 @@ const getSafeRoute = async (req, res) => {
     const allPoints = rawRoutes.flatMap((r) => r.path);
     const services = await fetchServicesFromOverpass(allPoints);
 
+    console.log("police:", services.filter((s) => s.type === "police").length);
+    console.log("hospital:", services.filter((s) => s.type === "hospital").length);
+
     const scored = scoreRoutes(rawRoutes, services);
     // Safest first (most police/hospitals along the way), then shortest duration.
     scored.sort((a, b) => b.safetyScore - a.safetyScore || a.durationSeconds - b.durationSeconds);
@@ -168,7 +178,7 @@ const getSafeRoute = async (req, res) => {
     res.json({ routes: scored, services });
   } catch (err) {
     res.status(500).json({ message: err.message || "Failed to compute safe route" });
-    console.log(err)
+    console.log(err);
   }
 };
 
@@ -180,7 +190,7 @@ const getHistory = async (req, res) => {
     res.json({ history });
   } catch (err) {
     res.status(500).json({ message: "Failed to load route history", error: err.message });
-    console.log(err)
+    console.log(err);
   }
 };
 
