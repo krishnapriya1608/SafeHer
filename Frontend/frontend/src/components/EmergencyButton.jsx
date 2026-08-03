@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { triggerEmergency } from '../api/contactApi';
+import  {contactApi}  from '../api/contactApi';
 
-export default function EmergencyButton() {
+export default function EmergencyButton({ userId }) {
   const [status, setStatus] = useState('idle'); // idle | locating | sending | sent | error
   const [report, setReport] = useState(null);
 
@@ -24,8 +24,8 @@ export default function EmergencyButton() {
   const sendAlert = async (location) => {
     setStatus('sending');
     try {
-      const res = await triggerEmergency(location);
-      setReport(res);
+      const res = await contactApi.triggerEmergency(userId, location);
+      setReport(res.data);
       setStatus('sent');
     } catch (err) {
       setStatus('error');

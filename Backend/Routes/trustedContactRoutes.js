@@ -7,18 +7,22 @@ const {
   deleteContact,
   triggerEmergency,
   acknowledgeAlert,
-} = require('../controllers/trustedContactController');
+} = require('../Controller/trustedContactController');
 
-// Replace with your real auth middleware, e.g. requireAuth (JWT/session check)
-const requireAuth = require('../middleware/requireAuth');
+
+const requireAuth = require('../Middleware/requireAuth');
 
 router.use(requireAuth);
 
-router.route('/').get(getContacts).post(addContact);
+router.route('/contact/:userId')
+  .get(getContacts)
+  .post(addContact);
 
-router.route('/:id').put(editContact).delete(deleteContact);
+router.route('/contact/:userId/:contactId')
+  .put(editContact)
+  .delete(deleteContact);
 
-router.post('/emergency', triggerEmergency);
+router.post('/emergency/:userId', triggerEmergency);
 router.patch('/emergency/:alertId/ack/:contactId', acknowledgeAlert);
 
 module.exports = router;

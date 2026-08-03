@@ -1,17 +1,21 @@
-const TrustedContact = require('../models/TrustedContact');
-const EmergencyAlert = require('../models/EmergencyAlert');
+const TrustedContact = require('../Model/TrustedContact');
+const EmergencyAlert = require('../Model/EmergencyAlert');
 const { generateAlertMessage, rankContactsByReliability } = require('../services/aiService');
 const { notifyAll } = require('../services/notificationService');
 
 // ---------- CRUD ----------
 
-// POST /api/contacts
+// POST /api/dashboard/contact/:userId
 exports.addContact = async (req, res) => {
   try {
+    const { userId } = req.params;
     const { name, relationship, phone, email, isPrimary } = req.body;
 
+    // Recommended: verify req.user.id === userId here once real auth is wired in,
+    // so one logged-in user can't add contacts to another user's account.
+
     const contact = await TrustedContact.create({
-      user: req.user.id, // assumes auth middleware sets req.user
+      user: userId,
       name,
       relationship,
       phone,
@@ -28,17 +32,17 @@ exports.addContact = async (req, res) => {
   }
 };
 
-// GET /api/contacts
+// GET /api/dashboard/contact/:userId
 exports.getContacts = async (req, res) => {
   try {
-    const contacts = await TrustedContact.find({ user: req.user.id }).sort({ priority: 1, createdAt: 1 });
+    const contacts = await TrustedContact.find({ user: req.params.userId }).sort({ priority: 1, createdAt: 1 });
     res.json({ success: true, count: contacts.length, data: contacts });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// PUT /api/contacts/:id
+// PUT /api/dashboard/contact/:userId/:contactId
 exports.editContact = async (req, res) => {
   try {
     const allowedFields = ['name', 'relationship', 'phone', 'email', 'priority', 'isPrimary'];
@@ -48,7 +52,7 @@ exports.editContact = async (req, res) => {
     });
 
     const contact = await TrustedContact.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id },
+      { _id: req.params.contactId, user: req.params.userId },
       updates,
       { new: true, runValidators: true }
     );
@@ -60,12 +64,12 @@ exports.editContact = async (req, res) => {
   }
 };
 
-// DELETE /api/contacts/:id
+// DELETE /api/dashboard/contact/:userId/:contactId
 exports.deleteContact = async (req, res) => {
   try {
-    const contact = await TrustedContact.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    const contact = await TrustedContact.findOneAndDelete({ _id: req.params.contactId, user: req.params.userId });
     if (!contact) return res.status(404).json({ success: false, message: 'Contact not found' });
-    res.json({ success: true, message: 'Contact removed', data: { id: req.params.id } });
+    res.json({ success: true, message: 'Contact removed', data: { id: req.params.contactId } });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -73,12 +77,13 @@ exports.deleteContact = async (req, res) => {
 
 // ---------- Emergency Notification ----------
 
-// POST /api/contacts/emergency
+// POST /api/dashboard/emergency/:userId
 // body: { lat, lng, address }
 exports.triggerEmergency = async (req, res) => {
   try {
+    const { userId } = req.params;
     const { lat, lng, address } = req.body;
-    const contacts = await TrustedContact.find({ user: req.user.id });
+    const contacts = await TrustedContact.find({ user: userId });
 
     if (contacts.length === 0) {
       return res.status(400).json({ success: false, message: 'No trusted contacts saved. Add at least one before triggering an alert.' });
@@ -89,7 +94,7 @@ exports.triggerEmergency = async (req, res) => {
 
     // AI measure #2: generate a clear, context-aware message (with safe fallback)
     const message = await generateAlertMessage({
-      userName: req.user.name || 'A trusted contact of yours',
+      userName: req.body.userName || 'A trusted contact of yours',
       location: { lat, lng, address },
       relationship: orderedContacts[0]?.relationship,
     });
@@ -97,7 +102,7 @@ exports.triggerEmergency = async (req, res) => {
     const deliveryReports = await notifyAll(orderedContacts, message);
 
     const alert = await EmergencyAlert.create({
-      user: req.user.id,
+      user: userId,
       location: { lat, lng, address },
       message,
       contactsNotified: deliveryReports.flatMap((r) =>

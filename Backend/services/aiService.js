@@ -1,16 +1,4 @@
-/**
- * AI Measures for Trusted Contacts / Emergency Notification
- * ------------------------------------------------------
- * 1. generateAlertMessage() - uses an LLM (Claude) to draft a short, clear,
- *    context-aware emergency message (name, location, time, relationship).
- *    Falls back to a deterministic template instantly if the API is slow,
- *    unreachable, or errors — an emergency alert must NEVER be blocked
- *    waiting on a third-party AI call.
- *
- * 2. rankContactsByReliability() - ranks trusted contacts using their
- *    historical response behavior (ack rate + average response time) so the
- *    fastest, most reliable contacts are notified/retried first.
- */
+
 
 const Anthropic = require('@anthropic-ai/sdk');
 
@@ -18,7 +6,7 @@ const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null;
 
-const AI_TIMEOUT_MS = 3000; // never let AI generation delay a real emergency
+const AI_TIMEOUT_MS = 3000;
 
 function templateMessage({ userName, location, timeString, relationship }) {
   const where = location?.address

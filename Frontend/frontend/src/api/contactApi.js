@@ -1,22 +1,28 @@
-import axios from 'axios';
+// src/api/contactApi.js
+import api from "./axios";
 
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:5000/api';
+export const contactApi = {
+  // GET all trusted contacts for a user
+  getContacts: (userId) =>
+    api.get(`/api/dashboard/contact/${userId}`),
 
-const client = axios.create({ baseURL: API_BASE });
+  // POST add a new trusted contact
+  addContact: (userId, payload) =>
+    api.post(`/api/dashboard/contact/${userId}`, payload),
 
-client.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+  // PUT edit an existing trusted contact
+  editContact: (userId, contactId, payload) =>
+    api.put(`/api/dashboard/contact/${userId}/${contactId}`, payload),
 
-export const getContacts = () => client.get('/contacts').then((r) => r.data);
+  // DELETE a trusted contact
+  deleteContact: (userId, contactId) =>
+    api.delete(`/api/dashboard/contact/${userId}/${contactId}`),
 
-export const addContact = (payload) => client.post('/contacts', payload).then((r) => r.data);
+  // POST trigger emergency alert to all trusted contacts
+  triggerEmergency: (userId, payload) =>
+    api.post(`/api/dashboard/emergency/${userId}`, payload),
 
-export const editContact = (id, payload) => client.put(`/contacts/${id}`, payload).then((r) => r.data);
-
-export const deleteContact = (id) => client.delete(`/contacts/${id}`).then((r) => r.data);
-
-export const triggerEmergency = (location) =>
-  client.post('/contacts/emergency', location).then((r) => r.data);
+  // PATCH a contact acknowledges receipt of an alert
+  acknowledgeAlert: (alertId, contactId) =>
+    api.patch(`/api/dashboard/emergency/${alertId}/ack/${contactId}`),
+};
