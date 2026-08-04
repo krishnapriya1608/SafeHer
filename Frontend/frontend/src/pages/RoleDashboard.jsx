@@ -1,6 +1,7 @@
 import UserLayout from "../components/dashboards/UserLayout";
 import VolunteerLayout from "../components/dashboards/VolunteerLayout";
 import AdminLayout from "../components/AdminReportPanel";
+import PoliceLayout from "../components/dashboards/PoliceLayout";
 
 
 export default function RoleDashboard({ roleName }) {
@@ -13,8 +14,8 @@ export default function RoleDashboard({ roleName }) {
     case "volunteer":
       return <VolunteerLayout />;
 
-    // case "police":
-    //   return <PoliceLayout />;
+    case "police":
+      return <PoliceLayout />;
 
     case "admin":
       return <AdminLayout />;
