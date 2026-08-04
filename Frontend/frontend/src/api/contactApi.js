@@ -19,8 +19,8 @@ export const contactApi = {
     api.delete(`/api/contacts/contact/${userId}/${contactId}`),
 
   // POST trigger emergency alert to all trusted contacts
-  triggerEmergency: (userId, payload) =>
-    api.post(`/api/emergency/${userId}`, payload),
+ triggerEmergency: (userId, payload) =>
+  api.post(`/api/contacts/emergency/${userId}`, payload),
 
   // PATCH a contact acknowledges receipt of an alert
   acknowledgeAlert: (alertId, contactId) =>

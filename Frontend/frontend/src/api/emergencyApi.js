@@ -1,8 +1,8 @@
 import api from "./axios";
 
 export const emergencyApi = {
-  createEmergency: (payload) =>
-    api.post("/api/emergency/create", payload),
+  createEmergency: (userId, location) =>
+    api.post("/api/emergency/create", { userId, ...location }),
 
   getEmergencyHistory: (userId) =>
     api.get(`/api/emergency/history/${userId}`),
