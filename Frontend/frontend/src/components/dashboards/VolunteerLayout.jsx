@@ -120,25 +120,21 @@ export default function VolunteerDashboard() {
   const mapAlerts = [...newAlerts, ...acceptedByMe];
 
   return (
-    <div className="min-h-screen bg-[#F4F1EA] text-[#3D473D] font-serif px-4 py-8 md:py-12">
-      <div className="mx-auto max-w-4xl space-y-10">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#3B4A3E] font-serif selection:bg-[#D3DEC2] px-4 py-8 md:py-16">
+      <div className="mx-auto max-w-5xl space-y-16">
 
         {/* Hero Header Section */}
-        <section className="relative overflow-hidden rounded-2xl bg-[#4A5D4E] p-8 md:p-12 text-[#F4F1EA] shadow-xl border border-[#3E4E41]">
-          <div className="relative z-10 max-w-2xl space-y-3">
-            <span className="font-serif italic text-2xl text-[#C9D6C5] tracking-wide block">
+        <section className="relative bg-[#FAF8F5] p-6 md:p-12 border border-[#E2DDD5] rounded-sm shadow-sm">
+          <div className="relative z-10 max-w-3xl space-y-4">
+            <span className="font-serif italic text-3xl md:text-4xl text-[#788876] font-light block tracking-wide">
               welcome back,
             </span>
-            <h1 className="text-3xl md:text-5xl font-light uppercase tracking-widest leading-tight text-[#FAF8F5]">
+            <h1 className="text-2xl md:text-4xl font-normal uppercase tracking-[0.2em] text-[#3B4A3E] leading-relaxed">
               {volunteerName}
             </h1>
-            <p className="text-sm md:text-base text-[#D3DEC2] font-sans font-light tracking-wide leading-relaxed pt-2">
+            <p className="text-xs md:text-sm text-[#637262] font-sans font-light tracking-widest uppercase leading-relaxed pt-2 border-t border-[#E2DDD5]/60 max-w-xl">
               Nourish your community with care and swift action. Respond to nearby SOS alerts and offer support where it’s needed most.
             </p>
-          </div>
-          {/* Faded background accent text */}
-          <div className="absolute -bottom-6 -right-6 select-none opacity-5 font-serif text-8xl italic text-white pointer-events-none">
-            Cup of Care
           </div>
         </section>
 
@@ -149,67 +145,80 @@ export default function VolunteerDashboard() {
           </div>
         )}
 
-        {/* Stats Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="relative rounded-xl bg-white/80 backdrop-blur-sm p-6 shadow-sm border border-[#DCD6CD] text-center">
-            <span className="text-xs uppercase tracking-widest text-[#788577] font-sans font-medium block mb-2">
-              New Alerts
-            </span>
-            <p className="text-4xl font-light text-[#3D473D]">{newAlerts.length}</p>
-          </div>
+        {/* Full-width Muted Banner Section */}
+        <section className="bg-[#5F6F5E] text-[#FAF8F5] p-10 md:p-14 text-center rounded-sm space-y-6 shadow-sm border border-[#4F5E4E]">
+          <span className="font-serif italic text-2xl md:text-3xl text-[#D8E2D5] font-light block">
+            Current Dashboard Overview
+          </span>
+          <h2 className="text-sm md:text-base font-sans font-light tracking-[0.25em] uppercase max-w-2xl mx-auto text-[#EBF0E9]/90">
+            Real-time status of emergency requests and your contributions
+          </h2>
 
-          <div className="relative rounded-xl bg-white/80 backdrop-blur-sm p-6 shadow-sm border border-[#DCD6CD] text-center">
-            <span className="text-xs uppercase tracking-widest text-[#788577] font-sans font-medium block mb-2">
-              Accepted Cases
-            </span>
-            <p className="text-4xl font-light text-[#3D473D]">{acceptedByMe.length}</p>
-          </div>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 max-w-3xl mx-auto">
+            <div className="p-6 bg-[#4F5E4E]/50 border border-[#718270] rounded-sm backdrop-blur-xs">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-[#D8E2D5] font-sans block mb-1">
+                New Alerts
+              </span>
+              <p className="text-3xl font-light tracking-wider text-[#FAF8F5]">{newAlerts.length}</p>
+            </div>
 
-          <div className="relative rounded-xl bg-white/80 backdrop-blur-sm p-6 shadow-sm border border-[#DCD6CD] text-center">
-            <span className="text-xs uppercase tracking-widest text-[#788577] font-sans font-medium block mb-2">
-              Completed
-            </span>
-            <p className="text-4xl font-light text-[#3D473D]">{completedByMe.length}</p>
+            <div className="p-6 bg-[#4F5E4E]/50 border border-[#718270] rounded-sm backdrop-blur-xs">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-[#D8E2D5] font-sans block mb-1">
+                Accepted Cases
+              </span>
+              <p className="text-3xl font-light tracking-wider text-[#FAF8F5]">{acceptedByMe.length}</p>
+            </div>
+
+            <div className="p-6 bg-[#4F5E4E]/50 border border-[#718270] rounded-sm backdrop-blur-xs">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-[#D8E2D5] font-sans block mb-1">
+                Completed
+              </span>
+              <p className="text-3xl font-light tracking-wider text-[#FAF8F5]">{completedByMe.length}</p>
+            </div>
           </div>
         </section>
 
         {/* Accepted Cases Section */}
         {acceptedByMe.length > 0 && (
-          <section className="space-y-4">
-            <h2 className="text-xs uppercase tracking-widest font-sans font-semibold text-[#627061] border-b border-[#DCD6CD] pb-2">
-              Your Active Cases
-            </h2>
-            <div className="grid gap-4">
+          <section className="space-y-6">
+            <div className="text-center space-y-1">
+              <span className="font-serif italic text-xl text-[#788876] block">active commitment</span>
+              <h2 className="text-xs uppercase tracking-[0.25em] font-sans text-[#3B4A3E] font-medium border-b border-[#E2DDD5] pb-3">
+                Your Active Cases
+              </h2>
+            </div>
+            <div className="grid gap-6">
               {acceptedByMe.map((alert) => (
                 <div
                   key={alert._id}
-                  className="relative rounded-xl bg-white p-6 shadow-md border-l-4 border-[#4A5D4E] space-y-3"
+                  className="bg-white p-8 border border-[#E2DDD5] shadow-xs space-y-4 rounded-sm relative"
                 >
-                  <div className="flex justify-between items-start">
-                    <h3 className="text-lg font-light uppercase tracking-wider text-[#3D473D]">
-                      🚨 SOS Alert — Active Case
+                  <div className="flex justify-between items-start border-b border-[#FAF8F5] pb-3">
+                    <h3 className="text-base font-normal uppercase tracking-widest text-[#3B4A3E]">
+                      🚨 SOS Alert — In Progress
                     </h3>
-                    <span className="text-xs font-sans bg-[#EBF0E9] text-[#4A5D4E] px-3 py-1 rounded-full border border-[#D0DDD0]">
-                      In Progress
+                    <span className="text-[10px] font-sans uppercase tracking-widest bg-[#F2EDE4] text-[#5F6F5E] px-3 py-1 rounded-xs border border-[#E2DDD5]">
+                      Active
                     </span>
                   </div>
-                  <div className="font-sans text-sm text-[#5C665B] space-y-1">
-                    <p><strong className="text-[#3D473D]">User:</strong> {alert.username}</p>
+                  <div className="font-sans text-xs text-[#556354] space-y-1.5 tracking-wide">
+                    <p><strong className="text-[#3B4A3E] font-semibold">User:</strong> {alert.username}</p>
                     <p>
-                      <strong className="text-[#3D473D]">Distance:</strong>{" "}
+                      <strong className="text-[#3B4A3E] font-semibold">Distance:</strong>{" "}
                       {alert.distanceKm != null ? `${alert.distanceKm.toFixed(1)} km away` : "Unknown"}
                     </p>
                   </div>
-                  <div className="pt-3 flex flex-wrap gap-3 font-sans">
+                  <div className="pt-2 flex flex-wrap gap-4 font-sans">
                     <button
                       onClick={() => navigate(`/live-tracking/${alert._id}`)}
-                      className="rounded-lg bg-[#4A5D4E] hover:bg-[#3D473D] text-[#FAF8F5] px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm"
+                      className="bg-[#5F6F5E] hover:bg-[#4F5E4E] text-[#FAF8F5] px-6 py-2.5 text-[11px] font-medium uppercase tracking-[0.2em] transition-all rounded-xs shadow-2xs"
                     >
                       Track Live
                     </button>
                     <button
                       onClick={() => handleResolve(alert._id)}
-                      className="rounded-lg border border-[#B1C2AF] bg-transparent hover:bg-[#EBF0E9] text-[#4A5D4E] px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors"
+                      className="border border-[#788876] bg-transparent hover:bg-[#F2EDE4] text-[#3B4A3E] px-6 py-2.5 text-[11px] font-medium uppercase tracking-[0.2em] transition-all rounded-xs"
                     >
                       Mark Resolved
                     </button>
@@ -221,53 +230,58 @@ export default function VolunteerDashboard() {
         )}
 
         {/* New SOS Alerts Section */}
-        <section className="space-y-4">
-          <h2 className="text-xs uppercase tracking-widest font-sans font-semibold text-[#627061] border-b border-[#DCD6CD] pb-2">
-            New SOS Alerts
-          </h2>
+        <section className="space-y-6">
+          <div className="text-center space-y-1">
+            <span className="font-serif italic text-xl text-[#788876] block">community requests</span>
+            <h2 className="text-xs uppercase tracking-[0.25em] font-sans text-[#3B4A3E] font-medium border-b border-[#E2DDD5] pb-3">
+              New SOS Alerts
+            </h2>
+          </div>
 
           {loading ? (
-            <p className="text-sm font-sans text-[#788577]">Loading nearby alerts…</p>
+            <p className="text-xs uppercase tracking-widest font-sans text-[#788876] text-center py-6">
+              Loading nearby alerts…
+            </p>
           ) : newAlerts.length === 0 ? (
-            <div className="rounded-xl bg-white/60 p-8 shadow-sm border border-[#DCD6CD] text-center text-sm font-sans text-[#788577]">
+            <div className="bg-white p-10 border border-[#E2DDD5] text-center text-xs uppercase tracking-widest font-sans text-[#788876] rounded-sm">
               No unclaimed alerts right now.
             </div>
           ) : (
-            <div className="grid gap-4">
+            <div className="grid gap-6">
               {newAlerts.map((alert) => (
                 <div
                   key={alert._id}
-                  className="rounded-xl bg-white p-6 shadow-sm border border-[#E3DDD4] hover:border-[#B8C7B5] transition-all space-y-3"
+                  className="bg-white p-8 border border-[#E2DDD5] hover:border-[#788876] transition-all space-y-4 rounded-sm shadow-xs"
                 >
                   <div className="flex justify-between items-start">
-                    <h3 className="text-lg font-light uppercase tracking-wider text-[#3D473D]">
-                      🚨 SOS Alert
+                    <h3 className="text-base font-normal uppercase tracking-widest text-[#3B4A3E]">
+                      🚨 Emergency Alert
                     </h3>
                     {alert.distanceKm != null && (
-                      <span className="text-xs font-sans text-[#788577] bg-[#F4F1EA] px-2.5 py-1 rounded">
-                        {alert.distanceKm.toFixed(1)} km
+                      <span className="text-[10px] font-sans uppercase tracking-wider text-[#788876] bg-[#FAF8F5] px-3 py-1 border border-[#E2DDD5]">
+                        {alert.distanceKm.toFixed(1)} km away
                       </span>
                     )}
                   </div>
 
-                  <div className="font-sans text-sm text-[#5C665B] space-y-1">
-                    <p><strong className="text-[#3D473D]">User:</strong> {alert.username}</p>
+                  <div className="font-sans text-xs text-[#556354] space-y-1.5 tracking-wide">
+                    <p><strong className="text-[#3B4A3E] font-semibold">User:</strong> {alert.username}</p>
                     {alert.message && (
-                      <p className="italic text-[#788577] pt-1">"{alert.message}"</p>
+                      <p className="italic font-serif text-sm text-[#788876] pt-1">"{alert.message}"</p>
                     )}
                   </div>
 
-                  <div className="pt-3 flex flex-wrap gap-3 font-sans">
+                  <div className="pt-2 flex flex-wrap gap-4 font-sans">
                     <button
                       onClick={() => handleAccept(alert._id)}
                       disabled={acceptingId === alert._id}
-                      className="rounded-lg bg-[#C2A382] hover:bg-[#B39270] disabled:opacity-50 text-white px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm"
+                      className="bg-[#C8B29B] hover:bg-[#B8A087] disabled:opacity-50 text-white px-6 py-2.5 text-[11px] font-medium uppercase tracking-[0.2em] transition-all rounded-xs shadow-2xs"
                     >
                       {acceptingId === alert._id ? "Accepting…" : "Accept"}
                     </button>
                     <button
                       onClick={() => navigate(`/live-tracking/${alert._id}`)}
-                      className="rounded-lg border border-[#DCD6CD] bg-transparent hover:bg-[#F4F1EA] text-[#4A5D4E] px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors"
+                      className="border border-[#E2DDD5] bg-transparent hover:bg-[#FAF8F5] text-[#3B4A3E] px-6 py-2.5 text-[11px] font-medium uppercase tracking-[0.2em] transition-all rounded-xs"
                     >
                       Track Live
                     </button>
@@ -279,20 +293,20 @@ export default function VolunteerDashboard() {
         </section>
 
         {/* Map Section */}
-        <section className="rounded-2xl bg-white p-6 shadow-sm border border-[#DCD6CD] space-y-4">
-          <div className="flex items-center justify-between border-b border-[#F4F1EA] pb-3">
-            <h2 className="text-lg font-light uppercase tracking-wider text-[#3D473D]">
+        <section className="bg-white p-8 border border-[#E2DDD5] space-y-6 rounded-sm shadow-xs">
+          <div className="flex items-center justify-between border-b border-[#E2DDD5] pb-4">
+            <h2 className="text-sm font-normal uppercase tracking-[0.2em] text-[#3B4A3E]">
               Nearby Alerts Map
             </h2>
-            <span className="text-xs font-sans italic text-[#8C988B]">Live Overview</span>
+            <span className="font-serif italic text-sm text-[#788876]">Live Overview</span>
           </div>
 
-          <div className="rounded-xl overflow-hidden border border-[#E3DDD4]">
+          <div className="overflow-hidden border border-[#E2DDD5] rounded-xs">
             <NearbyAlertsMap self={self} alerts={mapAlerts} />
           </div>
 
           {!self && (
-            <p className="text-xs font-sans text-[#8C988B] text-center pt-1">
+            <p className="text-[11px] uppercase tracking-widest font-sans text-[#788876] text-center pt-2">
               Allow location access to see your position and exact distances on the map.
             </p>
           )}
