@@ -15,6 +15,8 @@ const User = require("./Model/userModel");
 const reportRoutes = require("./Routes/reportRoutes");
 const { registerLiveTrackingHandlers } = require("./Controller/LivetrackingController");
 const trustedContactRoutes = require('./Routes/trustedContactRoutes');
+const aiSafetyRoutes = require("./Routes/aiSafetyRoutes");
+const errorHandler = require("./Middleware/errorHandler");
 require("./DB/connection");
 
 const app = express();
@@ -38,6 +40,11 @@ app.use("/api/fakecall", fakeCallRoute);
 app.use("/api/saferoute", safeRouteRoute);
 app.use("/api/reports", reportRoutes);
 app.use('/api/contacts', trustedContactRoutes);
+app.get("/api/health", (req, res) => res.json({ success: true, status: "ok" }));
+
+app.use("/api/ai-safety", aiSafetyRoutes);
+
+app.use(errorHandler);
 
 const io = new Server(server, {
   cors: {

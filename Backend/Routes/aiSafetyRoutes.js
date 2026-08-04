@@ -5,7 +5,7 @@ const {
   chat,
   getEmergencyContacts,
   getHistory,
-} = require("../controllers/aiSafetyController");
+} = require("../Controller/aiSafetyController");
 
 // Basic abuse protection on the AI endpoint
 const chatLimiter = rateLimit({

@@ -1,6 +1,6 @@
 const ChatLog = require("../models/ChatLog");
 const { getAIResponse } = require("../services/aiService");
-const emergencyContacts = require("../data/emergencyContacts");
+const emergencyContacts = require("../Data/emergencyContacts");
 
 const VALID_CATEGORIES = ["safety-guidance", "emergency-info", "legal-rights", "general"];
 
