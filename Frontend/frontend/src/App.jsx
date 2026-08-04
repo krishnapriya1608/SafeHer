@@ -57,7 +57,7 @@ export default function App() {
         <Route path="/safe-route" element={<SafeRoute />} />
         <Route path="/reports" element={<CommunityReports userId={user?._id} />} />
         <Route element={<ProtectedRoute allowedRoles={["user", "volunteer", "police", "admin"]} />}>
-  <Route path="/trusted-contacts" element={<TrustedContacts />} />
+<Route path="/trusted-contacts" element={<TrustedContacts userId={user?._id} />} />
 </Route>
       </Routes>
     </>

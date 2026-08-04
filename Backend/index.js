@@ -14,8 +14,7 @@ const safeRouteRoute = require("./Routes/safeRouteRoutes");
 const User = require("./Model/userModel");
 const reportRoutes = require("./Routes/reportRoutes");
 const { registerLiveTrackingHandlers } = require("./Controller/LivetrackingController");
-const {trustedContactRoutes} = require('./Routes/trustedContactRoutes');
-
+const trustedContactRoutes = require('./Routes/trustedContactRoutes');
 require("./DB/connection");
 
 const app = express();
