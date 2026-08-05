@@ -10,7 +10,6 @@ export default function VolunteerDashboard() {
   const navigate = useNavigate();
   const volunteerId = localStorage.getItem("userId");
   const volunteerName = localStorage.getItem("username") || "Volunteer";
-
   const [self, setSelf] = useState(null);
   const [emergencies, setEmergencies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -121,19 +120,19 @@ export default function VolunteerDashboard() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#3B4A3E] font-serif selection:bg-[#D3DEC2] px-4 py-8 md:py-16">
-      <div className="mx-auto max-w-5xl space-y-16">
+      <div className="mx-auto max-w-11xl space-y-16">
 
         {/* Hero Header Section */}
         <section className="relative bg-[#FAF8F5] p-6 md:p-12 border border-[#E2DDD5] rounded-sm shadow-sm">
           <div className="relative z-10 max-w-3xl space-y-4">
             <span className="font-serif italic text-3xl md:text-4xl text-[#788876] font-light block tracking-wide">
-              welcome back,
+              Welcome back,
             </span>
             <h1 className="text-2xl md:text-4xl font-normal uppercase tracking-[0.2em] text-[#3B4A3E] leading-relaxed">
               {volunteerName}
             </h1>
             <p className="text-xs md:text-sm text-[#637262] font-sans font-light tracking-widest uppercase leading-relaxed pt-2 border-t border-[#E2DDD5]/60 max-w-xl">
-              Nourish your community with care and swift action. Respond to nearby SOS alerts and offer support where it’s needed most.
+              Nourish your community with care and swift action. Respond to nearby SOS alerts and offer support where it's needed most.
             </p>
           </div>
         </section>
@@ -148,7 +147,7 @@ export default function VolunteerDashboard() {
         {/* Full-width Muted Banner Section */}
         <section className="bg-[#5F6F5E] text-[#FAF8F5] p-10 md:p-14 text-center rounded-sm space-y-6 shadow-sm border border-[#4F5E4E]">
           <span className="font-serif italic text-2xl md:text-3xl text-[#D8E2D5] font-light block">
-            Current Dashboard Overview
+            Volunteer Dashboard Overview
           </span>
           <h2 className="text-sm md:text-base font-sans font-light tracking-[0.25em] uppercase max-w-2xl mx-auto text-[#EBF0E9]/90">
             Real-time status of emergency requests and your contributions

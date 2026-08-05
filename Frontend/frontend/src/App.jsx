@@ -16,7 +16,8 @@ import FakeCallPage from "./pages/FakeCall";
 import LiveTrackingPage from "./pages/LiveTracking";
 import SafeRoute from "./pages/SafeRoute";
 import CommunityReports from "./pages/CommunityReports";
-import TrustedContacts from "./components/TrustedContacts"; 
+import TrustedContacts from "./components/TrustedContacts";
+import AISafetyAssistant from "./components/AISafetyAssistant";
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;
@@ -57,8 +58,9 @@ export default function App() {
         <Route path="/safe-route" element={<SafeRoute />} />
         <Route path="/reports" element={<CommunityReports userId={user?._id} />} />
         <Route element={<ProtectedRoute allowedRoles={["user", "volunteer", "police", "admin"]} />}>
-<Route path="/trusted-contacts" element={<TrustedContacts userId={user?._id} />} />
-</Route>
+          <Route path="/trusted-contacts" element={<TrustedContacts userId={user?._id} />} />
+          <Route path="/ai-safety" element={<AISafetyAssistant userId={user?._id} />} />
+        </Route>
       </Routes>
     </>
   );

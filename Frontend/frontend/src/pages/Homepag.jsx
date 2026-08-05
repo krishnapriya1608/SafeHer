@@ -368,23 +368,27 @@ export default function Home() {
               Extended Protection
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {modules.map((m) => {
-                const Icon = m.icon;
-                return (
-                  <div
-                    key={m.title}
-                    className="p-5 border border-[#e8e1d7]/15 bg-[#34372e] flex flex-col justify-between"
-                  >
-                    <div>
-                      <Icon className="text-amber-200/80 mb-4" size={20} />
-                      <h4 className="text-sm font-serif uppercase tracking-wider mb-2">{m.title}</h4>
-                      <p className="font-sans text-xs font-light text-[#a4a99b] leading-relaxed">
-                        {m.text}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+            {modules.map((m) => {
+  const Icon = m.icon;
+  const card = (
+    <div className="p-5 border border-[#e8e1d7]/15 bg-[#34372e] flex flex-col justify-between h-full">
+      <div>
+        <Icon className="text-amber-200/80 mb-4" size={20} />
+        <h4 className="text-sm font-serif uppercase tracking-wider mb-2">{m.title}</h4>
+        <p className="font-sans text-xs font-light text-[#a4a99b] leading-relaxed">
+          {m.text}
+        </p>
+      </div>
+    </div>
+  );
+  return m.title === "AI Assistant" ? (
+    <Link to="/ai-safety" key={m.title}>
+      {card}
+    </Link>
+  ) : (
+    <Fragment key={m.title}>{card}</Fragment>
+  );
+})}
             </div>
           </div>
 

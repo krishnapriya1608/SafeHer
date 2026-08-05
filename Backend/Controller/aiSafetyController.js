@@ -1,5 +1,5 @@
 const ChatLog = require("../Model/ChatLog");
-const { getAIResponse } = require("../services/aiService");
+const { getAIResponse } = require("../services/aiSafetyService");
 const emergencyContacts = require("../Data/emergencyContact");
 
 const VALID_CATEGORIES = ["safety-guidance", "emergency-info", "legal-rights", "general"];
@@ -38,7 +38,7 @@ async function chat(req, res) {
       },
     });
   } catch (err) {
-    console.error("AI chat error:", err.message);
+console.error("AI chat error:", err.response?.data || err.message);
     res.status(500).json({ success: false, error: "Failed to get AI response" });
   }
 }

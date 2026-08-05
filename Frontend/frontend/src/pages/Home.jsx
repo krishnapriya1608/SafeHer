@@ -32,6 +32,8 @@ import response from '../assets/Response.png'
 import dash3 from '../assets/dash3.png'
 import followme from '../assets/followme.png'
 import banner from '../assets/Bannerimg.png'
+import { Fragment } from "react";
+import FloatingAIAssistant from "../components/FloatingAIAssistant";
 import { useNavigate } from "react-router-dom";
 const modules = [
   { icon: PhoneCall, title: "Emergency Circles", text: "Instant communication channels with primary contacts." },
@@ -100,6 +102,7 @@ export default function Home() {
       {/* SECTION 1: EDITORIAL HEADER & HERO BANNER */}
     <section className="relative w-full bg-[#c8d6ba] text-[#2c2a29] py-20 px-6 md:px-12 overflow-hidden">
   <Logo/>
+  <FloatingAIAssistant userId={user?._id} />
   <div className="mx-auto max-w-5xl space-y-12">
    
     
@@ -440,13 +443,10 @@ export default function Home() {
               Extended Protection
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {modules.map((m) => {
+               {modules.map((m) => {
                 const Icon = m.icon;
-                return (
-                  <div
-                    key={m.title}
-                    className="p-5 border border-[#e8e1d7]/15 bg-[#34372e] flex flex-col justify-between"
-                  >
+                const card = (
+                  <div className="p-5 border border-[#e8e1d7]/15 bg-[#34372e] flex flex-col justify-between h-full">
                     <div>
                       <Icon className="text-amber-200/80 mb-4" size={20} />
                       <h4 className="text-sm font-serif uppercase tracking-wider mb-2">{m.title}</h4>
@@ -456,7 +456,14 @@ export default function Home() {
                     </div>
                   </div>
                 );
-              })}
+                return m.title === "AI Assistant" ? (
+                  <Link to="/ai-safety" key={m.title}>
+                    {card}
+                  </Link>
+                ) : (
+                  <Fragment key={m.title}>{card}</Fragment>
+                );
+              })} 
             </div>
           </div>
         </div>
