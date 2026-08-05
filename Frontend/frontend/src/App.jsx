@@ -18,6 +18,8 @@ import SafeRoute from "./pages/SafeRoute";
 import CommunityReports from "./pages/CommunityReports";
 import TrustedContacts from "./components/TrustedContacts";
 import AISafetyAssistant from "./components/AISafetyAssistant";
+import Subscription from "./pages/Subscription";
+
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;
@@ -60,6 +62,9 @@ export default function App() {
         <Route element={<ProtectedRoute allowedRoles={["user", "volunteer", "police", "admin"]} />}>
           <Route path="/trusted-contacts" element={<TrustedContacts userId={user?._id} />} />
           <Route path="/ai-safety" element={<AISafetyAssistant userId={user?._id} />} />
+        </Route>
+        <Route element={<ProtectedRoute allowedRoles={["user", "volunteer", "police", "admin"]} />}>
+          <Route path="/subscription" element={<Subscription />} />
         </Route>
       </Routes>
     </>

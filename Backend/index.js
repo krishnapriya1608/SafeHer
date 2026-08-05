@@ -17,6 +17,7 @@ const { registerLiveTrackingHandlers } = require("./Controller/LivetrackingContr
 const trustedContactRoutes = require('./Routes/trustedContactRoutes');
 const aiSafetyRoutes = require("./Routes/aiSafetyRoutes");
 const errorHandler = require("./Middleware/errorHandler");
+const subscriptionRoutes = require("./Routes/subscriptionRoutes");
 require("./DB/connection");
 
 const app = express();
@@ -43,6 +44,7 @@ app.use('/api/contacts', trustedContactRoutes);
 app.get("/api/health", (req, res) => res.json({ success: true, status: "ok" }));
 
 app.use("/api/ai-safety", aiSafetyRoutes);
+app.use("/api/subscription", subscriptionRoutes);
 
 app.use(errorHandler);
 

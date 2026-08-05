@@ -1,7 +1,8 @@
 const ChatLog = require("../Model/ChatLog");
 const { getAIResponse } = require("../services/aiSafetyService");
+const User = require("../Model/userModel");
 const emergencyContacts = require("../Data/emergencyContact");
-
+const FREE_DAILY_MESSAGE_LIMIT = 10;
 const VALID_CATEGORIES = ["safety-guidance", "emergency-info", "legal-rights", "general"];
 
 // POST /api/ai-safety/chat
@@ -14,6 +15,32 @@ async function chat(req, res) {
     }
     if (!VALID_CATEGORIES.includes(category)) {
       return res.status(400).json({ success: false, error: "invalid category" });
+    }
+
+    // Free-tier users get a daily message cap; Pro users are unlimited.
+    // Anonymous requests (no userId) aren't capped here since there's no
+    // account to check a plan against.
+    if (userId) {
+      const user = await User.findById(userId).select("plan planExpiry");
+      const isActivePro = user?.plan === "pro" && user.planExpiry && user.planExpiry > new Date();
+
+      if (!isActivePro) {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const usedToday = await ChatLog.countDocuments({
+          userId,
+          createdAt: { $gte: startOfDay },
+        });
+
+        if (usedToday >= FREE_DAILY_MESSAGE_LIMIT) {
+          return res.status(403).json({
+            success: false,
+            error: `Free plan limit reached (${FREE_DAILY_MESSAGE_LIMIT} messages/day). Upgrade to Pro for unlimited access.`,
+            code: "FREE_LIMIT_REACHED",
+          });
+        }
+      }
     }
 
     const { aiResponse, provider, urgent } = await getAIResponse(message, category);
@@ -38,7 +65,7 @@ async function chat(req, res) {
       },
     });
   } catch (err) {
-console.error("AI chat error:", err.response?.data || err.message);
+    console.error("AI chat error:", err.response?.data || err.message);
     res.status(500).json({ success: false, error: "Failed to get AI response" });
   }
 }

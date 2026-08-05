@@ -44,6 +44,15 @@ const userSchema = new mongoose.Schema(
     return ["volunteer", "police"].includes(this.role) ? "pending" : "approved";
   },
 },
+plan: {
+  type: String,
+  enum: ["free", "pro"],
+  default: "free",
+},
+planExpiry: {
+  type: Date,
+  default: null,
+},
   },
 
   {
