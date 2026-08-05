@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import personal from '../../assets/personal.png';
-
+import bannerImage from '../../assets/Bannerimg.png';
 export default function UserDashboard() {
     const userId = localStorage.getItem("userId");
     const username = localStorage.getItem("username") || "";
@@ -190,7 +190,7 @@ export default function UserDashboard() {
     };
 
     return (
-        <div className="relative min-h-screen bg-[#f7f4ee] text-[#2c2825] font-serif overflow-hidden selection:bg-[#d5cebf]">
+        <div className="relative min-h-screen bg-[#a39d99] text-[#2c2825] font-serif overflow-hidden selection:bg-[#d5cebf]">
             <AnimatePresence mode="wait">
                 {showIntro ? (
                     <motion.div
@@ -225,7 +225,7 @@ export default function UserDashboard() {
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="max-w-6xl mx-auto px-4 py-8 md:px-12 md:py-12 flex flex-col gap-12"
+                        className="max-w-12xl  px-4 py-8 md:px-12 md:py-12 flex flex-col gap-12"
                     >
                         {/* Header Navigation */}
                         <header className="flex flex-col md:flex-row items-center justify-between border-b border-[#ded7ca] pb-6 gap-6">
@@ -237,7 +237,7 @@ export default function UserDashboard() {
                             </div>
 
                             <nav className="flex items-center gap-8 text-xs font-sans uppercase tracking-[0.2em] text-[#6b635b]">
-                                <span className="text-[#1c1917] font-semibold border-b border-[#1c1917] pb-1">
+                                <span className="text-[#0f0701] font-semibold border-b border-[#080400] pb-1">
                                     Overview
                                 </span>
                                 <Link to="/sos" className="hover:text-[#1c1917] transition">
@@ -264,7 +264,7 @@ export default function UserDashboard() {
                             <h1 className="text-3xl md:text-5xl font-light tracking-wide uppercase text-[#211e1c]">
                                 Safe Circle <span className="italic font-normal lowercase font-serif">&amp; Protection</span>
                             </h1>
-                            <p className="text-sm font-sans tracking-wide text-[#6e665d] leading-relaxed">
+                            <p className="text-sm font-sans tracking-wide text-[#0b0702] leading-relaxed">
                                 Continuous vigilance interface and emergency broadcast response system.
                                 Keep your trusted circle updated seamlessly.
                             </p>
@@ -282,14 +282,14 @@ export default function UserDashboard() {
                         <section className="grid grid-cols-1 md:grid-cols-12 overflow-hidden rounded-sm border border-[#e2dcd0] shadow-sm">
                             <div className="md:col-span-7 relative min-h-[260px] bg-[#d9d3c7]">
                                 <img
-                                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800"
+                                    src={personal}
                                     alt="Circle"
                                     className="w-full h-full object-cover grayscale opacity-90 mix-blend-multiply"
                                 />
                             </div>
                             <div className="md:col-span-5 bg-[#9e9687] text-[#f7f4ee] p-8 md:p-10 flex flex-col justify-between">
                                 <div className="space-y-2">
-                                    <span className="text-[10px] uppercase tracking-[0.3em] font-sans text-[#ded8cb]">
+                                    <span className="text-[10px] uppercase tracking-[0.3em] font-sans text-[#f3f1eb]">
                                         Your Status
                                     </span>
                                     <h2 className="text-3xl font-light italic">
@@ -298,11 +298,11 @@ export default function UserDashboard() {
                                 </div>
 
                                 <div className="space-y-4 pt-8">
-                                    <div className="border-t border-[#b8b0a1] pt-4 text-xs font-sans tracking-wider space-y-1">
-                                        <p className="uppercase text-[#ded8cb]">Network Status</p>
+                                    <div className="border-t border-[#f0ede8] pt-4 text-xs font-sans tracking-wider space-y-1">
+                                        <p className="uppercase text-[#f0ede8]">Network Status</p>
                                         <p className="text-lg font-serif">{emergencyContacts.length} Contacts Linked</p>
                                     </div>
-                                    <p className="text-xs font-sans text-[#ebe5d8] leading-relaxed">
+                                    <p className="text-xs font-sans text-[#b0afad] leading-relaxed">
                                         Live telemetry and automated alerts remain active for your registered devices.
                                     </p>
                                 </div>
@@ -315,7 +315,7 @@ export default function UserDashboard() {
                                 <h2 className="text-2xl font-light uppercase tracking-wide">
                                     Broadcast <span className="italic font-serif lowercase">Protocol</span>
                                 </h2>
-                                <p className="text-xs font-sans text-[#7a7267] uppercase tracking-widest">
+                                <p className="text-xs font-sans text-[#0b0701] uppercase tracking-widest">
                                     Select your state to inform your network
                                 </p>
                             </div>

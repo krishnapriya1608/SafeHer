@@ -41,7 +41,7 @@ const CALLER_OPTIONS = [
   },
   {
     id: "delivery",
-    label: "Delivery Executive",
+    label: "Delivery Exec",
     subtitle: "+91 98••• ••210",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
     bgImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=1200",
@@ -222,7 +222,7 @@ export default function FakeCallPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 flex items-center justify-center selection:bg-red-500 selection:text-white">
+    <main className="min-h-screen bg-[#FDF8F5] px-4 py-10 text-[#3D2E2B] font-serif flex items-center justify-center selection:bg-[#D4A373]/30">
       <div className="w-full max-w-md space-y-6">
         <AnimatePresence mode="wait">
           {/* STAGE: PICK */}
@@ -233,35 +233,39 @@ export default function FakeCallPage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -15, scale: 0.98 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 backdrop-blur-xl shadow-2xl shadow-slate-950/50"
+              className="relative overflow-hidden rounded-t-[5rem] rounded-b-3xl border border-[#EADBD3] bg-white p-6 sm:p-8 shadow-sm space-y-6"
             >
-              <Link
-                to="/dashboard/user"
-                className="group relative inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900/90 px-3.5 py-1.5 text-xs font-semibold text-zinc-300 shadow-sm transition-all hover:border-emerald-500/30 hover:bg-zinc-800/90 hover:text-white"
-              >
-                <LayoutDashboard size={14} className="text-emerald-400 transition-transform group-hover:scale-110" />
-                <span>Dashboard</span>
-              </Link>
+              <div className="flex justify-between items-center border-b border-[#F5ECE8] pb-4">
+                <Link
+                  to="/dashboard/user"
+                  className="group inline-flex items-center gap-2 rounded-none border-b border-[#8C4A32] pb-0.5 text-xs tracking-widest uppercase text-[#8C4A32] font-sans transition-all hover:text-[#582A1B]"
+                >
+                  <LayoutDashboard size={14} className="transition-transform group-hover:scale-110" />
+                  <span>Dashboard</span>
+                </Link>
 
-              <div className="absolute -top-24 py-10 -right-24 h-48 w-48 rounded-full bg-red-600/10 blur-3xl pointer-events-none" />
-
-              <div className="flex items-center gap-2 mt-4">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-red-400 border border-red-500/20">
-                  <Shield size={12} className="text-red-400" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#D4A373]/20 px-3 py-1 text-[10px] font-sans font-semibold tracking-widest uppercase text-[#8C4A32] border border-[#D4A373]/40">
+                  <Shield size={12} />
                   Safety Tool
                 </span>
               </div>
 
-              <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white">
-                Fake Call Generator
-              </h1>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                Instantly simulate an incoming call with a natural, one-sided script so it looks and sounds like you're talking to someone.
-              </p>
+              <div className="text-center space-y-2 pt-2">
+                <span className="text-xs tracking-[0.25em] uppercase text-[#B58369] font-sans font-semibold">
+                  Discrete Assistance
+                </span>
+                <h1 className="text-2xl sm:text-3xl font-normal tracking-tight text-[#3D2E2B] uppercase">
+                  Fake Call Generator
+                </h1>
+                <div className="w-10 h-px bg-[#B58369] mx-auto my-1" />
+                <p className="text-xs font-sans italic text-[#6B524B] leading-relaxed">
+                  Instantly simulate an incoming call with a natural, one-sided audio script to gracefully exit uncomfortable situations.
+                </p>
+              </div>
 
               {!supportsSpeech && (
-                <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-3.5 text-xs text-amber-300 backdrop-blur-sm">
-                  <AlertCircle size={16} className="shrink-0 text-amber-400 mt-0.5" />
+                <div className="flex items-start gap-2.5 rounded-xl border border-[#EADBD3] bg-[#FDF8F5] p-3 text-xs font-sans text-[#B58369]">
+                  <AlertCircle size={16} className="shrink-0 text-[#8C4A32] mt-0.5" />
                   <span>
                     Voice playback isn't supported in this browser. The call script will still display on screen.
                   </span>
@@ -269,47 +273,54 @@ export default function FakeCallPage() {
               )}
 
               {error && (
-                <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-300 backdrop-blur-sm">
-                  <AlertCircle size={16} className="shrink-0 text-red-400 mt-0.5" />
+                <div className="flex items-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-sans text-rose-700">
+                  <AlertCircle size={16} className="shrink-0 text-rose-600 mt-0.5" />
                   <span>{error}</span>
                 </div>
               )}
 
-              <div className="mt-6 grid grid-cols-2 gap-3.5">
-                {CALLER_OPTIONS.map((option) => (
+              <div className="grid grid-cols-2 gap-4 pt-2 font-sans">
+                {CALLER_OPTIONS.map((option, idx) => (
                   <button
                     key={option.id}
                     disabled={loading}
                     onClick={() => startCallFlow(option)}
-                    className="group relative flex flex-col items-center gap-2 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-center transition-all duration-300 hover:border-red-500/40 hover:bg-slate-900/80 hover:shadow-lg hover:shadow-red-500/5 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none"
+                    className="group relative flex flex-col items-center gap-3 rounded-t-full rounded-b-2xl border border-[#EADBD3] bg-white p-5 text-center transition-all duration-300 hover:border-[#8C4A32] hover:bg-[#FDF8F5] shadow-sm disabled:opacity-50"
                   >
+                    <span className="text-[10px] font-serif text-[#B58369]">0{idx + 1}</span>
                     {option.avatar ? (
                       <img
                         src={option.avatar}
                         alt={option.label}
-                        className="h-12 w-12 rounded-full object-cover border border-red-500/30 transition-transform duration-300 group-hover:scale-110"
+                        className="h-14 w-14 rounded-full object-cover border border-[#EADBD3] transition-transform duration-300 group-hover:scale-105"
                       />
                     ) : (
-                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 border border-red-500/20 text-sm font-bold text-red-400 transition-transform duration-300 group-hover:scale-110 group-hover:bg-red-500/20">
+                      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FDF8F5] border border-[#EADBD3] text-xs font-bold text-[#8C4A32]">
                         {initials(option.label)}
                       </span>
                     )}
-                    <span className="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors">
-                      {option.label}
-                    </span>
-                    <span className="text-xs text-slate-500 truncate max-w-full">
-                      {option.subtitle}
-                    </span>
+                    <div className="space-y-0.5">
+                      <span className="block text-xs font-bold font-serif text-[#3D2E2B] group-hover:text-[#8C4A32] transition-colors">
+                        {option.label}
+                      </span>
+                      <span className="block text-[10px] text-[#B58369] truncate max-w-full uppercase tracking-wider">
+                        {option.subtitle}
+                      </span>
+                    </div>
                   </button>
                 ))}
               </div>
 
               {loading && (
-                <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-400 animate-pulse">
-                  <Sparkles size={16} className="text-red-400" />
-                  <span>Preparing your call...</span>
+                <div className="flex items-center justify-center gap-2 text-xs font-sans text-[#8C4A32] italic animate-pulse">
+                  <Sparkles size={14} />
+                  <span>Preparing your safe call...</span>
                 </div>
               )}
+
+              <div className="text-center pt-2">
+                <p className="text-[11px] italic text-[#B58369]">A journey of a thousand miles begins with a single step.</p>
+              </div>
             </motion.section>
           )}
 
@@ -321,39 +332,21 @@ export default function FakeCallPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className="relative flex min-h-[75vh] flex-col items-center justify-between overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 p-8 text-center backdrop-blur-2xl shadow-2xl"
+              className="relative flex min-h-[70vh] flex-col items-center justify-between overflow-hidden rounded-t-[5rem] rounded-b-3xl border border-[#EADBD3] bg-white p-8 text-center shadow-sm"
             >
-              {/* Background Caller Image with Overlay */}
-              {callerOption.bgImage && (
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                  <img
-                    src={callerOption.bgImage}
-                    alt={callerOption.label}
-                    className="h-full w-full object-cover scale-105 filter blur-sm brightness-75"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/70 to-slate-950/90" />
-                </div>
-              )}
-
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-32 w-64 bg-red-500/10 blur-3xl pointer-events-none z-10" />
-
-              <div className="mt-12 space-y-4 flex flex-col items-center z-10">
-                <span className="inline-flex items-center gap-2 rounded-full bg-slate-900/80 px-3 py-1 text-xs font-medium text-slate-300 border border-slate-700/60 backdrop-blur-md">
-                  <PhoneCall size={12} className="animate-pulse text-emerald-400" />
+              <div className="mt-6 space-y-4 flex flex-col items-center">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#FDF8F5] px-3.5 py-1 text-xs font-sans text-[#8C4A32] border border-[#EADBD3]">
+                  <PhoneCall size={12} className="animate-pulse text-[#8C4A32]" />
                   Incoming call
                 </span>
 
                 <div className="relative my-4">
                   <motion.div
-                    animate={{ scale: [1, 1.35, 1], opacity: [0.3, 0, 0.3] }}
+                    animate={{ scale: [1, 1.25, 1], opacity: [0.4, 0, 0.4] }}
                     transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                    className="absolute inset-0 rounded-full bg-red-500/30 blur-md"
+                    className="absolute inset-0 rounded-full bg-[#D4A373]/30"
                   />
-                  <motion.span
-                    animate={{ scale: [1, 1.05, 1] }}
-                    transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                    className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-gradient-to-tr from-red-600/30 to-red-500/10 border-2 border-red-500/50 text-3xl font-extrabold text-red-300 shadow-xl"
-                  >
+                  <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-2 border-[#8C4A32] bg-[#FDF8F5]">
                     {callerOption.avatar ? (
                       <img
                         src={callerOption.avatar}
@@ -361,49 +354,51 @@ export default function FakeCallPage() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      initials(callerOption.label)
+                      <span className="text-2xl font-serif text-[#8C4A32] font-bold">
+                        {initials(callerOption.label)}
+                      </span>
                     )}
-                  </motion.span>
+                  </div>
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-white tracking-tight drop-shadow-md">
+                  <h2 className="text-2xl font-serif font-bold text-[#3D2E2B] uppercase tracking-wide">
                     {callerOption.label}
                   </h2>
-                  <p className="mt-1 text-xs font-medium text-slate-300 uppercase tracking-widest drop-shadow">
+                  <p className="mt-1 text-[11px] font-sans font-semibold text-[#B58369] uppercase tracking-widest">
                     Mobile
                   </p>
                 </div>
               </div>
 
-              <div className="mb-8 flex w-full items-center justify-around z-10 px-6">
+              <div className="mb-6 flex w-full items-center justify-around font-sans px-4">
                 <div className="flex flex-col items-center gap-2">
                   <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={resetToPicker}
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600/90 text-white shadow-lg shadow-red-600/30 backdrop-blur-sm transition-all hover:bg-red-600"
+                    className="flex h-14 w-14 items-center justify-center rounded-full bg-[#A64B2A] text-white shadow-sm transition-all"
                     title="Decline"
                   >
-                    <PhoneOff size={24} />
+                    <PhoneOff size={20} />
                   </motion.button>
-                  <span className="text-xs text-slate-300 font-medium drop-shadow">Decline</span>
+                  <span className="text-xs text-[#6B524B] font-medium uppercase tracking-wider">Decline</span>
                 </div>
 
                 <div className="flex flex-col items-center gap-2">
                   <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => {
                       clearTimeout(ringTimeoutRef.current);
                       answerCall(script);
                     }}
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-white shadow-lg shadow-emerald-600/30 backdrop-blur-sm transition-all hover:bg-emerald-500"
+                    className="flex h-14 w-14 items-center justify-center rounded-full bg-[#6B8E23] text-white shadow-sm transition-all"
                     title="Answer"
                   >
-                    <Phone size={24} />
+                    <Phone size={20} />
                   </motion.button>
-                  <span className="text-xs text-slate-300 font-medium drop-shadow">Accept</span>
+                  <span className="text-xs text-[#6B524B] font-medium uppercase tracking-wider">Accept</span>
                 </div>
               </div>
             </motion.section>
@@ -417,23 +412,11 @@ export default function FakeCallPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="relative flex min-h-[75vh] flex-col items-center justify-between overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 p-6 sm:p-8 text-center backdrop-blur-2xl shadow-2xl"
+              className="relative flex min-h-[70vh] flex-col items-center justify-between overflow-hidden rounded-t-[5rem] rounded-b-3xl border border-[#EADBD3] bg-white p-6 sm:p-8 text-center shadow-sm"
             >
-              {/* Background Caller Image with Overlay */}
-              {callerOption.bgImage && (
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                  <img
-                    src={callerOption.bgImage}
-                    alt={callerOption.label}
-                    className="h-full w-full object-cover scale-105 filter blur-md brightness-50"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/95" />
-                </div>
-              )}
-
-              <div className="mt-4 space-y-3 flex flex-col items-center z-10">
+              <div className="mt-4 space-y-3 flex flex-col items-center">
                 <div className="relative">
-                  <span className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-slate-800 border border-slate-700/60 text-xl font-bold text-slate-200 shadow-inner">
+                  <span className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-[#FDF8F5] border border-[#EADBD3]">
                     {callerOption.avatar ? (
                       <img
                         src={callerOption.avatar}
@@ -441,17 +424,19 @@ export default function FakeCallPage() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      initials(callerOption.label)
+                      <span className="text-xl font-bold font-serif text-[#8C4A32]">
+                        {initials(callerOption.label)}
+                      </span>
                     )}
                   </span>
-                  <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full bg-emerald-500 border-2 border-slate-900" />
+                  <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-[#6B8E23] border-2 border-white" />
                 </div>
 
                 <div>
-                  <h2 className="text-xl font-bold text-white tracking-tight drop-shadow-md">
+                  <h2 className="text-xl font-serif font-bold text-[#3D2E2B]">
                     {callerOption.label}
                   </h2>
-                  <div className="mt-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-emerald-400 drop-shadow">
+                  <div className="mt-1 flex items-center justify-center gap-1.5 text-xs font-sans font-medium text-[#8C4A32]">
                     <Clock size={12} className="animate-pulse" />
                     <span>{formatTime(seconds)}</span>
                   </div>
@@ -459,7 +444,7 @@ export default function FakeCallPage() {
               </div>
 
               {/* Live Script Teleprompter Card */}
-              <div className="my-6 max-h-56 w-full overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-950/80 p-4 text-left shadow-inner backdrop-blur-md z-10 scrollbar-thin scrollbar-thumb-slate-800">
+              <div className="my-4 max-h-52 w-full overflow-y-auto rounded-2xl border border-[#EADBD3] bg-[#FDF8F5] p-4 text-left font-sans shadow-inner scrollbar-thin">
                 {script?.lines?.map((line, idx) => (
                   <motion.p
                     key={idx}
@@ -468,12 +453,10 @@ export default function FakeCallPage() {
                       opacity: idx === currentLine ? 1 : idx < currentLine ? 0.4 : 0.25,
                       scale: idx === currentLine ? 1.01 : 1,
                     }}
-                    className={`mb-2.5 text-sm leading-relaxed transition-all ${
+                    className={`mb-2 text-xs leading-relaxed transition-all ${
                       idx === currentLine
-                        ? "font-semibold text-white bg-slate-800/60 p-2 rounded-xl border border-slate-700/50"
-                        : idx < currentLine
-                        ? "text-slate-400 px-2"
-                        : "text-slate-500 px-2"
+                        ? "font-semibold text-[#3D2E2B] bg-white p-2.5 rounded-xl border border-[#EADBD3]"
+                        : "text-[#6B524B] px-2"
                     }`}
                   >
                     {line.text}
@@ -482,22 +465,22 @@ export default function FakeCallPage() {
               </div>
 
               {/* Call Control Dashboard */}
-              <div className="mb-2 flex w-full items-center justify-center gap-6 z-10">
-                <button className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800/80 text-slate-400 border border-slate-700/50 backdrop-blur-md transition hover:bg-slate-700 hover:text-white">
+              <div className="mb-2 flex w-full items-center justify-center gap-6 font-sans">
+                <button className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FDF8F5] text-[#6B524B] border border-[#EADBD3] transition hover:text-[#3D2E2B]">
                   <VolumeX size={18} />
                 </button>
 
                 <motion.button
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.92 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={endCall}
-                  className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white shadow-lg shadow-red-600/30 transition hover:bg-red-500"
+                  className="flex h-16 w-16 items-center justify-center rounded-full bg-[#A64B2A] text-white shadow-sm transition"
                   title="End call"
                 >
-                  <PhoneOff size={26} />
+                  <PhoneOff size={24} />
                 </motion.button>
 
-                <button className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-800/80 text-slate-400 border border-slate-700/50 backdrop-blur-md transition hover:bg-slate-700 hover:text-white">
+                <button className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FDF8F5] text-[#6B524B] border border-[#EADBD3] transition hover:text-[#3D2E2B]">
                   <Volume2 size={18} />
                 </button>
               </div>
@@ -512,24 +495,24 @@ export default function FakeCallPage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -15, scale: 0.98 }}
               transition={{ duration: 0.3 }}
-              className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 p-8 text-center backdrop-blur-xl shadow-2xl"
+              className="relative overflow-hidden rounded-t-[5rem] rounded-b-3xl border border-[#EADBD3] bg-white p-8 text-center shadow-sm space-y-4"
             >
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-800/80 text-slate-400 border border-slate-700/60 mb-4">
-                <UserCheck size={28} className="text-slate-300" />
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#FDF8F5] text-[#8C4A32] border border-[#EADBD3]">
+                <UserCheck size={26} />
               </div>
 
-              <h2 className="text-2xl font-bold text-white tracking-tight">
+              <h2 className="text-2xl font-serif font-bold text-[#3D2E2B] uppercase tracking-wide">
                 Call Ended
               </h2>
-              <p className="mt-2 text-sm text-slate-400">
-                Call duration: <span className="font-semibold text-slate-200">{formatTime(seconds)}</span>
+              <p className="text-xs font-sans text-[#6B524B]">
+                Call duration: <span className="font-semibold text-[#8C4A32]">{formatTime(seconds)}</span>
               </p>
 
               <button
                 onClick={resetToPicker}
-                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-red-600/20 transition-all hover:bg-red-500 hover:shadow-red-600/30 active:scale-95"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#8C4A32] hover:bg-[#582A1B] px-6 py-3 text-xs font-sans tracking-widest uppercase text-white shadow-sm transition-all active:scale-95"
               >
-                <RefreshCw size={16} />
+                <RefreshCw size={14} />
                 Start Another Call
               </button>
             </motion.section>
