@@ -94,9 +94,7 @@ const realWorldSafetyFeatures = [
 
 export default function Home() {
   const navigate=useNavigate()
-
-  const { isAuthenticated, role } = useAuth();
-
+const { isAuthenticated, role, user } = useAuth();
   return (
     <main className="min-h-screen bg-[#f8f5f0] text-[#2c2e2b] font-serif selection:bg-[#4d5940] selection:text-[#f8f5f0]">
       {/* SECTION 1: EDITORIAL HEADER & HERO BANNER */}
