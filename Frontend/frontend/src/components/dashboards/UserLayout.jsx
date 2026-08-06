@@ -245,6 +245,9 @@ export default function UserDashboard() {
                                 </Link>
                                 <Link to="/reports" className="hover:text-[#1c1917] transition">
                                     CommunityReports                                 </Link>
+                                <Link to="/subscription" className="hover:text-[#1c1917] transition">
+                                    Pricing
+                                </Link>
                                 <button onClick={handleLogout} className="hover:text-[#1c1917] transition">
                                     Logout
                                 </button>
@@ -326,8 +329,8 @@ export default function UserDashboard() {
                                     onClick={() => handleStatusChange("Safe")}
                                     disabled={loading}
                                     className={`p-6 border text-left transition duration-300 ${currentStatus === "Safe"
-                                            ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
-                                            : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
+                                        ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
+                                        : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
                                         }`}
                                 >
                                     <span className="text-[10px] tracking-[0.2em] uppercase text-[#a89f91] block mb-2">
@@ -342,8 +345,8 @@ export default function UserDashboard() {
                                     onClick={() => handleStatusChange("Need Help")}
                                     disabled={loading}
                                     className={`p-6 border text-left transition duration-300 ${currentStatus === "Need Help"
-                                            ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
-                                            : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
+                                        ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
+                                        : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
                                         }`}
                                 >
                                     <span className="text-[10px] tracking-[0.2em] uppercase text-[#a89f91] block mb-2">
@@ -358,8 +361,8 @@ export default function UserDashboard() {
                                     onClick={() => handleStatusChange("Emergency")}
                                     disabled={loading}
                                     className={`p-6 border text-left transition duration-300 ${currentStatus === "Emergency"
-                                            ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
-                                            : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
+                                        ? "bg-[#211e1c] text-[#f7f4ee] border-[#211e1c]"
+                                        : "bg-[#f2ece1] border-[#ded7ca] text-[#2c2825] hover:border-[#8c8273]"
                                         }`}
                                 >
                                     <span className="text-[10px] tracking-[0.2em] uppercase text-[#a89f91] block mb-2">

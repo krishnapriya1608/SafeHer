@@ -61,7 +61,11 @@ export default function AISafetyAssistant({ userId }) {
         },
       ]);
     } catch (err) {
-      setError("Something went wrong reaching the assistant. Please try again.");
+      if (err.response?.data?.code === "FREE_LIMIT_REACHED") {
+        setError(err.response.data.error);
+      } else {
+        setError("Something went wrong reaching the assistant. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -91,11 +95,10 @@ export default function AISafetyAssistant({ userId }) {
             key={c.id}
             type="button"
             onClick={() => setCategory(c.id)}
-            className={`flex flex-col items-start gap-1 text-left px-3 py-3 rounded-xl border transition-colors ${
-              category === c.id
+            className={`flex flex-col items-start gap-1 text-left px-3 py-3 rounded-xl border transition-colors ${category === c.id
                 ? "bg-teal-50 border-teal-700"
                 : "bg-slate-50 border-slate-300 hover:border-teal-700"
-            }`}
+              }`}
           >
             <span className="font-semibold text-sm text-teal-950">{c.label}</span>
             <span className="text-xs text-slate-500">{c.description}</span>
@@ -134,11 +137,10 @@ export default function AISafetyAssistant({ userId }) {
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[90%] mb-3 px-3 py-2.5 rounded-lg text-sm leading-relaxed ${
-              m.role === "user"
+            className={`max-w-[90%] mb-3 px-3 py-2.5 rounded-lg text-sm leading-relaxed ${m.role === "user"
                 ? "ml-auto bg-teal-50"
                 : "bg-slate-100"
-            }`}
+              }`}
           >
             {m.role === "assistant" && m.urgent && (
               <div className="mb-2 text-xs font-semibold bg-red-50 border border-red-300 text-red-800 rounded-md px-2.5 py-1.5">
@@ -157,8 +159,16 @@ export default function AISafetyAssistant({ userId }) {
         <div ref={bottomRef} />
       </div>
 
-      {error && <div className="text-sm text-red-700 mb-2">{error}</div>}
-
+      {error && (
+        <div className="text-sm text-red-700 mb-2">
+          {error}
+          {error.includes("Upgrade to Pro") && (
+            <a href="/subscription" className="ml-1 underline font-semibold">
+              Upgrade now
+            </a>
+          )}
+        </div>
+      )}
       <form onSubmit={handleSend} className="flex gap-2">
         <input
           type="text"

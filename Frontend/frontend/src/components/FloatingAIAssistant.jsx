@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Bot, X, Send } from "lucide-react";
+import { Bot, X, Send, CreditCard } from "lucide-react";
 import { sendChatMessage, fetchEmergencyContacts } from "../api/aiSafetyApi";
+import { useAuth } from "../context/AuthContext";
+import { useRazorpayCheckout } from "../hooks/useRazorpayCheckout";
 
 const CATEGORIES = [
   { id: "safety-guidance", label: "Safety" },
@@ -9,19 +11,30 @@ const CATEGORIES = [
 ];
 
 export default function FloatingAIAssistant({ userId }) {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("safety-guidance");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [limitReached, setLimitReached] = useState(false);
+  const [upgraded, setUpgraded] = useState(false);
   const [emergencyNumber, setEmergencyNumber] = useState("112");
   const bottomRef = useRef(null);
+
+  const { payNow, payLoading, payError } = useRazorpayCheckout({
+    user,
+    onSuccess: () => {
+      setLimitReached(false);
+      setUpgraded(true);
+    },
+  });
 
   useEffect(() => {
     fetchEmergencyContacts("IN")
       .then((data) => setEmergencyNumber(data?.numbers?.["All-in-one emergency"] || "112"))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -36,6 +49,7 @@ export default function FloatingAIAssistant({ userId }) {
     setMessages((prev) => [...prev, { role: "user", text }]);
     setInput("");
     setError(null);
+    setLimitReached(false);
     setLoading(true);
 
     try {
@@ -45,7 +59,11 @@ export default function FloatingAIAssistant({ userId }) {
         { role: "assistant", text: data.response, urgent: data.urgent },
       ]);
     } catch (err) {
-      setError("Couldn't reach the assistant. Please try again.");
+      if (err.response?.data?.code === "FREE_LIMIT_REACHED") {
+        setLimitReached(true);
+      } else {
+        setError("Couldn't reach the assistant. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -80,11 +98,10 @@ export default function FloatingAIAssistant({ userId }) {
                 key={c.id}
                 type="button"
                 onClick={() => setCategory(c.id)}
-                className={`text-[11px] px-2.5 py-1 rounded-full border transition ${
-                  category === c.id
-                    ? "bg-teal-50 border-teal-700 text-teal-800 font-semibold"
-                    : "bg-white border-slate-300 text-slate-500"
-                }`}
+                className={`text-[11px] px-2.5 py-1 rounded-full border transition ${category === c.id
+                  ? "bg-teal-50 border-teal-700 text-teal-800 font-semibold"
+                  : "bg-white border-slate-300 text-slate-500"
+                  }`}
               >
                 {c.label}
               </button>
@@ -101,9 +118,8 @@ export default function FloatingAIAssistant({ userId }) {
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${
-                  m.role === "user" ? "ml-auto bg-teal-600 text-white" : "bg-slate-100 text-slate-800"
-                }`}
+                className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${m.role === "user" ? "ml-auto bg-teal-600 text-white" : "bg-slate-100 text-slate-800"
+                  }`}
               >
                 {m.role === "assistant" && m.urgent && (
                   <div className="mb-1.5 text-[10px] font-semibold bg-red-50 border border-red-300 text-red-700 rounded px-2 py-1">
@@ -119,6 +135,32 @@ export default function FloatingAIAssistant({ userId }) {
               </div>
             )}
             {error && <p className="text-[11px] text-red-600">{error}</p>}
+
+            {limitReached && (
+              <div className="border border-amber-300 bg-amber-50 rounded-xl p-3 text-xs text-amber-900 space-y-2">
+                <p className="font-semibold">Free daily limit reached (10 messages)</p>
+                <p className="text-amber-800">
+                  Upgrade to Pro for ₹99/month to keep chatting with no daily limit.
+                </p>
+                <button
+                  type="button"
+                  onClick={payNow}
+                  disabled={payLoading}
+                  className="w-full flex items-center justify-center gap-1.5 bg-teal-700 text-white rounded-full py-2 font-semibold hover:bg-teal-800 transition disabled:opacity-50"
+                >
+                  <CreditCard size={14} />
+                  {payLoading ? "Opening payment…" : "Pay ₹99 & Upgrade"}
+                </button>
+                {payError && <p className="text-red-600">{payError}</p>}
+              </div>
+            )}
+
+            {upgraded && (
+              <div className="border border-teal-300 bg-teal-50 rounded-xl p-3 text-xs text-teal-800 font-semibold">
+                You're on Pro now — unlimited messages unlocked. 🎉
+              </div>
+            )}
+
             <div ref={bottomRef} />
           </div>
 

@@ -2,9 +2,11 @@ const crypto = require("crypto");
 const Razorpay = require("razorpay");
 const User = require("../Model/userModel");
 const SubscriptionPayment = require("../Model/SubscriptionPayment");
+const ChatLog = require("../Model/ChatLog");
 
-const PRO_PLAN_AMOUNT_PAISE = Number(process.env.PRO_PLAN_AMOUNT_PAISE) || 9900; // ₹99.00
+const PRO_PLAN_AMOUNT_PAISE = Number(process.env.PRO_PLAN_AMOUNT_PAISE) || 9900;
 const PLAN_DURATION_DAYS = 30;
+const FREE_DAILY_MESSAGE_LIMIT = 10;
 
 function getRazorpayInstance() {
   const key_id = process.env.RAZORPAY_KEY_ID;
@@ -121,9 +123,26 @@ async function getStatus(req, res) {
       await user.save();
     }
 
+    const isActivePro = user.plan === "pro" && user.planExpiry && user.planExpiry > new Date();
+
+    let aiMessagesUsedToday = 0;
+    if (!isActivePro) {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      aiMessagesUsedToday = await ChatLog.countDocuments({
+        userId,
+        createdAt: { $gte: startOfDay },
+      });
+    }
+
     res.json({
       success: true,
-      data: { plan: user.plan, planExpiry: user.planExpiry },
+      data: {
+        plan: user.plan,
+        planExpiry: user.planExpiry,
+        aiMessagesUsedToday,
+        aiMessagesLimit: isActivePro ? null : FREE_DAILY_MESSAGE_LIMIT,
+      },
     });
   } catch (err) {
     console.error("getStatus error:", err.message);
