@@ -1,11 +1,47 @@
 const Emergency = require("../Model/emergencyModel");
+const User = require("../Model/userModel");
+
+const FREE_MAX_FOLLOWERS = 1; // free plan: 1 guardian watching at a time
 
 
 function registerLiveTrackingHandlers(io, socket) {
 
-  socket.on("join-emergency-room", (emergencyId) => {
+  socket.on("join-emergency-room", async (emergencyId) => {
     if (!emergencyId) return;
-    socket.join(`emergency-${emergencyId}`);
+
+    const room = `emergency-${emergencyId}`;
+
+    try {
+      const emergency = await Emergency.findById(emergencyId).select("userId");
+      if (!emergency) return;
+
+      const isOwner = socket.user?.id === emergency.userId.toString();
+
+      // The person whose emergency it is can always join their own room.
+      // The cap only applies to guardians/followers watching someone else.
+      if (!isOwner) {
+        const owner = await User.findById(emergency.userId).select("plan planExpiry");
+        const ownerIsActivePro =
+          owner?.plan === "pro" && owner.planExpiry && owner.planExpiry > new Date();
+
+        if (!ownerIsActivePro) {
+          const currentRoom = io.sockets.adapter.rooms.get(room);
+          const currentFollowerCount = currentRoom ? currentRoom.size : 0;
+
+          if (currentFollowerCount >= FREE_MAX_FOLLOWERS) {
+            socket.emit("follow-denied", {
+              emergencyId,
+              reason: "This free-plan user already has the maximum number of live followers. Upgrade to Pro for multiple simultaneous followers.",
+            });
+            return;
+          }
+        }
+      }
+
+      socket.join(room);
+    } catch (err) {
+      console.log("join-emergency-room failed:", err.message);
+    }
   });
 
   socket.on("leave-emergency-room", (emergencyId) => {

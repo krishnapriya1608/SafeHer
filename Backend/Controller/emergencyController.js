@@ -1,4 +1,9 @@
 const Emergency = require("../Model/emergencyModel");
+const User = require("../Model/userModel");
+const { distanceMeters } = require("../utils/geo");
+const { streamIncidentReportPdf } = require("../utils/generateIncidentPdf");
+
+const PRIORITY_RADIUS_METERS = 5000; // 5km — nearest responders get a direct, immediate ping
 
 exports.createEmergency = async (req, res) => {
   try {
@@ -35,6 +40,43 @@ exports.createEmergency = async (req, res) => {
       emergency,
       message: "New SOS emergency alert received",
     });
+
+    // Pro users additionally get an immediate, targeted ping to the nearest
+    // connected responders (by live location), on top of the normal
+    // broadcast every user already gets above. This never reduces free
+    // users' coverage — it's an extra speed boost for Pro, not a gate.
+    try {
+      const creator = await User.findById(userId).select("plan planExpiry");
+      const isActivePro = creator?.plan === "pro" && creator.planExpiry && creator.planExpiry > new Date();
+
+      if (isActivePro) {
+        const volunteerLocations = req.app.get("volunteerLocations");
+        if (volunteerLocations && volunteerLocations.size > 0) {
+          const alertPoint = [Number(latitude), Number(longitude)];
+          const nearby = [];
+
+          for (const [respUserId, loc] of volunteerLocations.entries()) {
+            const dist = distanceMeters(alertPoint, [loc.lat, loc.lng]);
+            if (dist <= PRIORITY_RADIUS_METERS) {
+              nearby.push({ ...loc, userId: respUserId, distanceMeters: Math.round(dist) });
+            }
+          }
+
+          nearby.sort((a, b) => a.distanceMeters - b.distanceMeters);
+
+          for (const responder of nearby) {
+            io.to(responder.socketId).emit("priority-emergency", {
+              emergency,
+              distanceMeters: responder.distanceMeters,
+              message: "Priority SOS alert nearby — Pro user request",
+            });
+          }
+        }
+      }
+    } catch (priorityErr) {
+      // Never let the priority-targeting step block or fail the core alert.
+      console.error("Priority alert targeting failed:", priorityErr.message);
+    }
 
     res.status(201).json({
       success: true,
@@ -196,6 +238,33 @@ exports.resolveEmergency = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error resolving emergency",
+      error: error.message,
+    });
+  }
+};
+
+// GET /api/emergency/:emergencyId/export-pdf (Pro only — see Routes/emergencyRoutes.js)
+exports.exportIncidentPdf = async (req, res) => {
+  try {
+    const { emergencyId } = req.params;
+    const emergency = await Emergency.findById(emergencyId);
+
+    if (!emergency) {
+      return res.status(404).json({ success: false, message: "Emergency not found" });
+    }
+
+    // Only the person who raised it (or a responder) may download it.
+    const isOwner = emergency.userId.toString() === req.user.id;
+    const isResponder = ["volunteer", "police", "admin"].includes(req.user.role);
+    if (!isOwner && !isResponder) {
+      return res.status(403).json({ success: false, message: "Not authorized to export this report" });
+    }
+
+    streamIncidentReportPdf(res, emergency);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error generating incident report",
       error: error.message,
     });
   }
