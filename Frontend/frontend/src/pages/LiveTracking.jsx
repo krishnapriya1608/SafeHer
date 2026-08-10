@@ -12,6 +12,7 @@ export default function LiveTrackingPage() {
   const [username, setUsername] = useState("");
   const [lastUpdated, setLastUpdated] = useState(null);
   const [connected, setConnected] = useState(socket.connected);
+  const [followDenied, setFollowDenied] = useState(null);
 
   // Load the emergency's last known position so the map isn't empty
   // before the first live "location-update" event arrives.
@@ -44,16 +45,22 @@ export default function LiveTrackingPage() {
       setPosition({ latitude: data.latitude, longitude: data.longitude });
       setLastUpdated(data.timestamp);
     };
+    const onFollowDenied = (data) => {
+      if (data.emergencyId !== emergencyId) return;
+      setFollowDenied(data.reason);
+    };
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("location-update", onLocationUpdate);
+    socket.on("follow-denied", onFollowDenied);
 
     return () => {
       socket.emit("leave-emergency-room", emergencyId);
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("location-update", onLocationUpdate);
+      socket.off("follow-denied", onFollowDenied);
     };
   }, [emergencyId]);
 
@@ -93,16 +100,23 @@ export default function LiveTrackingPage() {
               : "Waiting for the first location update…"}
           </p>
 
-          <div className="mt-5">
-            <LiveTrackingMap
-              latitude={position.latitude}
-              longitude={position.longitude}
-              label={username || "Emergency"}
-              height={460}
-            />
-          </div>
+          {followDenied ? (
+            <div className="mt-5 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 text-sm text-amber-200">
+              <p className="font-semibold mb-1">Couldn't join live tracking</p>
+              <p>{followDenied}</p>
+            </div>
+          ) : (
+            <div className="mt-5">
+              <LiveTrackingMap
+                latitude={position.latitude}
+                longitude={position.longitude}
+                label={username || "Emergency"}
+                height={460}
+              />
+            </div>
+          )}
 
-          {position.latitude != null && (
+          {!followDenied && position.latitude != null && (
             <button
               onClick={() =>
                 window.open(

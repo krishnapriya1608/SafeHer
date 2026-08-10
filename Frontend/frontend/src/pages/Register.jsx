@@ -5,7 +5,7 @@ import AuthLayout from "../components/AuthLayout";
 import StatusMessage from "../components/StatusMessage";
 import { authApi } from "../api/authApi";
 import { roles } from "../utils/roles";
-import registerImage from '../assets/side profile.jpg'
+import registerImage from '../assets/side profile.jpg' // Keep your original asset
 
 export default function Register() {
   const navigate = useNavigate();
@@ -33,21 +33,48 @@ export default function Register() {
       const response = await authApi.register(form);
       setMessage(response.data.message || "OTP sent successfully");
       
+      // Keep original logic for OTP navigation
       navigate("/verify-otp", { state: { email: form.email } });
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
-      set
     } finally {
       setLoading(false);
     }
   };
 
-  // Tailored Tailwind utility strings for input elements
+  // ************************************************************
+  // Tailored utility strings for the new EARTHY aesthetic
+  // ************************************************************
+  
   const inputClasses = 
-    "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 " +
-    "placeholder-slate-400 shadow-sm transition-all duration-200 " +
-    "focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/10 " +
+    "w-full rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm " +
+    "text-[#2a2a2a] placeholder-[#9c9c9c] " + // Dark charcoal text
+    "shadow-inner transition-all duration-200 " +
+    "focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-500/10 " + // Dusty green focus
     "disabled:cursor-not-allowed disabled:opacity-60";
+
+  const labelClasses = 
+    "mb-1 block text-[10px] font-bold uppercase tracking-[0.1em] text-slate-500";
+
+  const roleCardClasses = (isActive) =>
+    `group relative flex flex-col text-left p-4 rounded-md border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500/20 disabled:cursor-not-allowed ${
+      isActive
+        ? "border-slate-700 bg-white ring-1 ring-slate-700" // Dusty green border/shadow when active
+        : "border-slate-200 bg-[#f5f1ea] hover:border-slate-300 hover:bg-[#eae6de]" // Earthy beige base
+    }`;
+
+  const roleTitleClasses = (isActive) =>
+    `block text-sm font-bold font-serif transition-colors duration-200 ${
+      isActive ? "text-[#2a2a2a]" : "text-[#5e5e5e]"
+    }`;
+
+  const roleDescClasses = (isActive) =>
+    `mt-0.5 block text-[11px] leading-normal transition-colors duration-200 ${
+      isActive ? "text-slate-600" : "text-slate-500"
+    }`;
+
+  // ************************************************************
+  // ************************************************************
 
   return (
     <AuthLayout
@@ -55,7 +82,7 @@ export default function Register() {
       title="Join your safety network"
       subtitle="Register with your role, verify your email, and continue to your dashboard."
       image={registerImage}
-      bggradient="black"
+      bggradient="none" // Use the default earthy bg from AuthLayout
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         
@@ -63,10 +90,12 @@ export default function Register() {
         {message && <StatusMessage type="success">{message}</StatusMessage>}
         {error && <StatusMessage type="error">{error}</StatusMessage>}
 
-        {/* Input Fields Group */}
+        {/* ************************************************************
+           Input Fields Group - Now withserif typography and earth tones
+           ************************************************************ */}
         <div className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-700">Username</label>
+            <label className={labelClasses}>Username</label>
             <input 
               className={inputClasses}
               name="username" 
@@ -80,7 +109,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-700">Email Address</label>
+            <label className={labelClasses}>Email Address</label>
             <input 
               className={inputClasses}
               name="email" 
@@ -94,7 +123,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-700">Password</label>
+            <label className={labelClasses}>Password</label>
             <input 
               className={inputClasses}
               name="password" 
@@ -108,9 +137,11 @@ export default function Register() {
           </div>
         </div>
 
-        {/* Role Selection Blocks */}
+        {/* ************************************************************
+           Role Selection - Re-styled as beige cards with charcoal accents
+           ************************************************************ */}
         <div className="space-y-2.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Select Your Role</label>
+          <label className={labelClasses}>Select Your Role</label>
           <div className="grid gap-3 sm:grid-cols-2">
             {roles.map((role) => {
               const isActive = form.role === role.value;
@@ -120,16 +151,12 @@ export default function Register() {
                   key={role.value}
                   onClick={() => setForm((prev) => ({ ...prev, role: role.value }))}
                   disabled={loading}
-                  className={`group relative flex flex-col text-left p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 disabled:cursor-not-allowed ${
-                    isActive
-                      ? "border-teal-600 bg-teal-50/40 ring-2 ring-teal-600"
-                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
-                  }`}
+                  className={roleCardClasses(isActive)}
                 >
-                  <span className={`block text-sm font-bold transition-colors duration-200 ${isActive ? "text-teal-900" : "text-slate-900"}`}>
+                  <span className={roleTitleClasses(isActive)}>
                     {role.label}
                   </span>
-                  <span className={`mt-1 block text-xs leading-normal transition-colors duration-200 ${isActive ? "text-teal-700" : "text-slate-500"}`}>
+                  <span className={roleDescClasses(isActive)}>
                     {role.description}
                   </span>
                 </button>
@@ -138,11 +165,13 @@ export default function Register() {
           </div>
         </div>
 
-        {/* Submit Action */}
+        {/* ************************************************************
+           Submit Action - Now a dark charcoal/dusty green block button
+           ************************************************************ */}
         <div className="pt-2">
           <motion.button 
             whileTap={!loading ? { scale: 0.985 } : {}} 
-            className="w-full rounded-xl bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-teal-600/10 transition-all duration-200 hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-500/20 active:bg-teal-800 disabled:pointer-events-none disabled:opacity-50" 
+            className="w-full rounded-md bg-slate-700 px-5 py-3 text-sm font-semibold uppercase tracking-wider text-white shadow transition-all duration-200 hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-500/20 active:bg-slate-900 disabled:pointer-events-none disabled:opacity-50" 
             disabled={loading}
           >
             {loading ? (
@@ -151,7 +180,7 @@ export default function Register() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                 </svg>
-                Creating account...
+                Processing...
               </span>
             ) : (
               "Register"
@@ -159,10 +188,12 @@ export default function Register() {
           </motion.button>
         </div>
 
-        {/* Footer Link */}
+        {/* ************************************************************
+           Footer Link - Re-styled as dark gray text
+           ************************************************************ */}
         <p className="text-center text-sm text-slate-500">
           Already have an account?{" "}
-          <Link className="font-semibold text-teal-600 transition-colors duration-150 hover:text-teal-700 hover:underline" to="/login">
+          <Link className="font-semibold text-slate-700 transition-colors duration-150 hover:text-slate-900 hover:underline" to="/login">
             Login
           </Link>
         </p>

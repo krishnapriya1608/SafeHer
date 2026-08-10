@@ -4,7 +4,7 @@ const User = require("../Model/userModel");
 const SubscriptionPayment = require("../Model/SubscriptionPayment");
 const ChatLog = require("../Model/ChatLog");
 
-const PRO_PLAN_AMOUNT_PAISE = Number(process.env.PRO_PLAN_AMOUNT_PAISE) || 9900;
+const PRO_PLAN_AMOUNT_PAISE = Number(process.env.PRO_PLAN_AMOUNT_PAISE) || 100;
 const PLAN_DURATION_DAYS = 30;
 const FREE_DAILY_MESSAGE_LIMIT = 10;
 
@@ -26,10 +26,9 @@ async function createOrder(req, res) {
     const order = await razorpay.orders.create({
       amount: PRO_PLAN_AMOUNT_PAISE,
       currency: "INR",
-      receipt: `pro_${userId}_${Date.now()}`,
+      receipt: `pro_${Date.now()}`,
       notes: { userId, plan: "pro" },
     });
-
     await SubscriptionPayment.create({
       userId,
       plan: "pro",
@@ -49,9 +48,10 @@ async function createOrder(req, res) {
       },
     });
   } catch (err) {
-    console.error("createOrder error:", err.message);
+    console.error("createOrder error:", err.error?.description || err.message || err);
     res.status(500).json({ success: false, error: "Failed to create payment order" });
   }
+
 }
 
 // POST /api/subscription/verify

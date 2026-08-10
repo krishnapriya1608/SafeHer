@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import StatusMessage from "../components/StatusMessage";
 import { authApi } from "../api/authApi";
+import verifyImage from '../assets/Community.png';
 
 export default function VerifyOtp() {
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ export default function VerifyOtp() {
     <AuthLayout 
       eyebrow="Verify email" 
       title="Enter your OTP" 
+      image={verifyImage}
       subtitle="Check your email inbox and enter the 6 digit verification code."
     >
       <form onSubmit={verify} className="space-y-5">

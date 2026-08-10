@@ -19,7 +19,8 @@ import CommunityReports from "./pages/CommunityReports";
 import TrustedContacts from "./components/TrustedContacts";
 import AISafetyAssistant from "./components/AISafetyAssistant";
 import Subscription from "./pages/Subscription";
-
+import CheckIns from "./pages/CheckIn";
+import CheckInPrompt from "./components/CheckInPrompt";
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;
@@ -30,6 +31,7 @@ export default function App() {
 
   return (
     <>
+     <CheckInPrompt />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -66,6 +68,7 @@ export default function App() {
         <Route element={<ProtectedRoute allowedRoles={["user", "volunteer", "police", "admin"]} />}>
           <Route path="/subscription" element={<Subscription />} />
         </Route>
+        <Route path="/checkins" element={<CheckIns />} />
       </Routes>
     </>
   );

@@ -96,9 +96,9 @@ export default function Home() {
   const navigate = useNavigate()
   const { isAuthenticated, role, user } = useAuth();
   return (
-    <main className="min-h-screen bg-[#f8f5f0] text-[#2c2e2b] font-serif selection:bg-[#4d5940] selection:text-[#f8f5f0]">
+    <main className="min-h-screen bg-[#f8f5f0] text-[#2c2e2b] font-serif selection:bg-[#2b3d17] selection:text-[#f8f5f0]">
       {/* SECTION 1: EDITORIAL HEADER & HERO BANNER */}
-      <section className="relative w-full bg-[#c8d6ba] text-[#2c2a29] py-20 px-6 md:px-12 overflow-hidden">
+      <section className="relative w-full bg-[#505b45] text-[#0a0a0a] py-20 px-6 md:px-12 overflow-hidden">
         <Logo />
         <FloatingAIAssistant userId={user?._id} />
         <div className="mx-auto max-w-5xl space-y-12">
@@ -137,17 +137,17 @@ export default function Home() {
 
           {/* Editorial Header Section */}
           <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.35em] uppercase text-stone-500 font-medium">
+            <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.35em] uppercase text-stone-900 font-medium">
               Emergency Response Network
             </p>
 
-            <h1 className="text-3xl sm:text-5xl font-serif font-normal tracking-wider uppercase text-[#22201f]">
+            <h1 className="text-3xl sm:text-5xl font-serif font-normal tracking-wider uppercase text-[#0a0908]">
               Meet SafeCircle Network
             </h1>
           </div>
 
           {/* Two-Column Editorial Copy */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto font-serif text-xs leading-relaxed text-stone-600/90 text-justify">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto font-serif text-xs leading-relaxed text-stone-200/90 text-justify">
             <p>
               SafeCircle reimagines personal safety through an interconnected emergency response framework. By pairing low-latency location intelligence with automated distress signals, our system provides continuous monitoring and direct action when seconds count.
             </p>
@@ -158,7 +158,7 @@ export default function Home() {
 
           {/* Footer Tagline & Rounded Action Buttons */}
           <div className="flex flex-col items-center space-y-6 pt-2">
-            <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.25em] uppercase font-light text-stone-500 text-center max-w-xl">
+            <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.25em] uppercase font-light text-stone-100 text-center max-w-xl">
               Location Intelligence paired with real-time community dispatch
             </p>
 
@@ -176,12 +176,12 @@ export default function Home() {
               >
                 Login
               </button>
-               <button 
-          onClick={() => navigate('/subscription')} 
-          className="px-8 py-2.5 rounded-full text-[#22201f] text-xs uppercase tracking-widest underline hover:text-stone-600 transition duration-300 cursor-pointer"
-        >
-          Pricing
-        </button>
+              <button
+                onClick={() => navigate('/subscription')}
+                className="px-8 py-2.5 rounded-full border border-[#22201f] text-[#22201f] text-xs uppercase tracking-widest hover:bg-[#22201f] hover:text-[#f3f1ec] transition duration-300 hover:scale-105 shadow-sm cursor-pointer"
+              >
+                Pricing
+              </button>
             </div>
           </div>
 

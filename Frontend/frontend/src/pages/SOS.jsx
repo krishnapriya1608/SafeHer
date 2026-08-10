@@ -14,6 +14,7 @@ import {
   ExternalLink,
   Mail,
   Clock,
+  Download,
 } from "lucide-react";
 import StatusMessage from "../components/StatusMessage";
 import { emergencyApi } from "../api/emergencyApi";
@@ -33,6 +34,30 @@ export default function SOSPage() {
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [liveAlerts, setLiveAlerts] = useState([]);
+  const [pdfError, setPdfError] = useState("");
+
+  const handleDownloadPdf = async (emergencyId) => {
+    setPdfError("");
+    try {
+      const response = await emergencyApi.exportPdf(emergencyId);
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `incident-report-${emergencyId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      if (err.response?.status === 403) {
+        setPdfError("Downloading incident reports is a Pro feature — upgrade to unlock it.");
+      } else {
+        setPdfError("Failed to download report. Please try again.");
+      }
+    }
+  };
 
   const fetchHistory = async () => {
     try {
@@ -98,16 +123,15 @@ export default function SOSPage() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
-          const payload = {
-            userId,
+         const response = await emergencyApi.createEmergency(userId, {
             username,
             email,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             message: "SOS emergency triggered",
-          };
+          });
 
-          const response = await emergencyApi.createEmergency(payload);
+          setMessage(response.data.message || "SOS alert sent successfully");
 
           setMessage(response.data.message || "SOS alert sent successfully");
           setHistory((prev) => [response.data.emergency, ...prev]);
@@ -255,15 +279,15 @@ export default function SOSPage() {
             <p className="text-xs text-[#5a6b5c] mt-2 leading-relaxed">
               Active tracking monitoring center for nearby security services and contacts.
             </p>
-             <Link
+            <Link
               to="/safe-route"
               className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#2e4f32] hover:underline"
             >
-             <span className="mt-5 text-xs font-bold text-[#2e4f32]">
-              GPS Live Signal Active
-            </span>
+              <span className="mt-5 text-xs font-bold text-[#2e4f32]">
+                GPS Live Signal Active
+              </span>
             </Link>
-            
+
           </div>
         </section>
 
@@ -372,6 +396,10 @@ export default function SOSPage() {
                 </h3>
               </div>
 
+              {pdfError && (
+                <p className="text-[10px] text-red-600 mt-1">{pdfError}</p>
+              )}
+
               <div className="mt-3 space-y-3 max-h-56 overflow-y-auto pr-1">
                 {history.length === 0 ? (
                   <p className="text-xs text-[#8a9a8c] text-center py-6">
@@ -389,11 +417,10 @@ export default function SOSPage() {
                             {alert.message}
                           </span>
                           <span
-                            className={`text-[9px] px-2 py-0.5 rounded-full font-extrabold uppercase ${
-                              alert.status?.toLowerCase() === "active"
+                            className={`text-[9px] px-2 py-0.5 rounded-full font-extrabold uppercase ${alert.status?.toLowerCase() === "active"
                                 ? "bg-red-100 text-red-700"
                                 : "bg-emerald-100 text-emerald-800"
-                            }`}
+                              }`}
                           >
                             {alert.status}
                           </span>
@@ -403,16 +430,26 @@ export default function SOSPage() {
                         </span>
                       </div>
 
-                      <button
-                        onClick={() =>
-                          alert.status?.toLowerCase() === "active"
-                            ? openLiveTracking(alert._id)
-                            : openMap(alert.latitude, alert.longitude)
-                        }
-                        className="p-2 rounded-xl bg-[#e8e4d8] hover:bg-[#d8d0ba] text-[#2e4f32] shrink-0 transition-colors"
-                      >
-                        <ExternalLink size={14} />
-                      </button>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => handleDownloadPdf(alert._id)}
+                          className="p-2 rounded-xl bg-[#e8e4d8] hover:bg-[#d8d0ba] text-[#2e4f32] transition-colors"
+                          aria-label="Download incident report PDF"
+                          title="Download incident report (Pro)"
+                        >
+                          <Download size={14} />
+                        </button>
+                        <button
+                          onClick={() =>
+                            alert.status?.toLowerCase() === "active"
+                              ? openLiveTracking(alert._id)
+                              : openMap(alert.latitude, alert.longitude)
+                          }
+                          className="p-2 rounded-xl bg-[#e8e4d8] hover:bg-[#d8d0ba] text-[#2e4f32] transition-colors"
+                        >
+                          <ExternalLink size={14} />
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}

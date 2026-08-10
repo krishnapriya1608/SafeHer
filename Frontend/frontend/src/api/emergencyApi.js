@@ -17,4 +17,7 @@ export const emergencyApi = {
 
   resolveEmergency: (emergencyId) =>
     api.put(`/api/emergency/resolve/${emergencyId}`),
+
+  exportPdf: (emergencyId) =>
+    api.get(`/api/emergency/${emergencyId}/export-pdf`, { responseType: "blob" }),
 };
