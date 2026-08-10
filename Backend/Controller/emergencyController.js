@@ -197,6 +197,17 @@ exports.getEmergencyById = async (req, res) => {
       });
     }
 
+    // Only the person who raised it, or a responder, may view it —
+    // this record now carries phone/medicalNotes, so it's not public.
+    const isOwner = emergency.userId.toString() === req.user.id;
+    const isResponder = ["volunteer", "police", "admin"].includes(req.user.role);
+    if (!isOwner && !isResponder) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to view this emergency",
+      });
+    }
+
     res.status(200).json({
       success: true,
       emergency,

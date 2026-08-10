@@ -26,7 +26,9 @@ router.get(
 router.get("/single/:emergencyId", getEmergencyById);
 router.get("/:emergencyId/export-pdf", requirePro, exportIncidentPdf);
 
+const { acknowledgeCheckin } = require("../Controller/emergencyController");
 
+router.put("/checkin/:emergencyId/ack", authorize("volunteer", "police", "admin"), acknowledgeCheckin);
 router.put(
   "/accept/:emergencyId",
   authorize("volunteer", "police"),
