@@ -1,5 +1,5 @@
 const Dashboard = require("../Model/dashboardModel");
-
+const io = req.app.get("io");
 const createDashboard = async (req, res) => {
   try {
     const {
@@ -168,11 +168,8 @@ const updateCurrentStatus = async (req, res) => {
     const { currentStatus } = req.body;
 
     const dashboard = await Dashboard.findOne({ userId });
-
     if (!dashboard) {
-      return res.status(404).json({
-        message: "Dashboard not found",
-      });
+      return res.status(404).json({ message: "Dashboard not found" });
     }
 
     dashboard.currentStatus = currentStatus;
@@ -190,16 +187,34 @@ const updateCurrentStatus = async (req, res) => {
 
     await dashboard.save();
 
+    // NEW: create an Emergency record so volunteers actually see this,
+    // for both "Need Help" (checkin) and "Emergency" (sos) states.
+    if (currentStatus === "Need Help" || currentStatus === "Emergency") {
+      const emergency = await Emergency.create({
+        userId,
+        username: dashboard.fullName,
+        email: req.body.email || "", // ASSUMPTION: pass this from the frontend call — dashboard doc has no email field
+        phone: dashboard.phone || "",
+        medicalNotes: dashboard.medicalNotes || "",
+        type: currentStatus === "Need Help" ? "checkin" : "sos",
+        status: "Active",
+      });
+
+      const io = getIO();
+      if (currentStatus === "Need Help") {
+        io.emit("new-checkin", { emergency });
+      } else {
+        io.emit("new-emergency", { emergency });
+      }
+    }
+
     res.status(200).json({
       message: "Current status updated successfully",
       currentStatus: dashboard.currentStatus,
       recentAlerts: dashboard.recentAlerts,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Error updating current status",
-      error: error.message,
-    });
+    res.status(500).json({ message: "Error updating current status", error: error.message });
   }
 };
 

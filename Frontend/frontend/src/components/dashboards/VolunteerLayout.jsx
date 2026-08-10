@@ -14,15 +14,12 @@ export default function VolunteerDashboard() {
   const [self, setSelf] = useState(null);
   const [emergencies, setEmergencies] = useState([]);
   const [priorityAlerts, setPriorityAlerts] = useState([]);
+  const [needHelpAlerts, setNeedHelpAlerts] = useState([]); // ← moved here, with other hooks
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [acceptingId, setAcceptingId] = useState(null);
 
-  // This volunteer's own current location, used to compute distance to
-  // each SOS, plot a "you are here" pin on the map, and — refreshed
-  // periodically — sent to the server so Pro users' alerts can be
-  // targeted to the nearest responders.
   useEffect(() => {
     if (!("geolocation" in navigator)) return;
 
@@ -35,7 +32,7 @@ export default function VolunteerDashboard() {
     };
 
     updateLocation();
-    const interval = setInterval(updateLocation, 60000); // refresh every 60s
+    const interval = setInterval(updateLocation, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -74,16 +71,22 @@ export default function VolunteerDashboard() {
       );
     const onPriority = (data) =>
       setPriorityAlerts((prev) => {
-        // Avoid piling up duplicate pings for the same emergency.
         const withoutDupe = prev.filter((p) => p.emergency._id !== data.emergency._id);
         return [{ ...data, receivedAt: Date.now() }, ...withoutDupe].slice(0, 5);
       });
+    // ← moved here: check-in listener, alongside the other socket listeners
+    const onCheckin = (data) =>
+      setNeedHelpAlerts((prev) => [
+        data.emergency,
+        ...prev.filter((e) => e._id !== data.emergency._id),
+      ]);
 
     socket.on("new-emergency", onNew);
     socket.on("emergency-resolved", onUpdate);
     socket.on("emergency-accepted", onUpdate);
     socket.on("location-update", onLocation);
     socket.on("priority-emergency", onPriority);
+    socket.on("new-checkin", onCheckin);
 
     return () => {
       socket.off("new-emergency", onNew);
@@ -91,10 +94,10 @@ export default function VolunteerDashboard() {
       socket.off("emergency-accepted", onUpdate);
       socket.off("location-update", onLocation);
       socket.off("priority-emergency", onPriority);
+      socket.off("new-checkin", onCheckin);
     };
   }, []);
 
-  // Distance (km) from this volunteer to each alert, when we know both points.
   const withDistance = useMemo(() => {
     return emergencies.map((e) => ({
       ...e,
@@ -147,12 +150,20 @@ export default function VolunteerDashboard() {
     }
   };
 
+  const handleAcknowledgeCheckin = async (alertId) => {
+    try {
+      await emergencyApi.acknowledgeCheckin(alertId);
+      setNeedHelpAlerts((prev) => prev.filter((a) => a._id !== alertId));
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to acknowledge check-in");
+    }
+  };
+
   const mapAlerts = [...newAlerts, ...acceptedByMe];
 
   return (
     <div className="min-h-screen bg-zinc-950 px-4 py-8 md:py-12">
       <div className="mx-auto max-w-4xl space-y-6">
-        {/* Header */}
         <section className="rounded-3xl bg-blue-900 p-8 text-white">
           <h1 className="text-4xl font-bold">Volunteer Dashboard</h1>
           <p className="mt-2">
@@ -167,18 +178,15 @@ export default function VolunteerDashboard() {
           </div>
         )}
 
-        {/* Stats */}
         <section className="grid md:grid-cols-3 gap-5">
           <div className="rounded-xl bg-white p-6 shadow">
             <h2 className="text-sm font-semibold text-stone-500">New Alerts</h2>
             <p className="text-3xl font-bold text-stone-900">{newAlerts.length}</p>
           </div>
-
           <div className="rounded-xl bg-white p-6 shadow">
             <h2 className="text-sm font-semibold text-stone-500">Accepted Cases</h2>
             <p className="text-3xl font-bold text-stone-900">{acceptedByMe.length}</p>
           </div>
-
           <div className="rounded-xl bg-white p-6 shadow">
             <h2 className="text-sm font-semibold text-stone-500">Completed</h2>
             <p className="text-3xl font-bold text-stone-900">{completedByMe.length}</p>
@@ -195,6 +203,19 @@ export default function VolunteerDashboard() {
               <div key={alert._id} className="rounded-xl bg-white p-5 shadow">
                 <h2 className="font-bold">🚨 SOS Alert — You accepted this</h2>
                 <p>User : {alert.username}</p>
+                {alert.phone && (
+                  <p>
+                    Phone :{" "}
+                    <a href={`tel:${alert.phone}`} className="text-blue-700 underline font-semibold">
+                      {alert.phone}
+                    </a>
+                  </p>
+                )}
+                {alert.medicalNotes && (
+                  <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded px-2 py-1 mt-1">
+                    ⚕ Medical notes: {alert.medicalNotes}
+                  </p>
+                )}
                 <p>
                   Distance :{" "}
                   {alert.distanceKm != null ? `${alert.distanceKm.toFixed(1)} km` : "Unknown"}
@@ -256,6 +277,30 @@ export default function VolunteerDashboard() {
           </section>
         )}
 
+        {/* Need Help / Check-in Requests — lower urgency than SOS */}
+        {needHelpAlerts.length > 0 && (
+          <section className="space-y-3">
+            <h2 className="text-sm font-bold text-blue-400 uppercase tracking-wider">
+              Check-in Requests
+            </h2>
+            {needHelpAlerts.map((alert) => (
+              <div key={alert._id} className="rounded-xl bg-blue-50 border border-blue-300 p-4 shadow-sm">
+                <div className="flex justify-between items-center">
+                  <p className="text-sm font-semibold text-blue-900">
+                    💬 {alert.username} requested a check-in
+                  </p>
+                  <button
+                    onClick={() => handleAcknowledgeCheckin(alert._id)}
+                    className="rounded bg-blue-600 px-3 py-1.5 text-white text-xs font-semibold"
+                  >
+                    Acknowledge
+                  </button>
+                </div>
+              </div>
+            ))}
+          </section>
+        )}
+
         {/* SOS Cards — new, unclaimed alerts, nearest first */}
         <section className="space-y-4">
           <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-wider">
@@ -273,6 +318,19 @@ export default function VolunteerDashboard() {
               <div key={alert._id} className="rounded-xl bg-white p-5 shadow">
                 <h2 className="font-bold">🚨 SOS Alert</h2>
                 <p>User : {alert.username}</p>
+                {alert.phone && (
+                  <p>
+                    Phone :{" "}
+                    <a href={`tel:${alert.phone}`} className="text-blue-700 underline font-semibold">
+                      {alert.phone}
+                    </a>
+                  </p>
+                )}
+                {alert.medicalNotes && (
+                  <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded px-2 py-1 mt-1">
+                    ⚕ Medical notes: {alert.medicalNotes}
+                  </p>
+                )}
                 <p>
                   Distance :{" "}
                   {alert.distanceKm != null ? `${alert.distanceKm.toFixed(1)} km` : "Unknown"}
@@ -299,7 +357,6 @@ export default function VolunteerDashboard() {
           )}
         </section>
 
-        {/* Map — nearby unclaimed + your own accepted cases, plus your position */}
         <section className="rounded-xl bg-white p-5 shadow">
           <h2 className="font-bold mb-3">Nearby Alerts Map</h2>
           <NearbyAlertsMap self={self} alerts={mapAlerts} />
@@ -313,4 +370,3 @@ export default function VolunteerDashboard() {
     </div>
   );
 }
-

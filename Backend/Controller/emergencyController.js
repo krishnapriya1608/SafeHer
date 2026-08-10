@@ -7,31 +7,17 @@ const PRIORITY_RADIUS_METERS = 5000; // 5km — nearest responders get a direct,
 
 exports.createEmergency = async (req, res) => {
   try {
-    const {
-      userId,
-      username,
-      email,
-      latitude,
-      longitude,
-      address,
-      message,
-    } = req.body;
+    const { userId, username, email, latitude, longitude, address, message, phone, medicalNotes } = req.body;
 
-    if (!userId || !username || !latitude || !longitude) {
-      return res.status(400).json({
-        success: false,
-        message: "User and location details are required",
-      });
+    if (!userId || !username) {
+      return res.status(400).json({ success: false, message: "User details are required" });
     }
 
     const emergency = await Emergency.create({
-      userId,
-      username,
-      email,
-      latitude,
-      longitude,
-      address,
-      message,
+      userId, username, email,
+      latitude: latitude ?? null,
+      longitude: longitude ?? null,
+      address, message, phone, medicalNotes,
     });
 
     const io = req.app.get("io");
@@ -49,7 +35,7 @@ exports.createEmergency = async (req, res) => {
       const creator = await User.findById(userId).select("plan planExpiry");
       const isActivePro = creator?.plan === "pro" && creator.planExpiry && creator.planExpiry > new Date();
 
-      if (isActivePro) {
+     if (isActivePro && latitude != null && longitude != null){
         const volunteerLocations = req.app.get("volunteerLocations");
         if (volunteerLocations && volunteerLocations.size > 0) {
           const alertPoint = [Number(latitude), Number(longitude)];
@@ -131,6 +117,25 @@ exports.getAllEmergencies = async (req, res) => {
       message: "Error fetching emergencies",
       error: error.message,
     });
+  }
+};
+
+exports.acknowledgeCheckin = async (req, res) => {
+  try {
+    const { emergencyId } = req.params;
+    const emergency = await Emergency.findByIdAndUpdate(
+      emergencyId,
+      { status: "Acknowledged" }, // requires adding "Acknowledged" to the schema's status enum
+      { new: true }
+    );
+    if (!emergency) {
+      return res.status(404).json({ success: false, message: "Check-in not found" });
+    }
+    const io = req.app.get("io");
+    io.emit("checkin-acknowledged", { emergency });
+    res.status(200).json({ success: true, message: "Check-in acknowledged", emergency });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error acknowledging check-in", error: error.message });
   }
 };
 
