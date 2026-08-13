@@ -80,6 +80,8 @@ export default function VolunteerDashboard() {
         data.emergency,
         ...prev.filter((e) => e._id !== data.emergency._id),
       ]);
+    const onEscalate = (data) =>
+      setEmergencies((prev) => prev.map((e) => (e._id === data.emergency._id ? data.emergency : e)));
 
     socket.on("new-emergency", onNew);
     socket.on("emergency-resolved", onUpdate);
@@ -87,6 +89,7 @@ export default function VolunteerDashboard() {
     socket.on("location-update", onLocation);
     socket.on("priority-emergency", onPriority);
     socket.on("new-checkin", onCheckin);
+    socket.on("emergency-escalated", onEscalate);
 
     return () => {
       socket.off("new-emergency", onNew);
@@ -95,6 +98,7 @@ export default function VolunteerDashboard() {
       socket.off("location-update", onLocation);
       socket.off("priority-emergency", onPriority);
       socket.off("new-checkin", onCheckin);
+      socket.off("emergency-escalated", onEscalate);
     };
   }, []);
 
@@ -156,6 +160,20 @@ export default function VolunteerDashboard() {
       setNeedHelpAlerts((prev) => prev.filter((a) => a._id !== alertId));
     } catch (err) {
       setError(err.response?.data?.message || "Failed to acknowledge check-in");
+    }
+  };
+
+  const handleEscalate = async (emergencyId) => {
+    setError("");
+    setMessage("");
+    try {
+      const response = await emergencyApi.escalateEmergency(
+        emergencyId,
+        "Volunteer requested police backup"
+      );
+      setMessage(response.data.message || "Escalated to police");
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to escalate case");
     }
   };
 
@@ -233,6 +251,18 @@ export default function VolunteerDashboard() {
                   >
                     Mark Resolved
                   </button>
+                  {alert.escalated ? (
+                    <span className="rounded bg-red-100 border border-red-400 px-4 py-2 text-red-700 text-sm font-semibold">
+                      🚓 Escalated to police
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => handleEscalate(alert._id)}
+                      className="rounded border border-red-600 px-4 py-2 text-red-700 text-sm font-semibold"
+                    >
+                      Escalate to Police
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

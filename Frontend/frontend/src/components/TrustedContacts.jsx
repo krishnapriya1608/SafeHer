@@ -242,7 +242,7 @@ const styles = {
     minHeight: '100vh',
   },
   contentWrapper: {
-    maxWidth: '1600px', 
+    maxWidth: '1800px', 
     backgroundColor: '#F3EFE6', // Soft light linen card
     boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
     borderRadius: '8px',

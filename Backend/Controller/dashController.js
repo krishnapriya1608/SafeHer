@@ -1,5 +1,6 @@
 const Dashboard = require("../Model/dashboardModel");
-const io = req.app.get("io");
+const Emergency = require("../Model/emergencyModel");
+const isOwner = (req, userId) => req.user && req.user.id === userId;
 const createDashboard = async (req, res) => {
   try {
     const {
@@ -200,7 +201,8 @@ const updateCurrentStatus = async (req, res) => {
         status: "Active",
       });
 
-      const io = getIO();
+    const io = req.app.get("io");
+
       if (currentStatus === "Need Help") {
         io.emit("new-checkin", { emergency });
       } else {

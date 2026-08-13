@@ -40,6 +40,13 @@ const emergencySchema = new mongoose.Schema(
     locationHistory: [
       { latitude: Number, longitude: Number, timestamp: Number },
     ],
+
+
+    escalated: { type: Boolean, default: false },
+    escalatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    escalatedByName: { type: String, default: "" },
+    escalationReason: { type: String, default: "" },
+    escalatedAt: { type: Date, default: null },
   },
   { timestamps: true }
 );

@@ -258,6 +258,9 @@ export default function UserDashboard() {
                   <Link to="/subscription" className="hover:text-[#A85A3C] transition">
                     Subscription
                   </Link>
+                   <Link to="/trusted-contacts" className="hover:text-[#A85A3C] transition">
+                    Trusted Contacts
+                  </Link>
                   <button onClick={handleLogout} className="hover:text-[#A85A3C] transition">
                     Logout
                   </button>

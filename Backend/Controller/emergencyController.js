@@ -184,6 +184,50 @@ exports.acceptEmergency = async (req, res) => {
     });
   }
 };
+exports.escalateEmergency = async (req, res) => {
+  try {
+    const { emergencyId } = req.params;
+    const { reason } = req.body;
+
+    // req.user comes from the `protect` middleware (verified JWT), not the
+    // request body — a volunteer can't spoof who escalated a case.
+    const emergency = await Emergency.findByIdAndUpdate(
+      emergencyId,
+      {
+        escalated: true,
+        escalatedBy: req.user.id,
+        escalatedByName: req.user.username,
+        escalationReason: reason || "",
+        escalatedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!emergency) {
+      return res.status(404).json({ success: false, message: "Emergency not found" });
+    }
+
+    const io = req.app.get("io");
+    // Only responders (police included) are in this room — see index.js.
+    io.to("responders").emit("emergency-escalated", {
+      emergency,
+      message: `${req.user.username} escalated this case — police backup requested`,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Case escalated to police",
+      emergency,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error escalating emergency",
+      error: error.message,
+    });
+  }
+};
+
 exports.getEmergencyById = async (req, res) => {
   try {
     const { emergencyId } = req.params;
@@ -285,6 +329,3 @@ exports.exportIncidentPdf = async (req, res) => {
     });
   }
 };
-
-
-

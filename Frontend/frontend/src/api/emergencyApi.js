@@ -18,6 +18,12 @@ export const emergencyApi = {
   resolveEmergency: (emergencyId) =>
     api.put(`/api/emergency/resolve/${emergencyId}`),
 
+  acknowledgeCheckin: (emergencyId) =>
+    api.put(`/api/emergency/checkin/${emergencyId}/ack`),
+
+  escalateEmergency: (emergencyId, reason) =>
+    api.put(`/api/emergency/escalate/${emergencyId}`, { reason }),
+
   exportPdf: (emergencyId) =>
     api.get(`/api/emergency/${emergencyId}/export-pdf`, { responseType: "blob" }),
 };

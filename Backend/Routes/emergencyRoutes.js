@@ -5,6 +5,7 @@ const {
   getAllEmergencies,
   acceptEmergency,
   resolveEmergency,
+  escalateEmergency,
   getEmergencyById,
   exportIncidentPdf,
 } = require("../Controller/emergencyController");
@@ -39,6 +40,12 @@ router.put(
   "/resolve/:emergencyId",
   authorize("volunteer", "police", "admin"),
   resolveEmergency
+);
+
+router.put(
+  "/escalate/:emergencyId",
+  authorize("volunteer"),
+  escalateEmergency
 );
 
 module.exports = router;
