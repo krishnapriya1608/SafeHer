@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import Logo from "./Logo";
-import loginImage from '../assets/Logins.jpg';
 
 export default function AuthLayout({ eyebrow, title, subtitle, children, bggradient,image }) {
  const gradients = {

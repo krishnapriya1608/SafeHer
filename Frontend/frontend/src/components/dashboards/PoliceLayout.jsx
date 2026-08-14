@@ -180,8 +180,8 @@ export default function PoliceDashboard() {
   const mapAlerts = [...newAlerts, ...acceptedByMe];
 
   return (
-    <div className="min-h-screen bg-[#F5F6F8] text-[#1F2A3C] font-serif selection:bg-[#C7D3E8] px-4 py-8 md:py-16">
-      <div className="mx-auto max-w-5xl space-y-16">
+    <div className="min-h-screen bg-[#F5F6F8] text-[#1F2A3C] font-serif selection:bg-[#C7D3E8]   ">
+      <div className="mx-auto max-w-9xl space-y-16">
 
         {/* Hero Header Section */}
         <section className="relative bg-[#F5F6F8] p-6 md:p-12 border border-[#DCE1E8] rounded-sm shadow-sm">
