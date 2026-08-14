@@ -41,6 +41,7 @@ export default function CheckInPrompt() {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4">
+      
       <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center">
         {confirmed ? (
           <>

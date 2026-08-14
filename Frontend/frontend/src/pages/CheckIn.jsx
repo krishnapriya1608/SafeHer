@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Clock, Trash2, Power, Plus, Lock } from "lucide-react";
+import { Clock, Trash2, Power, Plus, Lock ,ArrowLeft} from "lucide-react";
 import { checkInApi } from "../api/checkIn";
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -91,6 +91,13 @@ export default function CheckIns() {
       <div className="max-w-9xl mx-auto">
         {/* Header Section */}
         <div className="bg-[#A47158] text-[#FAF6F0] p-8  shadow-lg mb-8 relative overflow-hidden">
+          <Link
+            to="/dashboard/user"
+            className="inline-flex items-center gap-1.5 text-xs font-sans-clean font-semibold uppercase tracking-widest text-[#060104] hover:text-[#7D5E71] transition-colors mb-6"
+          >
+            <ArrowLeft size={14} />
+            Back to Safety Dashboard
+          </Link>
           <span className="font-script text-2xl text-[#E8D3C5] block mb-1">Stay safe & connected</span>
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -171,11 +178,10 @@ export default function CheckIns() {
                     type="button"
                     key={d}
                     onClick={() => toggleDay(i)}
-                    className={`text-xs px-3.5 py-1.5 rounded-full border transition-all ${
-                      days.includes(i)
+                    className={`text-xs px-3.5 py-1.5 rounded-full border transition-all ${days.includes(i)
                         ? "bg-[#8A563F] border-[#8A563F] text-[#FAF6F0] font-semibold"
                         : "bg-white border-[#D5C2B1] text-[#7A6759] hover:bg-[#F2E8DF]"
-                    }`}
+                      }`}
                   >
                     {d}
                   </button>
@@ -222,11 +228,10 @@ export default function CheckIns() {
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => handleToggle(c._id)}
-                    className={`p-2.5 rounded-xl transition-colors ${
-                      c.active
+                    className={`p-2.5 rounded-xl transition-colors ${c.active
                         ? "bg-[#F2E8DF] text-[#8A563F] hover:bg-[#E8D3C5]"
                         : "bg-[#FAF6F0] text-[#B0A093] hover:bg-[#F2E8DF]"
-                    }`}
+                      }`}
                     title={c.active ? "Active — click to pause" : "Paused — click to activate"}
                   >
                     <Power size={15} />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Check, ShieldCheck, ArrowRight, Lock, Sparkles } from "lucide-react";
+import { Check, ShieldCheck, ArrowRight, Lock, Sparkles,ArrowLeft } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { createOrder, verifyPayment, fetchSubscriptionStatus } from "../api/subscriptionApi";
 
@@ -130,6 +130,13 @@ export default function Subscription() {
 
       {/* Top Banner / Hero Section (Terracotta Wave) */}
       <section className="relative bg-[#B57C5D] pt-12 pb-24 px-6 sm:px-12 text-[#FAF5F0]">
+         <Link
+          to="/dashboard/user"
+          className="inline-flex items-center gap-1.5 text-xs font-sans-clean font-semibold uppercase tracking-widest text-[#10010a] hover:text-[#7D5E71] transition-colors mb-6"
+        >
+          <ArrowLeft size={14} />
+          Back to Safety Dashboard
+        </Link>
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
           
           <div className="max-w-md text-left">
