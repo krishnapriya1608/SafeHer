@@ -60,15 +60,15 @@ exports.RegisterUser = async (req, res) => {
       success: true,
       message: "OTP sent successfully",
     });
-  } catch (err) {
-    console.log(err);
+  }  catch (err) {
+  console.error("REGISTER ERROR:", err);
 
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-    });
-  }
-};
+  return res.status(500).json({
+    success: false,
+    message: err.message,
+  });
+}
+}
 
 // =======================
 // Verify OTP
