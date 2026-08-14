@@ -21,7 +21,6 @@ import {
   Radio,
 } from "lucide-react";
 
-import Logo from "../components/Logo";
 import { useAuth } from "../context/AuthContext";
 import dash2 from "../assets/dash2.png";
 import personal from "../assets/personal.png";
@@ -180,8 +179,7 @@ export default function Home() {
       {!showIntro && (
         <main ref={mainRef}>
           {/* SECTION 1: EDITORIAL HEADER & HERO BANNER */}
-          <section className="relative w-full bg-[#9aa88d] text-[#0a0a0a] py-20 px-6 md:px-12 overflow-hidden">
-            <Logo />
+          <section className="relative w-full bg-[#9ba89a] text-[#0a0a0a] py-20 px-6 md:px-12 overflow-hidden">
             <FloatingAIAssistant userId={user?._id} />
             <div className="mx-auto max-w-5xl space-y-12">
 

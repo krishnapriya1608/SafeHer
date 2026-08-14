@@ -21,6 +21,7 @@ import AISafetyAssistant from "./components/AISafetyAssistant";
 import Subscription from "./pages/Subscription";
 import CheckIns from "./pages/CheckIn";
 import CheckInPrompt from "./components/CheckInPrompt";
+import Header from "./components/Header";
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;
@@ -32,6 +33,7 @@ export default function App() {
   return (
     <>
      <CheckInPrompt />
+     <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
