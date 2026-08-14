@@ -25,12 +25,17 @@ require("./DB/connection");
 const app = express();
 const server = http.createServer(app);
 
+// Strip any trailing slash from CLIENT_URL so a stray "/" pasted into the
+// Render env var (e.g. "https://app.vercel.app/") doesn't silently break
+// CORS by failing an exact string match against the browser's Origin header.
+const CLIENT_URL = (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/+$/, "");
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    methods: ["GET", "POST","PATCH", "PUT", "DELETE"],
+    origin: CLIENT_URL,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-     credentials: true,
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -53,8 +58,8 @@ app.use(errorHandler);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    methods: ["GET", "POST","PATCH", "PUT", "DELETE"],
+    origin: CLIENT_URL,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
   },
 });
 
