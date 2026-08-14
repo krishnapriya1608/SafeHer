@@ -7,7 +7,7 @@ const {
   upvoteReport,
   deleteReport,
 } = require("../Controller/reportController");
-const uploadReportImages = require("../middleware/uploadReportImages");
+const uploadReportImages = require("../Middleware/uploadReportImages");
 const { protect, authorize } = require("../utils/generateToken");
 
 const router = express.Router();
