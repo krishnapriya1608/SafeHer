@@ -22,6 +22,8 @@ import Subscription from "./pages/Subscription";
 import CheckIns from "./pages/CheckIn";
 import CheckInPrompt from "./components/CheckInPrompt";
 import Header from "./components/Header";
+import AboutSafeHer from "./components/About";
+import Service from "./components/Service";
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;
@@ -71,6 +73,8 @@ export default function App() {
           <Route path="/subscription" element={<Subscription />} />
         </Route>
         <Route path="/checkins" element={<CheckIns />} />
+        <Route path="/about" element={<AboutSafeHer/>}/>
+        <Route path="/services" element={<Service/>}/>
       </Routes>
     </>
   );
