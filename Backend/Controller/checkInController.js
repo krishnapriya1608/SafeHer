@@ -1,4 +1,4 @@
-const CheckIn = require("../Model/CheckIn");
+const CheckIn = require("../Model/checkIn");
 
 // POST /api/checkins (Pro only — see Routes/checkInRoutes.js)
 async function createCheckIn(req, res) {
