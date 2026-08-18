@@ -94,7 +94,7 @@ export default function Subscription() {
             setStatus(result);
             
             // Redirect to Dashboard upon successful payment verification
-            navigate("/dashboard", { replace: true });
+            navigate("user/dashboard", { replace: true });
           } catch (err) {
             setError("Payment succeeded but verification failed. Please contact support.");
           }
