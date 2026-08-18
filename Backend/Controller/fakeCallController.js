@@ -148,6 +148,8 @@ pauseAfterMs should be between 2000 and 4000, representing a natural pause for t
 // ElevenLabs accounts allow a maximum of 4 concurrent requests.
 async function attachAudio(script, callerType) {
   if (!process.env.ELEVENLABS_API_KEY) return script;
+    console.log("ATTACH AUDIO CALLED. Key present?", !!process.env.ELEVENLABS_API_KEY);
+
 
   const linesWithAudio = [];
 

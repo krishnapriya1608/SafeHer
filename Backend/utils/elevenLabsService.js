@@ -5,8 +5,8 @@ const https = require("https");
 const VOICE_IDS = {
   mom: "EXAVITQu4vr4xnSDxMaL",      // Sarah - Mature, Reassuring, Confident (female)
   friend: "hpp4J3VqNfWAUOO0d1Us",   // Bella - Professional, Bright, Warm (female)
-  boss: "nPczCjzI2devNBz1zQrb",     // Brian - Deep, Resonant and Comforting (male)
-  delivery: "cjVigY5qzO86Huf0OWal", // Eric - Smooth, Trustworthy (male)
+  boss: "nPczCjzI2devNBz1zQrb",     
+  delivery: "dtSEyYGNJqjrtBArPCVZ", // Eric - Smooth, Trustworthy (male)
 };
 
 function textToSpeech(text, callerType) {

@@ -24,6 +24,7 @@ import CheckInPrompt from "./components/CheckInPrompt";
 import Header from "./components/Header";
 import AboutSafeHer from "./components/About";
 import Service from "./components/Service";
+import { Contact } from "lucide-react";
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;
@@ -75,6 +76,7 @@ export default function App() {
         <Route path="/checkins" element={<CheckIns />} />
         <Route path="/about" element={<AboutSafeHer/>}/>
         <Route path="/services" element={<Service/>}/>
+        <Route path="/contact" element={<Contact/>}/>
       </Routes>
     </>
   );
