@@ -1,33 +1,23 @@
-const nodemailer = require("nodemailer");
+// utils/sendMail.js
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4, // force IPv4, ignore any IPv6 addresses returned by DNS
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
+const resend = new Resend(process.env.EMAIL_PASSWORD);
 
 const sendMail = async ({ to, subject, html }) => {
-  const info = await transporter.sendMail({
-    from: process.env.EMAIL,
+  const { data, error } = await resend.emails.send({
+    from: process.env.EMAIL, 
     to,
     subject,
     html,
   });
 
-  console.log("Message sent:", info.messageId);
-  console.log("Accepted:", info.accepted);
-  console.log("Rejected:", info.rejected);
-  console.log("Response:", info.response);
+  if (error) {
+    console.error("Resend error:", error);
+    throw new Error(error.message || "Failed to send email");
+  }
 
-  return info;
+  console.log("Message sent:", data.id);
+  return data;
 };
 
 module.exports = sendMail;
