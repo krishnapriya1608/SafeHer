@@ -38,20 +38,17 @@ exports.RegisterUser = async (req, res) => {
       otpExpiry: Date.now() + 10 * 60 * 1000,
     });
 
-    // Respond immediately — don't make the client wait on SMTP
     res.status(201).json({
       success: true,
       message: "Registered. OTP is being sent to your email.",
     });
 
-    // Fire-and-forget the email; log failures, don't block the response
     sendEmail({
       to: userEmail,
       subject: "OTP Verification",
       html: `<h2>Your OTP is ${otp}</h2><p>This OTP will expire in 10 minutes.</p>`,
     }).catch((err) => {
       console.error("Failed to send OTP email:", err.message);
-      // optionally: flag user.otpEmailFailed = true and let them request a resend
     });
 
   } catch (err) {
