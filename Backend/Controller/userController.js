@@ -11,43 +11,25 @@ const { protect, generateToken } = require("../utils/generateToken");
 // =======================
 
 exports.RegisterUser = async (req, res) => {
-  console.log("Inside Register User");
-
   try {
     const { username, email, password, role } = req.body;
 
     if (!username || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
     const userEmail = email.trim().toLowerCase();
-
     const existingUser = await User.findOne({ email: userEmail });
-
     if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "User already exists",
-      });
+      return res.status(400).json({ success: false, message: "User already exists" });
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
     const hashOtp = await bcrypt.hash(otp, 10);
 
-    await sendEmail({
-      to: userEmail,
-      subject: "OTP Verification",
-      html: `<h2>Your OTP is ${otp}</h2>
-             <p>This OTP will expire in 10 minutes.</p>`,
-    });
-
-    await User.create({
+    // Create user first — this is the critical write
+    const user = await User.create({
       username,
       email: userEmail,
       password: hashPassword,
@@ -56,20 +38,27 @@ exports.RegisterUser = async (req, res) => {
       otpExpiry: Date.now() + 10 * 60 * 1000,
     });
 
+    // Respond immediately — don't make the client wait on SMTP
     res.status(201).json({
       success: true,
-      message: "OTP sent successfully",
+      message: "Registered. OTP is being sent to your email.",
     });
-  }  catch (err) {
-  console.error("REGISTER ERROR:", err);
 
-  return res.status(500).json({
-    success: false,
-    message: err.message,
-  });
-}
-}
+    // Fire-and-forget the email; log failures, don't block the response
+    sendEmail({
+      to: userEmail,
+      subject: "OTP Verification",
+      html: `<h2>Your OTP is ${otp}</h2><p>This OTP will expire in 10 minutes.</p>`,
+    }).catch((err) => {
+      console.error("Failed to send OTP email:", err.message);
+      // optionally: flag user.otpEmailFailed = true and let them request a resend
+    });
 
+  } catch (err) {
+    console.error("REGISTER ERROR:", err);
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
 // =======================
 // Verify OTP
 // =======================
