@@ -71,7 +71,7 @@ export default function Subscription() {
       }
 
       const order = await createOrder();
-
+     console.log("Order object:", order);
       const options = {
         key: order.keyId,
         amount: order.amount,

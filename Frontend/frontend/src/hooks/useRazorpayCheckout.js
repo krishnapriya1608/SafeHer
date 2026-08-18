@@ -32,6 +32,7 @@ export function useRazorpayCheckout({ user, onSuccess } = {}) {
       }
 
       const order = await createOrder();
+      console.log("Order object:", order);
 
       const options = {
         key: order.keyId,
