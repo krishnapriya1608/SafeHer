@@ -24,7 +24,7 @@ import CheckInPrompt from "./components/CheckInPrompt";
 import Header from "./components/Header";
 import AboutSafeHer from "./components/About";
 import Service from "./components/Service";
-import { Contact } from "lucide-react";
+import  Contact  from "./pages/Contact";
 function HomeRedirect() {
   const { isAuthenticated, role } = useAuth();
   return <Navigate to={isAuthenticated ? dashboardPathForRole(role) : "/login"} replace />;

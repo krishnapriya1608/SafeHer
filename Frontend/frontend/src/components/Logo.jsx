@@ -6,9 +6,7 @@ export default function Logo() {
       </div>
       <div>
         <p className="text-base font-black leading-none text-slate-950">SafeCircle</p>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
-          Safety Network
-        </p>
+       
       </div>
     </div>
   );

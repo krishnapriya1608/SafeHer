@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, AlertTriangle, Clock, CheckCircle2 } from 'lucide-react';
 
-const SafeHerContact = () => {
+const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -200,4 +200,4 @@ const SafeHerContact = () => {
   );
 };
 
-export default SafeHerContact;
+export default Contact;
