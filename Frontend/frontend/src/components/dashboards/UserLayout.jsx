@@ -189,11 +189,11 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#EFEBE4] text-[#2B2825] font-sans overflow-x-hidden selection:bg-[#D5C3B2]">
+    <div className="relative min-h-screen bg-[#F9F8F3] text-[#2C3531] font-sans overflow-x-hidden selection:bg-[#D4B683]">
       {/* Editorial Google Fonts */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
-        .font-editorial-serif { font-family: 'Playfair Display', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+        .font-editorial-serif { font-family: 'Cormorant Garamond', serif; }
         .font-script { font-family: 'Alex Brush', cursive; }
         .font-sans-clean { font-family: 'Montserrat', sans-serif; }
       `}</style>
@@ -206,21 +206,21 @@ export default function UserDashboard() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1, ease: "easeInOut" }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#4F5643] cursor-pointer text-center p-6 text-[#EFEBE4]"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#4A6054] cursor-pointer text-center p-6 text-[#F9F8F3]"
             onClick={() => setShowIntro(false)}
           >
             <img
               src={personal}
               alt="Welcome Screen"
-              className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay"
+              className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-overlay"
             />
             <div className="relative z-10 space-y-4 max-w-lg">
-              <p className="font-script text-4xl text-[#D8B092]">Protected & Safe</p>
-              <h1 className="text-4xl md:text-6xl font-editorial-serif font-light tracking-wide text-white">
-                Welcome, <span className="italic">{username || "Member"}</span>
+              <p className="font-script text-5xl text-[#D4B683]">welcome</p>
+              <h1 className="text-4xl md:text-5xl font-editorial-serif font-light tracking-wider uppercase text-white">
+                NOURISH YOUR MIND, BODY AND SOUL
               </h1>
-              <p className="text-[10px] font-sans-clean tracking-[0.3em] uppercase text-[#C4C2B8]">
-                Initializing SafeSphere Protocol
+              <p className="text-[10px] font-sans-clean tracking-[0.35em] uppercase text-[#C2C9C5]">
+                INITIALIZING SAFESPHERE PROTOCOL
               </p>
             </div>
           </motion.div>
@@ -233,35 +233,35 @@ export default function UserDashboard() {
             className="min-h-screen flex flex-col justify-between"
           >
             <div>
-              {/* Header Navigation */}
-              <header className="max-w-7xl mx-auto px-6 pt-8 pb-4 flex flex-col md:flex-row items-center justify-between gap-6 font-sans-clean">
-                <div className="flex items-center gap-4">
+              {/* Top Navigation */}
+              <header className="max-w-6xl mx-auto px-6 pt-8 pb-4 flex flex-col md:flex-row items-center justify-between gap-6 font-sans-clean border-b border-[#E3E0D6]">
+                <div className="flex items-center gap-3">
                   <Logo />
-                  <span className="font-script text-2xl text-[#A85A3C] pt-1">
+                  <span className="font-script text-3xl text-[#4A6054] pt-1">
                     {username || "Member"}
                   </span>
                 </div>
 
-                <nav className="flex flex-wrap items-center justify-center gap-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#786E65]">
-                  <span className="text-[#2B2825] border-b-2 border-[#A85A3C] pb-0.5">
+                <nav className="flex flex-wrap items-center justify-center gap-6 text-[10px] font-medium uppercase tracking-[0.25em] text-[#6A7570]">
+                  <span className="text-[#2C3531] border-b border-[#4A6054] pb-0.5 font-semibold">
                     Overview
                   </span>
-                  <Link to="/sos" className="hover:text-[#A85A3C] transition">
+                  <Link to="/sos" className="hover:text-[#4A6054] transition">
                     SOS Signal
                   </Link>
-                  <Link to="/reports" className="hover:text-[#A85A3C] transition">
+                  <Link to="/reports" className="hover:text-[#4A6054] transition">
                     Reports
                   </Link>
-                  <Link to="/checkins" className="hover:text-[#A85A3C] transition">
+                  <Link to="/checkins" className="hover:text-[#4A6054] transition">
                     Check-ins
                   </Link>
-                  <Link to="/subscription" className="hover:text-[#A85A3C] transition">
+                  <Link to="/subscription" className="hover:text-[#4A6054] transition">
                     Subscription
                   </Link>
-                   <Link to="/trusted-contacts" className="hover:text-[#A85A3C] transition">
+                  <Link to="/trusted-contacts" className="hover:text-[#4A6054] transition">
                     Trusted Contacts
                   </Link>
-                  <button onClick={handleLogout} className="hover:text-[#A85A3C] transition">
+                  <button onClick={handleLogout} className="hover:text-[#4A6054] transition">
                     Logout
                   </button>
                 </nav>
@@ -269,232 +269,234 @@ export default function UserDashboard() {
 
               {/* Status Message Display */}
               {(message || error) && (
-                <div className="max-w-4xl mx-auto px-6 my-2 font-sans-clean text-xs">
+                <div className="max-w-4xl mx-auto px-6 my-4 font-sans-clean text-xs">
                   {message && <StatusMessage type="success">{message}</StatusMessage>}
                   {error && <StatusMessage type="error">{error}</StatusMessage>}
                 </div>
               )}
 
-              {/* Hero / Statement Header */}
-              <section className="relative px-6 pt-10 pb-16 max-w-6xl mx-auto text-center">
-                <p className="text-[10px] font-sans-clean tracking-[0.3em] uppercase text-[#A85A3C] font-semibold mb-2">
-                  SAFETY · NETWORK · RESPONSE
-                </p>
-                <h1 className="text-4xl sm:text-6xl md:text-7xl font-editorial-serif uppercase tracking-wider text-[#2B2825] leading-none mb-4">
-                  SAFESPHERE
-                </h1>
-                <p className="text-xs uppercase tracking-[0.25em] text-[#786E65] font-sans-clean mb-6">
-                  PROTECTION · CIRCLE · PROTOCOL
-                </p>
+              {/* Hero / Welcome Split Layout */}
+              <section className="relative px-6 pt-12 pb-16 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                  
+                  {/* Left Asymmetric Image Frame */}
+                  <div className="md:col-span-5 relative">
+                    <div className="absolute -top-4 -left-4 w-full h-full border border-[#D4B683] rounded-sm pointer-events-none" />
+                    <div className="relative bg-[#3B4E44] p-3 shadow-lg">
+                      <img
+                        src={personal}
+                        alt="Profile Overview"
+                        className="w-full h-[320px] object-cover filter brightness-95 contrast-105"
+                      />
+                    </div>
+                  </div>
 
-                <div className="max-w-xl mx-auto relative space-y-4">
-                  <p className="text-sm sm:text-base font-editorial-serif italic text-[#4F5643] leading-relaxed">
-                    “Continuous vigilance interface and automated emergency response system designed to keep your trusted circle informed without compromise.”
-                  </p>
-                  <p className="font-script text-3xl text-[#A85A3C]">{username || "Member Safety"}</p>
-                </div>
-              </section>
-
-              {/* Curved Organic Middle Banner */}
-              <section className="relative bg-[#4F5643] text-[#EFEBE4] pt-12 pb-20 px-8 my-8 shadow-inner">
-                <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-                  <div className="space-y-3 max-w-md">
-                    <span className="text-[10px] font-sans-clean uppercase tracking-[0.25em] text-[#D8B092] font-semibold block">
-                      CURRENT STATUS
-                    </span>
-                    <h2 className="text-3xl sm:text-4xl font-editorial-serif italic">
-                      Protocol Status: <span className="not-italic text-white underline decoration-[#A85A3C]">{currentStatus}</span>
-                    </h2>
-                    <p className="text-xs font-sans-clean font-light text-[#D5D2C8] leading-relaxed">
-                      Live telemetry and automated alerts remain active for your registered contacts. Standard status monitoring is operational.
+                  {/* Right Editorial Copy */}
+                  <div className="md:col-span-7 space-y-4 md:pl-6">
+                    <p className="font-script text-4xl text-[#D4B683]">welcome</p>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-editorial-serif font-light uppercase tracking-wider text-[#2C3531] leading-tight">
+                      NOURISH YOUR MIND, BODY, AND SOUL WITH PEACE OF MIND.
+                    </h1>
+                    <p className="text-xs font-sans-clean text-[#6A7570] leading-relaxed max-w-lg">
+                      Continuous vigilance interface and automated emergency response system designed to keep your trusted circle informed without compromise.
                     </p>
+                    <div className="pt-2">
+                      <Link
+                        to="/sos"
+                        className="inline-block bg-[#4A6054] hover:bg-[#3B4E44] text-[#F9F8F3] px-7 py-3 text-[10px] font-sans-clean tracking-[0.25em] uppercase transition shadow-sm"
+                      >
+                        Explore Protection
+                      </Link>
+                    </div>
                   </div>
 
-                  {/* Quick Action Button & Circle Counter */}
-                  <div className="flex flex-col items-center gap-4 bg-[#424838] p-6 rounded-[2.5rem] border border-[#5C6350] shadow-md shrink-0">
-                    <span className="text-3xl font-editorial-serif font-bold text-[#EFEBE4]">
-                      {emergencyContacts.length}
-                    </span>
-                    <span className="text-[10px] font-sans-clean uppercase tracking-widest text-[#C4C2B8]">
-                      Trusted Contacts
-                    </span>
-                    <Link
-                      to="/sos"
-                      className="mt-2 bg-[#A85A3C] hover:bg-[#8C462C] text-white px-6 py-2.5 rounded-full text-xs font-sans-clean font-semibold uppercase tracking-widest transition shadow-sm"
-                    >
-                      Trigger SOS
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Organic Wave Divider */}
-                <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none pointer-events-none">
-                  <svg className="relative block w-full h-10 sm:h-16" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M0,0 C300,90 800,120 1200,40 L1200,120 L0,120 Z" fill="#EFEBE4"></path>
-                  </svg>
                 </div>
               </section>
 
-              {/* Status Protocol Selection Buttons */}
-              <section className="max-w-5xl mx-auto px-6 py-8">
-                <div className="text-center mb-8">
-                  <p className="font-script text-3xl text-[#A85A3C]">Broadcast Protocol</p>
-                  <h2 className="text-xs font-sans-clean font-bold uppercase tracking-[0.2em] text-[#2B2825]">
-                    Select Your State To Update Circle
+              {/* Full-width Sage Green Banner Section */}
+              <section className="relative bg-[#4A6054] text-[#F9F8F3] py-20 px-8 my-8 overflow-hidden">
+                {/* Background particle shimmer overlay */}
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#D4B683_1px,transparent_1px)] [background-size:16px_16px]" />
+
+                <div className="max-w-4xl mx-auto text-center relative z-10 space-y-6">
+                  <h2 className="text-2xl sm:text-4xl font-editorial-serif font-light uppercase tracking-widest text-[#F9F8F3]">
+                    ARE YOU FEELING OVERWHELMED, STRESSED &amp; ANXIOUS?
+                  </h2>
+                  <p className="text-xs font-sans-clean text-[#D3DAD6] leading-relaxed max-w-2xl mx-auto">
+                    Live telemetry and automated alerts remain active for your registered contacts. Current Protocol Status: <span className="text-[#D4B683] font-semibold uppercase">{currentStatus}</span>
+                  </p>
+                  <div>
+                    <span className="inline-block border-b border-[#D4B683] pb-1 text-[#D4B683] text-[10px] font-sans-clean uppercase tracking-[0.3em]">
+                      {emergencyContacts.length} Trusted Contacts Connected
+                    </span>
+                  </div>
+                </div>
+              </section>
+
+              {/* Status Protocol Options */}
+              <section className="max-w-5xl mx-auto px-6 py-12">
+                <div className="text-center mb-10">
+                  <p className="font-script text-4xl text-[#D4B683]">broadcast protocol</p>
+                  <h2 className="text-xs font-sans-clean font-semibold uppercase tracking-[0.25em] text-[#2C3531]">
+                    SELECT YOUR STATE TO UPDATE YOUR CIRCLE
                   </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans-clean">
-                  {/* Protocol Option 1 */}
+                  {/* Option 1 */}
                   <button
                     type="button"
                     onClick={() => handleStatusChange("Safe")}
                     disabled={loading}
-                    className={`p-6 rounded-[2rem] text-left transition-all border ${
+                    className={`p-8 text-left transition-all border ${
                       currentStatus === "Safe"
-                        ? "bg-[#2B2825] text-[#EFEBE4] border-[#2B2825] shadow-lg scale-[1.02]"
-                        : "bg-[#F7F4EE] border-[#E2DDD3] text-[#2B2825] hover:border-[#A85A3C]"
+                        ? "bg-[#4A6054] text-[#F9F8F3] border-[#4A6054] shadow-md"
+                        : "bg-white border-[#E3E0D6] text-[#2C3531] hover:border-[#4A6054]"
                     }`}
                   >
-                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#A85A3C] block mb-2">
+                    <span className="text-[10px] uppercase font-semibold tracking-[0.2em] text-[#D4B683] block mb-2">
                       Protocol I
                     </span>
-                    <h3 className="text-lg font-editorial-serif italic mb-1">Safe &amp; Sound</h3>
-                    <p className="text-xs font-light opacity-80">All clear, standard monitoring active.</p>
+                    <h3 className="text-2xl font-editorial-serif italic mb-2">Safe &amp; Sound</h3>
+                    <p className="text-xs font-light opacity-80 leading-relaxed">
+                      All clear, standard monitoring active across your circle.
+                    </p>
                   </button>
 
-                  {/* Protocol Option 2 */}
+                  {/* Option 2 */}
                   <button
                     type="button"
                     onClick={() => handleStatusChange("Need Help")}
                     disabled={loading}
-                    className={`p-6 rounded-[2rem] text-left transition-all border ${
+                    className={`p-8 text-left transition-all border ${
                       currentStatus === "Need Help"
-                        ? "bg-[#2B2825] text-[#EFEBE4] border-[#2B2825] shadow-lg scale-[1.02]"
-                        : "bg-[#F7F4EE] border-[#E2DDD3] text-[#2B2825] hover:border-[#A85A3C]"
+                        ? "bg-[#4A6054] text-[#F9F8F3] border-[#4A6054] shadow-md"
+                        : "bg-white border-[#E3E0D6] text-[#2C3531] hover:border-[#4A6054]"
                     }`}
                   >
-                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#A85A3C] block mb-2">
+                    <span className="text-[10px] uppercase font-semibold tracking-[0.2em] text-[#D4B683] block mb-2">
                       Protocol II
                     </span>
-                    <h3 className="text-lg font-editorial-serif italic mb-1">Request Check-in</h3>
-                    <p className="text-xs font-light opacity-80">Notifies circle for a soft response check.</p>
+                    <h3 className="text-2xl font-editorial-serif italic mb-2">Request Check-in</h3>
+                    <p className="text-xs font-light opacity-80 leading-relaxed">
+                      Notifies circle for a soft response check.
+                    </p>
                   </button>
 
-                  {/* Protocol Option 3 */}
+                  {/* Option 3 */}
                   <button
                     type="button"
                     onClick={() => handleStatusChange("Emergency")}
                     disabled={loading}
-                    className={`p-6 rounded-[2rem] text-left transition-all border ${
+                    className={`p-8 text-left transition-all border ${
                       currentStatus === "Emergency"
-                        ? "bg-[#2B2825] text-[#EFEBE4] border-[#2B2825] shadow-lg scale-[1.02]"
-                        : "bg-[#F7F4EE] border-[#E2DDD3] text-[#2B2825] hover:border-[#A85A3C]"
+                        ? "bg-[#4A6054] text-[#F9F8F3] border-[#4A6054] shadow-md"
+                        : "bg-white border-[#E3E0D6] text-[#2C3531] hover:border-[#4A6054]"
                     }`}
                   >
-                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#A85A3C] block mb-2">
+                    <span className="text-[10px] uppercase font-semibold tracking-[0.2em] text-[#D4B683] block mb-2">
                       Protocol III
                     </span>
-                    <h3 className="text-lg font-editorial-serif italic mb-1">Critical Distress</h3>
-                    <p className="text-xs font-light opacity-80">Immediate distress alert dispatched.</p>
+                    <h3 className="text-2xl font-editorial-serif italic mb-2">Critical Distress</h3>
+                    <p className="text-xs font-light opacity-80 leading-relaxed">
+                      Immediate distress alert dispatched to trusted list.
+                    </p>
                   </button>
                 </div>
               </section>
 
-              {/* Bottom Split Layout: Dossier & Trusted Circle */}
+              {/* Bottom Split Section: Profile & Contacts */}
               <section className="max-w-6xl mx-auto px-6 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 rounded-[2.5rem] overflow-hidden shadow-xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   
-                  {/* Terracotta Block: Dossier Details */}
-                  <div className="bg-[#A85A3C] text-white p-8 sm:p-10 font-sans-clean flex flex-col justify-between">
-                    <div>
-                      <span className="font-script text-3xl text-[#F7E1D3] block mb-1">Dossier Details</span>
-                      <h2 className="text-lg font-bold uppercase tracking-widest text-white mb-6">
-                        MY APPROACH & PROFILE
-                      </h2>
+                  {/* Left Block: Dossier Profile */}
+                  <div className="bg-white border border-[#E3E0D6] p-8 sm:p-10 font-sans-clean relative">
+                    <span className="font-script text-3xl text-[#D4B683] block mb-1">dossier details</span>
+                    <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-[#2C3531] mb-6 border-b border-[#E3E0D6] pb-3">
+                      MY APPROACH &amp; PROFILE
+                    </h2>
 
-                      <form onSubmit={handleUpdateProfile} className="space-y-4 text-xs">
-                        <div>
-                          <label className="block text-[10px] uppercase font-bold tracking-widest text-[#F0DFD5] mb-1">
-                            Full Name
-                          </label>
-                          <input
-                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-white/50 outline-none focus:border-white transition"
-                            name="fullName"
-                            placeholder="Jane Doe"
-                            value={profile.fullName}
-                            onChange={updateProfileForm}
-                            required
-                            disabled={loading}
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] uppercase font-bold tracking-widest text-[#F0DFD5] mb-1">
-                            Phone Number
-                          </label>
-                          <input
-                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-white/50 outline-none focus:border-white transition"
-                            name="phone"
-                            placeholder="+1 (555) 000-0000"
-                            value={profile.phone}
-                            onChange={updateProfileForm}
-                            required
-                            disabled={loading}
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] uppercase font-bold tracking-widest text-[#F0DFD5] mb-1">
-                            Primary Location
-                          </label>
-                          <input
-                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-white/50 outline-none focus:border-white transition"
-                            name="location"
-                            placeholder="City or Region"
-                            value={profile.location}
-                            onChange={updateProfileForm}
-                            disabled={loading}
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] uppercase font-bold tracking-widest text-[#F0DFD5] mb-1">
-                            Medical &amp; Personal Notes
-                          </label>
-                          <textarea
-                            className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-white/50 outline-none focus:border-white transition min-h-[80px] resize-none"
-                            name="medicalNotes"
-                            placeholder="Blood group, allergies, conditions..."
-                            value={profile.medicalNotes}
-                            onChange={updateProfileForm}
-                            disabled={loading}
-                          />
-                        </div>
-
-                        <button
-                          type="submit"
+                    <form onSubmit={handleUpdateProfile} className="space-y-4 text-xs">
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold tracking-wider text-[#6A7570] mb-1">
+                          Full Name
+                        </label>
+                        <input
+                          className="w-full bg-[#F9F8F3] border border-[#E3E0D6] rounded-none px-4 py-2.5 text-[#2C3531] outline-none focus:border-[#4A6054] transition"
+                          name="fullName"
+                          placeholder="Jane Doe"
+                          value={profile.fullName}
+                          onChange={updateProfileForm}
+                          required
                           disabled={loading}
-                          className="mt-2 w-full bg-white text-[#A85A3C] hover:bg-[#F7F4EE] font-bold text-xs uppercase tracking-widest py-3 rounded-full transition"
-                        >
-                          {loading ? "Updating..." : "Save Safety Profile"}
-                        </button>
-                      </form>
-                    </div>
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold tracking-wider text-[#6A7570] mb-1">
+                          Phone Number
+                        </label>
+                        <input
+                          className="w-full bg-[#F9F8F3] border border-[#E3E0D6] rounded-none px-4 py-2.5 text-[#2C3531] outline-none focus:border-[#4A6054] transition"
+                          name="phone"
+                          placeholder="+1 (555) 000-0000"
+                          value={profile.phone}
+                          onChange={updateProfileForm}
+                          required
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold tracking-wider text-[#6A7570] mb-1">
+                          Primary Location
+                        </label>
+                        <input
+                          className="w-full bg-[#F9F8F3] border border-[#E3E0D6] rounded-none px-4 py-2.5 text-[#2C3531] outline-none focus:border-[#4A6054] transition"
+                          name="location"
+                          placeholder="City or Region"
+                          value={profile.location}
+                          onChange={updateProfileForm}
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] uppercase font-semibold tracking-wider text-[#6A7570] mb-1">
+                          Medical &amp; Personal Notes
+                        </label>
+                        <textarea
+                          className="w-full bg-[#F9F8F3] border border-[#E3E0D6] rounded-none px-4 py-2.5 text-[#2C3531] outline-none focus:border-[#4A6054] transition min-h-[80px] resize-none"
+                          name="medicalNotes"
+                          placeholder="Blood group, allergies, conditions..."
+                          value={profile.medicalNotes}
+                          onChange={updateProfileForm}
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="mt-2 w-full bg-[#4A6054] hover:bg-[#3B4E44] text-[#F9F8F3] font-semibold text-[10px] uppercase tracking-[0.2em] py-3 transition"
+                      >
+                        {loading ? "Updating..." : "Save Safety Profile"}
+                      </button>
+                    </form>
                   </div>
 
-                  {/* Sage Green Block: Trusted Circle */}
-                  <div className="bg-[#A4B096] text-[#2B2825] p-8 sm:p-10 font-sans-clean flex flex-col justify-between">
+                  {/* Right Block: Trusted Circle */}
+                  <div className="bg-[#4A6054] text-[#F9F8F3] p-8 sm:p-10 font-sans-clean flex flex-col justify-between">
                     <div>
-                      <span className="font-script text-3xl text-[#3A452D] block mb-1">Trusted Circle</span>
-                      <h2 className="text-lg font-bold uppercase tracking-widest text-[#2B2825] mb-6">
-                        SAFETY SERVICES & CONTACTS
+                      <span className="font-script text-3xl text-[#D4B683] block mb-1">trusted circle</span>
+                      <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-[#F9F8F3] mb-6 border-b border-[#6A7D72] pb-3">
+                        SAFETY SERVICES &amp; CONTACTS
                       </h2>
 
                       {/* Add Contact Form */}
-                      <form onSubmit={handleAddContact} className="space-y-3 mb-6 bg-white/40 p-4 rounded-2xl border border-white/30">
+                      <form onSubmit={handleAddContact} className="space-y-3 mb-6 bg-[#3B4E44] p-4 border border-[#5C7366]">
                         <input
-                          className="w-full bg-white/80 border border-[#8B987C] rounded-xl px-3 py-2 text-xs outline-none focus:border-[#2B2825]"
+                          className="w-full bg-[#F9F8F3] border border-transparent px-3 py-2 text-xs text-[#2C3531] outline-none focus:border-[#D4B683]"
                           name="name"
                           placeholder="Contact Name"
                           value={newContact.name}
@@ -504,7 +506,7 @@ export default function UserDashboard() {
                         />
                         <div className="grid grid-cols-2 gap-2">
                           <input
-                            className="w-full bg-white/80 border border-[#8B987C] rounded-xl px-3 py-2 text-xs outline-none focus:border-[#2B2825]"
+                            className="w-full bg-[#F9F8F3] border border-transparent px-3 py-2 text-xs text-[#2C3531] outline-none focus:border-[#D4B683]"
                             name="relation"
                             placeholder="Relation"
                             value={newContact.relation}
@@ -513,7 +515,7 @@ export default function UserDashboard() {
                             disabled={loading}
                           />
                           <input
-                            className="w-full bg-white/80 border border-[#8B987C] rounded-xl px-3 py-2 text-xs outline-none focus:border-[#2B2825]"
+                            className="w-full bg-[#F9F8F3] border border-transparent px-3 py-2 text-xs text-[#2C3531] outline-none focus:border-[#D4B683]"
                             name="phone"
                             placeholder="Phone Number"
                             value={newContact.phone}
@@ -525,7 +527,7 @@ export default function UserDashboard() {
                         <button
                           type="submit"
                           disabled={loading}
-                          className="w-full bg-[#4F5643] hover:bg-[#3D4334] text-white text-xs font-bold uppercase tracking-widest py-2.5 rounded-full transition"
+                          className="w-full bg-[#D4B683] hover:bg-[#c2a370] text-[#2C3531] text-[10px] font-semibold uppercase tracking-[0.2em] py-2.5 transition"
                         >
                           + Add Circle Member
                         </button>
@@ -534,27 +536,27 @@ export default function UserDashboard() {
                       {/* Contacts List */}
                       <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
                         {emergencyContacts.length === 0 ? (
-                          <p className="text-xs text-[#3A452D] text-center py-6 italic font-editorial-serif">
+                          <p className="text-xs text-[#C2C9C5] text-center py-6 italic font-editorial-serif">
                             No members added to your trusted circle yet.
                           </p>
                         ) : (
                           emergencyContacts.map((contact) => (
                             <div
                               key={contact._id}
-                              className="bg-white/80 rounded-xl p-3 flex items-center justify-between shadow-sm"
+                              className="bg-[#3B4E44] border border-[#5C7366] p-3 flex items-center justify-between"
                             >
                               <div>
-                                <h3 className="text-sm font-editorial-serif font-bold text-[#2B2825]">
+                                <h3 className="text-lg font-editorial-serif font-light text-[#F9F8F3]">
                                   {contact.name}
                                 </h3>
-                                <p className="text-[11px] text-[#55504A]">
+                                <p className="text-[10px] text-[#C2C9C5]">
                                   {contact.relation} · {contact.phone}
                                 </p>
                               </div>
                               <button
                                 type="button"
                                 onClick={() => handleDeleteContact(contact._id)}
-                                className="text-[10px] font-bold uppercase tracking-widest text-[#A85A3C] hover:underline"
+                                className="text-[10px] font-semibold uppercase tracking-wider text-[#D4B683] hover:underline"
                               >
                                 Remove
                               </button>
@@ -569,8 +571,8 @@ export default function UserDashboard() {
               </section>
             </div>
 
-            {/* Editorial Footer */}
-            <footer className="border-t border-[#E2DDD3] py-8 text-center font-sans-clean text-[10px] uppercase tracking-[0.25em] text-[#786E65]">
+            {/* Footer */}
+            <footer className="border-t border-[#E3E0D6] py-8 text-center font-sans-clean text-[10px] uppercase tracking-[0.25em] text-[#6A7570]">
               <p>SafeSphere · Personal Emergency Network Protocol</p>
             </footer>
           </motion.div>
