@@ -43,13 +43,14 @@ exports.RegisterUser = async (req, res) => {
       message: "Registered. OTP is being sent to your email.",
     });
 
-    sendEmail({
-      to: userEmail,
-      subject: "OTP Verification",
-      html: `<h2>Your OTP is ${otp}</h2><p>This OTP will expire in 10 minutes.</p>`,
-    }).catch((err) => {
-      console.error("Failed to send OTP email:", err.message);
-    });
+ console.log("Attempting to send OTP email to:", userEmail);
+sendEmail({
+  to: userEmail,
+  subject: "OTP Verification",
+  html: `<h2>Your OTP is ${otp}</h2><p>This OTP will expire in 10 minutes.</p>`,
+})
+  .then((info) => console.log("OTP email sent successfully:", info.messageId))
+  .catch((err) => console.error("Failed to send OTP email:", err));
 
   } catch (err) {
     console.error("REGISTER ERROR:", err);
