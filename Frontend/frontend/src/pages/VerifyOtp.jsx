@@ -58,7 +58,7 @@ export default function VerifyOtp() {
       </div>
 
       {/* RIGHT SECTION: Full-height Form Panel */}
-      <div className="w-full md:w-1/2 min-h-screen bg-[#916b7d] text-white flex flex-col justify-center px-8 sm:px-12 md:px-20 py-12 relative">
+      <div className="w-full md:w-1/2 min-h-screen bg-[#7ba88b] text-white flex flex-col justify-center px-8 sm:px-12 md:px-20 py-12 relative">
         
         {/* Subtle Decorative Border Frame Overlay */}
         <div className="absolute inset-4 sm:inset-6 rounded-2xl border border-[#d3b482]/30 pointer-events-none" />
