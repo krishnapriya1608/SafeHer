@@ -1,1 +1,4 @@
 @import "tailwindcss";
+html {
+  font-size: 87.5%; /* scales all rem-based sizing down proportionally, similar to 80% zoom look */
+}
