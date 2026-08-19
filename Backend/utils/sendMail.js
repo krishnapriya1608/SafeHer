@@ -11,7 +11,7 @@ const sendMail = async ({ to, subject, html }) => {
     const result = await brevo.transactionalEmails.sendTransacEmail({
       subject,
       htmlContent: html,
-      sender: { name: "SafeSphere", email: process.env.EMAIL_FROM },
+      sender: { name: "SafeSphere", email: process.env.EMAIL },
       to: [{ email: to }],
     });
 
