@@ -1,23 +1,23 @@
-const brevo = require("@getbrevo/brevo");
+const { BrevoClient } = require("@getbrevo/brevo");
 
-const apiInstance = new brevo.TransactionalEmailsApi();
-apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.EMAIL_PASSWORD);
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+});
 
 const sendMail = async ({ to, subject, html }) => {
-  const sendSmtpEmail = new brevo.SendSmtpEmail();
-
-  sendSmtpEmail.sender = { email: process.env.EMAIL, name: "SafeSphere" };
-  sendSmtpEmail.to = [{ email: to }];
-  sendSmtpEmail.subject = subject;
-  sendSmtpEmail.htmlContent = html;
-
   try {
-    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log("Message sent:", data.body?.messageId || data);
-    return data;
+    const result = await brevo.transactionalEmails.sendTransacEmail({
+      subject,
+      htmlContent: html,
+      sender: { name: "SafeSphere", email: process.env.EMAIL_FROM },
+      to: [{ email: to }],
+    });
+
+    console.log("Message sent:", result);
+    return result;
   } catch (err) {
-    console.error("Brevo error:", err.response?.body || err.message);
-    throw new Error(err.response?.body?.message || "Failed to send email");
+    console.error("Brevo error:", err.message, err.statusCode || "");
+    throw new Error(err.message || "Failed to send email");
   }
 };
 
