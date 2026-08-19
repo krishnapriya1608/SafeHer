@@ -1,7 +1,9 @@
 const { BrevoClient } = require("@getbrevo/brevo");
 
+console.log("Brevo key present?", !!process.env.BREVO_API_KEY, "length:", process.env.BREVO_API_KEY?.length);
+
 const brevo = new BrevoClient({
-  apiKey: process.env.EMAIL_PASSWORD,
+  apiKey: process.env.BREVO_API_KEY,
 });
 
 const sendMail = async ({ to, subject, html }) => {
@@ -9,7 +11,7 @@ const sendMail = async ({ to, subject, html }) => {
     const result = await brevo.transactionalEmails.sendTransacEmail({
       subject,
       htmlContent: html,
-      sender: { name: "SafeSphere", email: process.env.EMAIL },
+      sender: { name: "SafeSphere", email: process.env.EMAIL_FROM },
       to: [{ email: to }],
     });
 
