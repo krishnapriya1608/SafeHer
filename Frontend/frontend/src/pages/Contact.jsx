@@ -35,7 +35,7 @@ const Contact = () => {
         </div>
 
         {/* Emergency Notice Banner */}
-        <div className="mb-12 bg-rose-500 text-white rounded-2xl p-4 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mb-12 bg-rose-400 text-white rounded-2xl p-4 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-center sm:text-left">
             <div className="p-2 bg-white/20 rounded-lg shrink-0">
               <AlertTriangle className="w-6 h-6 text-white" />
