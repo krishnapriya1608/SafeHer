@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Logo from "./Logo";
 
 export default function Footer() {
   return (
@@ -18,7 +17,7 @@ export default function Footer() {
           {/* Brand & Mission Statement */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <Logo />
+             
               <span className="font-script text-3xl text-[#D4B683]">SafeSphere</span>
             </div>
             <p className="text-xs font-sans-clean text-[#D3DAD6] leading-relaxed max-w-sm">
